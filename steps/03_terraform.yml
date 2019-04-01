@@ -23,7 +23,7 @@ steps:
     SpecifyStorageAccount: true
     StorageAccountResourceGroup: '$(bastion_rg)'
     StorageAccountRM: '$(bastion_sa)'
-    StorageContainerName: '$(bastion_name)'
+    StorageContainerName: '$(bastion_hostname)'
 
 - task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Release-Terraform.Xpirit-Vsts-Release-Terraform.Terraform@2
   displayName: 'Terraform plan'
@@ -37,7 +37,7 @@ steps:
     SpecifyStorageAccount: true
     StorageAccountResourceGroup: $(bastion_rg)
     StorageAccountRM: $(bastion_sa)
-    StorageContainerName: $(bastion_name)
+    StorageContainerName: $(bastion_hostname)
 
 - task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Release-Terraform.Xpirit-Vsts-Release-Terraform.Terraform@2
   displayName: 'Terraform apply'
@@ -65,8 +65,12 @@ steps:
      & C:\terraform-download\terraform.exe output bastion_pub_ip >"pub_ip"
      $pub_ip = Get-content "pub_ip"
 
+     & C:\terraform-download\terraform.exe output bastion_hostname >"bastion_hostname"
+     $bastion_hostname = Get-content "bastion_hostname"
+
      Write-Host ("##vso[task.setvariable variable=bastion_priv_ip;isOutput=true]$priv_ip")
      Write-Host ("##vso[task.setvariable variable=bastion_pub_ip;isOutput=true]$pub_ip")
+     Write-Host ("##vso[task.setvariable variable=bastion_hostname;isOutput=true]$bastion_hostname")
   name: print_ips
 
 - script: echo $(print_ips.bastion_priv_ip)
@@ -75,3 +79,5 @@ steps:
 - script: echo $(print_ips.bastion_pub_ip)
   name: bastion_pub_ip
 
+- script: echo $(print_ips.bastion_hostname)
+  name: bastion_hostname
