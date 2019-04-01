@@ -40,7 +40,7 @@ steps:
 
 - bash: |
     echo "[all]" > '$(build.artifactstagingdirectory)/ansible/inventory'
-    echo "51.145.43.66" >> '$(build.artifactstagingdirectory)/ansible/inventory'
+    echo $(bastion_pub_ip) >> '$(build.artifactstagingdirectory)/ansible/inventory'
     echo "[all:vars]" >> '$(build.artifactstagingdirectory)/ansible/inventory'
     echo "ansible_user=webserver" >> '$(build.artifactstagingdirectory)/ansible/inventory'
     chmod 0600 $(build.artifactstagingdirectory)/$(privkeysecfile)
