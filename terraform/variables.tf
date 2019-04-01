@@ -1,8 +1,4 @@
 #
-variable "tenant_id" {}
-variable "subscription_id" {}
-variable "client_id" {}
-variable "client_secret" {}
 
 variable "bastion_rg" {
   default = "__bastion_rg__"
