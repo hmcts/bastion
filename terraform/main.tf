@@ -59,7 +59,7 @@ resource "azurerm_public_ip" "bastion_public_ip" {
 }
 
 resource "azurerm_network_security_group" "bastion_nsg" {
-  name                = "__bastion_rg__-nsg"
+  name                = "__bastion_name__-nsg"
   location            = "__bastion_location__"
   resource_group_name = "__bastion_rg__"
 }
@@ -157,3 +157,10 @@ output "bastion_pub_ip" {
   description = "public ip addresses of the vm nics"
   value       = "${azurerm_public_ip.bastion_public_ip.*.ip_address}"
 }
+
+output "bastion_hostname" {
+  description = "public ip addresses of the vm nics"
+  value       = "${azurerm_virtual_machine.bastion_vm.name}"
+}
+
+
