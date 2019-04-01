@@ -23,7 +23,7 @@ steps:
     SpecifyStorageAccount: true
     StorageAccountResourceGroup: '$(bastion_rg)'
     StorageAccountRM: '$(bastion_sa)'
-    StorageContainerName: '$(bastion_hostname)'
+    StorageContainerName: '$(bastion_name)'
 
 - task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Release-Terraform.Xpirit-Vsts-Release-Terraform.Terraform@2
   displayName: 'Terraform plan'
@@ -37,7 +37,7 @@ steps:
     SpecifyStorageAccount: true
     StorageAccountResourceGroup: $(bastion_rg)
     StorageAccountRM: $(bastion_sa)
-    StorageContainerName: $(bastion_hostname)
+    StorageContainerName: $(bastion_name)
 
 - task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Release-Terraform.Xpirit-Vsts-Release-Terraform.Terraform@2
   displayName: 'Terraform apply'
