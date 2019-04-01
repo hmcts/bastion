@@ -30,6 +30,7 @@ jobs:
       bastion_name: $(bastion_name)
       bastion_priv_ip: $(bastion_priv_ip)
       bastion_pub_ip: $(bastion_pub_ip)
+      bastion_hostname: $(bastion_hostname)
 
 - job: Ansible_Setup
   dependsOn: Build

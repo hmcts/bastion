@@ -6,7 +6,7 @@ steps:
     azureSubscription: $(service_connection)
     scriptLocation: inlineScript
     inlineScript: |
-     call az vm extension set --publisher Microsoft.Azure.ActiveDirectory.LinuxSSH --name AADLoginForLinux --resource-group $(bastion_rg) --vm-name $(bastion_name)-vm-00
+     call az vm extension set --publisher Microsoft.Azure.ActiveDirectory.LinuxSSH --name AADLoginForLinux --resource-group $(bastion_rg) --vm-name $(bastion_hostname)
      
      
      
