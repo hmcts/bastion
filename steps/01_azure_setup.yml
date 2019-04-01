@@ -1,0 +1,38 @@
+
+steps:
+- task: AzureCLI@1
+  displayName: 'Create RG SA and Container'
+  inputs:
+    azureSubscription: $(service_connection)
+    scriptLocation: inlineScript
+    inlineScript: |
+        call az group create --location $(bastion_location) --name $(bastion_rg)
+        call az storage account create --name $(bastion_sa) --resource-group $(bastion_rg) --location $(bastion_location) --sku Standard_LRS
+        call az storage container create --name $(bastion_name) --account-name $(bastion_sa)
+ 
+- task: AzurePowerShell@3
+  displayName: 'Get Storage Key'
+  inputs:
+    azureSubscription: $(service_connection)
+    ScriptType: InlineScript
+    Inline: |
+     $key=(Get-AzureRmStorageAccountKey -ResourceGroupName $(bastion_rg) -AccountName $(bastion_sa)).Value[0]
+     Write-Host "##vso[task.setvariable variable=bastion_sk]$key"
+    azurePowerShellVersion: LatestVersion  
+
+- task: AzurePowerShell@3
+  displayName: 'Setup Terraform'
+  inputs:
+    azureSubscription: $(service_connection)
+    ScriptType: InlineScript
+    Inline: |
+        printenv
+        gci env:*
+        #call az login
+        $env:AZURE_CLIENT_ID=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "client-id" --query value -o tsv)
+        $env:AZURE_CLIENT_SECRET=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "client-secret" --query value -o tsv)
+        $env:AZURE_TENANT_ID=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "tenant-id" --query value -o tsv)
+        $env:AZURE_SUBSCRIPTION_ID=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "subscription-id" --query value -o tsv)
+        printenv
+        gci env:*
+    azurePowerShellVersion: LatestVersion  

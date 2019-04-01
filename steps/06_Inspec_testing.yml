@@ -1,0 +1,25 @@
+steps:
+
+- powershell: |
+    . { iwr -useb https://omnitruck.chef.io/install.ps1 } | iex; install -project inspec
+    echo ($env:path).split(“;”)
+    Get-ChildItem -path "C:\Opscode\inspec\bin" -Recurse
+  displayName: Inspec Setup
+
+- task: qetza.replacetokens.replacetokens-task.replacetokens@3
+  displayName: 'Replace tokens in **/*.*'
+  inputs:
+    targetFiles: '$(build.artifactstagingdirectory)/**/*.rb'
+    tokenPrefix: '__'
+    tokenSuffix: '__'
+
+- task: AzureCLI@1
+  displayName: 'Inspec Testing'
+  inputs:
+    azureSubscription: $(service_connection)
+    scriptLocation: inlineScript
+    inlineScript: |
+      $env:AZURE_CLIENT_ID="<Client ID>" \
+      $env:AZURE_CLIENT_SECRET="<Tenant ID>" \
+      $env:AZURE_TENANT_ID="<Client Secret>" \
+      C:\\opscode\\inspec\\bin\\inspec.bat exec tests -t azure://

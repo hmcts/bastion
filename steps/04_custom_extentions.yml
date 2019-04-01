@@ -1,0 +1,12 @@
+
+steps:
+- task: AzureCLI@1
+  displayName: 'Install ActiveDirectory LinuxSSH'
+  inputs:
+    azureSubscription: $(service_connection)
+    scriptLocation: inlineScript
+    inlineScript: |
+     call az vm extension set --publisher Microsoft.Azure.ActiveDirectory.LinuxSSH --name AADLoginForLinux --resource-group $(bastion_rg) --vm-name rdo-bastion-vm-00
+     
+     
+     

@@ -1,0 +1,69 @@
+
+steps:
+
+- task: DownloadSecureFile@1
+  displayName: 'Download Public Key'
+  inputs:
+    secureFile: $(pubkeysecfile)
+
+- task: DownloadSecureFile@1
+  displayName: 'Download Private Key'
+  inputs:
+      secureFile: $(privkeysecfile)
+
+- task: CopyFiles@2
+  displayName: 'Copy secure files'
+  inputs:
+    sourceFolder: $(Agent.TempDirectory)
+    targetFolder: $(build.artifactstagingdirectory)
+
+- task: InstallSSHKey@0
+  displayName: 'Push SSH key'
+  inputs:
+    hostName: 51.145.43.66
+    #sshPublicKey: '${pubkeysecfile}'
+    #sshKeySecureFile: 'b449cc40-b567-48ae-8e02-9f988ed82026'
+    sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCwVJCQ7u7QmcpBEDIMNKpL528wI9v2kBruPfqsVIlRhNy3KbROQutO1TSCpaBDkS+HhRSPAjVCV1oUQjOkS83/ZqTQsPh4YSzD9oABJ02wCT1HcSu+LEGc2WwIvMyxLxH7Hl73fcADmxY5gpMjjn+OvMTCn1pc7vr2D20LHoeGoXpMJ6zkkY0NVUPZbJS6O/DVTplfJ1l5W9vDYwJhMupfyIPU4Vk1dhefGvQr4r4VDjX68AOTHpDodD/1FP7YWv/+VLsIriP9tfIfNZ+4W20yLae9HWFZ9VMYh6K2JNjGS9RCT342wVE3K4o+Bs1w1aZvx7AYVMDN6z0BHdQf8KE/evJ/UAJFd+w0zGO9l8RD0uFPttLmpkHD/KwzL20pa9MEiq5qJn0bWfB8zWgk4yhJoS96Z8nvVTYlET1qus9nvnHOH0RS5SjOlryFv0z7reY2nKeVbCs68j1C6m8PdalGLw6dBZoeQAjSXXjiYcD+hMoaTrFeRKDqmV4MfeeTng4eW+VVrBoG4H1gYZc+xakGpVYnBUaM2YcWeU83aVJlypfug71/kwFX3rLqc0cpNevD00gGOAEcmO36/aWgJ6BtaXkpzUPYUPGon32nHsuPB5OsO/ZXK+iut143lPAEry4o/ELrQ0qgOkCW6lbNbo7AfO0krPSRtJKNUXcvEf7XyQ== james.matthews@hmcts.net'
+    sshKeySecureFile: 'b449cc40-b567-48ae-8e02-9f988ed82026'
+
+- task: DownloadSecureFile@1
+  displayName: 'Download Private Key'
+  inputs:
+      secureFile: $(privkeysecfile)
+
+- task: CopyFiles@2
+  displayName: 'Copy secure files'
+  inputs:
+    sourceFolder: $(Agent.TempDirectory)
+    targetFolder: $(build.artifactstagingdirectory)
+
+
+- bash: |
+    echo "[all]" > '$(build.artifactstagingdirectory)/ansible/inventory'
+    echo "51.145.43.66" >> '$(build.artifactstagingdirectory)/ansible/inventory'
+    echo "[all:vars]" >> '$(build.artifactstagingdirectory)/ansible/inventory'
+    echo "ansible_user=webserver" >> '$(build.artifactstagingdirectory)/ansible/inventory'
+    chmod 0600 $(build.artifactstagingdirectory)/$(privkeysecfile)
+  displayName: Ansible Setup
+
+# Testing SSH
+#- bash: |
+#    ssh -o StrictHostKeyChecking=no -i $(build.artifactstagingdirectory)/$(privkeysecfile) webserver@$51.145.43.66 | ls -al  ~/.ssh/ 
+#  displayName: SSH Test
+
+- bash: |
+    #!/bin/bash
+    echo "################"
+    ls -al $(build.artifactstagingdirectory)
+    ls -al $(build.artifactstagingdirectory)/ansible
+    ls -al $(build.artifactstagingdirectory)/ansible/playbooks
+    echo "###################"
+    ansible-playbook --version
+    #"sudo ansible-playbook --ssh-extra-args='-o StrictHostKeyChecking=no' -i $(build.artifactstagingdirectory)/ansible/inventory $(build.artifactstagingdirectory)/ansible/playbooks/playbook.yml -vvvv"
+  displayName: Ansible Run
+
+- task: Bash@3
+  displayName: 'Running Ansible'
+  inputs:
+    targetType: 'inline'
+    script: "ansible-playbook --ssh-extra-args='-o StrictHostKeyChecking=no' -i $(build.artifactstagingdirectory)/ansible/inventory $(build.artifactstagingdirectory)/ansible/playbooks/playbook.yml -vvvv"
