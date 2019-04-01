@@ -5,3 +5,5 @@ variable "bastion_vm_name" {
 variable "bastion_vm_count" {
     default = 1
 }
+
+variable "ssh_key" {}
