@@ -10,11 +10,15 @@ terraform {
 
 data "azurerm_resource_group" "bastion_rg" {
   name = "__bastion_rg__"
-  #name = "rdo-terraform-bastion-RG"
 }
 
-data "azurerm_key_vault_secret" "rdo-bastion-kvs" {
+data "azurerm_key_vault_secret" "admin-pass-kvs" {
 name = "admin-password"
+vault_uri = "https://__bastion_name__-kvs.vault.azure.net/"
+}
+
+data "azurerm_key_vault_secret" "admin-user-kvs" {
+name = "admin-username"
 vault_uri = "https://__bastion_name__-kvs.vault.azure.net/"
 }
 
@@ -98,8 +102,8 @@ resource "azurerm_virtual_machine" "bastion_vm" {
   
   os_profile {
     computer_name      = "${var.bastion_vm_name}-${format("%02d",count.index)}" 
-    admin_username     = "webserver"
-    admin_password     = "${data.azurerm_key_vault_secret.rdo-ftps-kvs.value}"
+    admin_username     = "${data.azurerm_key_vault_secret.admin-user-kvs.value}"
+    admin_password     = "${data.azurerm_key_vault_secret.admin-pass-kvs.value}"
   }
  os_profile_linux_config {
     disable_password_authentication = false
