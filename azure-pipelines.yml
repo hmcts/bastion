@@ -41,6 +41,13 @@ jobs:
   steps:
   - template: steps/00_build.yml
   - template: steps/02_string_replacement.yml
-  - template: steps/05_ssh_key_push.yml
+  #- template: steps/05_ssh_key_push.yml
     parameters:
       azureSubscription: $(service_connection)
+
+- job: Testing
+  dependsOn: Ansible_Setup
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+  - template: steps/06_Inspec_testing.yml
