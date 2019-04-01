@@ -109,7 +109,7 @@ resource "azurerm_virtual_machine" "bastion_vm" {
     disable_password_authentication = false
 
     ssh_keys {
-      path     = "/home/webserver/.ssh/authorized_keys"
+      path     = "/home/${data.azurerm_key_vault_secret.admin-user-kvs.value}/.ssh/authorized_keys"
       key_data = "${file("${var.ssh_key}")}"
     }
   }
