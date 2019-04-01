@@ -18,7 +18,7 @@ steps:
     Arguments: init
     InstallTerraform: true
     UseAzureSub: true
-    ConnectedServiceNameARM: 'Bastion-SandBox'
+    ConnectedServiceNameARM: $(service_connection)
     ManageState: true
     SpecifyStorageAccount: true
     StorageAccountResourceGroup: '$(bastion_rg)'
