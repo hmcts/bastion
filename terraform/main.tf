@@ -32,7 +32,7 @@ resource "azurerm_subnet" "bastion_subnet" {
 resource "azurerm_virtual_network" "bastion_vnet" {
   address_space = ["10.97.101.0/28"]
   location = "__bastion_location__"
-  name = "__bastion_rg__-vn"
+  name = "__bastion_name__-vn"
   resource_group_name = "__bastion_rg__"
 }
 
