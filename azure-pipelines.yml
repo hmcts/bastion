@@ -23,9 +23,9 @@ jobs:
   steps:
   #- template: steps/00_build.yml
   #- template: steps/01_azure_setup.yml
-  - template: steps/02_string_replacement.yml
-  - template: steps/03_terraform.yml
-  - template: steps/04_custom_extentions.yml
+  #- template: steps/02_string_replacement.yml
+  #- template: steps/03_terraform.yml
+  #- template: steps/04_custom_extentions.yml
     parameters:
       azureSubscription: $(service_connection)
       bastion_rg: $(bastion_rg)
