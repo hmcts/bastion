@@ -1,10 +1,5 @@
 
 steps:
-- task: AzureKeyVault@1
-  displayName: 'Azure Key Vault: $(bastion_name)-kvs'
-  inputs:
-    azureSubscription: $(service_connection)
-    KeyVaultName: '$(bastion_name)-kvs'
 
 - task: AzureCLI@1
   displayName: 'Create RG SA and Container'
@@ -12,10 +7,17 @@ steps:
     azureSubscription: $(service_connection)
     scriptLocation: inlineScript
     inlineScript: |
+        call az keyvault create --name $(bastion_name)-kvs --resource-group $(bastion_rg) --location $(bastion_location)
         call az group create --location $(bastion_location) --name $(bastion_rg)
         call az storage account create --name $(bastion_sa) --resource-group $(bastion_rg) --location $(bastion_location) --sku Standard_LRS
         call az storage container create --name $(bastion_name) --account-name $(bastion_sa)
  
+- task: AzureKeyVault@1
+  displayName: 'Azure Key Vault: $(bastion_name)-kvs'
+  inputs:
+    azureSubscription: $(service_connection)
+    KeyVaultName: '$(bastion_name)-kvs'
+    
 - task: AzurePowerShell@3
   displayName: 'Get Storage Key'
   inputs:
