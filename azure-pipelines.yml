@@ -6,14 +6,80 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'Ubuntu-16.04'
+variables:
+  bastion_location: 'uksouth'
+  bastion_rg: 'rdo-uks-bastion-rg'
+  bastion_sa: 'rdouksbastionsa'
+  bastion_name: 'rdo-uks-bastion'
+  service_connection: 'DCD-CFT-Sandbox'
+  pubkeysecfile: 'azure_rsa.pub'
+  privkeysecfile: 'azure_rsa'
+  System.Debug: False
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+jobs:
+- job: Build
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+  #- template: steps/00_build.yml
+  #- template: steps/01_azure_setup.yml
+  - template: steps/02_string_replacement.yml
+  - template: steps/03_terraform.yml
+  - template: steps/04_custom_extentions.yml
+    parameters:
+      azureSubscription: $(service_connection)
+      bastion_rg: $(bastion_rg)
+      bastion_location: $(bastion_location)
+      bastion_sa: $(bastion_sa)
+      bastion_name: $(bastion_name)
+      bastion_priv_ip: $(bastion_priv_ip)
+      bastion_pub_ip: $(bastion_pub_ip)
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - task: CopyFiles@2
+    displayName: 'Copy Terraform files to artifacts'
+    inputs:
+      SourceFolder: terraform
+      contents: '**'
+      TargetFolder: '$(build.artifactstagingdirectory)/terraform'
+
+  - task: CopyFiles@2
+    displayName: 'Copy Ansible files to artifacts'
+    inputs:
+      SourceFolder: ansible
+      contents: '**'
+      TargetFolder: '$(build.artifactstagingdirectory)/ansible'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: 'drop' 
+      publishLocation: 'Container'
+      targetPath: '$(build.artifactstagingdirectory)'
+
+  - task: AzureCLI@1
+    displayName: 'Create RG SA and Container'
+    inputs:
+      azureSubscription: $(service_connection)
+      scriptLocation: inlineScript
+      inlineScript: |
+          call az group create --location $(bastion_location) --name $(bastion_rg)
+          call az storage account create --name $(bastion_sa) --resource-group $(bastion_rg) --location $(bastion_location) --sku Standard_LRS
+          call az storage container create --name $(bastion_name) --account-name $(bastion_sa)
+  
+  - task: AzurePowerShell@3
+    displayName: 'Get Storage Key'
+    inputs:
+      azureSubscription: $(service_connection)
+      ScriptType: InlineScript
+      Inline: |
+        $key=(Get-AzureRmStorageAccountKey -ResourceGroupName $(bastion_rg) -AccountName $(bastion_sa)).Value[0]
+        Write-Host "##vso[task.setvariable variable=bastion_sk]$key"
+      azurePowerShellVersion: LatestVersion  
+
+  - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+    displayName: 'Replace tokens in **/*.*'
+    inputs:
+      targetFiles: '$(build.artifactstagingdirectory)/**/*.tf'
+      tokenPrefix: '__'
+      tokenSuffix: '__'
