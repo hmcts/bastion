@@ -1,5 +1,11 @@
 
 steps:
+- task: AzureKeyVault@1
+  displayName: 'Azure Key Vault: $(bastion_name)-kvs'
+  inputs:
+    azureSubscription: $(service_connection)
+    KeyVaultName: '$(bastion_name)-kvs'
+
 - task: AzureCLI@1
   displayName: 'Create RG SA and Container'
   inputs:
@@ -20,19 +26,3 @@ steps:
      Write-Host "##vso[task.setvariable variable=bastion_sk]$key"
     azurePowerShellVersion: LatestVersion  
 
-- task: AzurePowerShell@3
-  displayName: 'Setup Terraform'
-  inputs:
-    azureSubscription: $(service_connection)
-    ScriptType: InlineScript
-    Inline: |
-        printenv
-        gci env:*
-        #call az login
-        $env:AZURE_CLIENT_ID=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "client-id" --query value -o tsv)
-        $env:AZURE_CLIENT_SECRET=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "client-secret" --query value -o tsv)
-        $env:AZURE_TENANT_ID=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "tenant-id" --query value -o tsv)
-        $env:AZURE_SUBSCRIPTION_ID=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "subscription-id" --query value -o tsv)
-        printenv
-        gci env:*
-    azurePowerShellVersion: LatestVersion  

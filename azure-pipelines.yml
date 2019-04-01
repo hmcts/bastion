@@ -3,10 +3,10 @@ trigger:
 
 variables:
   bastion_location: 'uksouth'
-  bastion_rg: 'rdo-bastion-ssh-RG'
-  bastion_sa: 'rdobastionsa'
-  bastion_name: 'rdo-bastion'
-  service_connection: 'Bastion-SandBox'
+  bastion_rg: 'rdo-uks-bastion-rg'
+  bastion_sa: 'rdouksbastionsa'
+  bastion_name: 'rdo-uks-bastion'
+  service_connection: 'DCD-CFT-Sandbox'
   pubkeysecfile: 'azure_rsa.pub'
   privkeysecfile: 'azure_rsa'
   System.Debug: False
