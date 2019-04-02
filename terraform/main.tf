@@ -1,12 +1,11 @@
 terraform {
   backend "azurerm" {
-  storage_account_name = "__bastion_sa__"
-    container_name       = "__bastion_name__"
-    key                  = "__bastion_name__/terraform.tfstate"
-	  access_key  = "__bastion_sk__"
+  storage_account_name    = "__bastion_sa__"
+    container_name        = "__bastion_name__"
+    key                   = "__bastion_name__/terraform.tfstate"
+	  access_key            = "__bastion_sk__"
   }
 }
-
 
 data "azurerm_resource_group" "bastion_rg" {
   name = "__bastion_rg__"
@@ -114,6 +113,17 @@ resource "azurerm_virtual_machine" "bastion_vm" {
     }
   }
 
+  provisioner "remote-exec" {
+      inline = [
+        "mkdir ~/ansible"
+      ]
+        connection {
+      type     = "ssh"
+      user     = "${data.azurerm_key_vault_secret.admin-user-kvs.value}"
+      password = "${data.azurerm_key_vault_secret.admin-pass-kvs.value}"
+  }
+  }
+
 #  os_profile_linux_config {
 #    disable_password_authentication = false
 #  }
@@ -130,7 +140,7 @@ resource "azurerm_virtual_machine" "bastion_vm" {
   
 }
 
-resource "azurerm_virtual_machine_extension" "bastion_scripts" {
+resource "azurerm_virtual_machine_extension" "ansible_extension" {
   name                 = "Ansible-Agent-Install"
   location             = "__bastion_location__"
   resource_group_name  = "__bastion_rg__"
@@ -148,19 +158,42 @@ resource "azurerm_virtual_machine_extension" "bastion_scripts" {
 SETTINGS
 }
 
-output "bastion_priv_ip" {
-  description = "private ip addresses of the vm nics"
-  value       = "${azurerm_network_interface.bastion_nic.*.private_ip_address}"
+
+resource "null_resource" "ansible-runs" {
+    triggers = {
+      always_run = "${timestamp()}"
+    }
+
+    depends_on = [
+        "azurerm_public_ip.bastion_public_ip",
+        "azurerm_virtual_machine_extension.ansible_extension",
+        "azurerm_virtual_machine.bastion_vm"
+    ]
+
+  provisioner "file" {
+    source      = "../ansible/"
+    destination = "~/ansible/"
+  
+    connection {
+      type     = "ssh"
+      user     = "${var.username}"
+      password = "${data.azurerm_key_vault_secret.admin-password.value}"
+      host     = "${azurerm_public_ip.pip-ansible.*.ip_address}"
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "ansible-playbook ~/ansible/playbooks/ansible.yml",
+      "ansible-playbook -i ~/ansible/inventory ~/ansible/playbooks/windows.yml",
+      "ansible-playbook -i ~/ansible/inventory ~/ansible/playbooks/eftservers.yml",
+    ]
+
+    connection {
+      type     = "ssh"
+      user     = "${data.azurerm_key_vault_secret.admin-user-kvs.value}"
+      password = "${data.azurerm_key_vault_secret.admin-pass-kvs.value}"
+      host     = "${azurerm_public_ip.bastion_public_ip.*.ip_address}"
+    }
+  }
 }
-
-output "bastion_pub_ip" {
-  description = "public ip addresses of the vm nics"
-  value       = "${azurerm_public_ip.bastion_public_ip.*.ip_address}"
-}
-
-output "bastion_hostname" {
-  description = "public ip addresses of the vm nics"
-  value       = "${azurerm_virtual_machine.bastion_vm.name}"
-}
-
-
