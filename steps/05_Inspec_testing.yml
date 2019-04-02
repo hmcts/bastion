@@ -15,19 +15,12 @@ steps:
     tokenPrefix: '__'
     tokenSuffix: '__'
 
-- task: AzureCLI@1
+- task: AzurePowerShell@3
   displayName: 'Inspec Testing'
   inputs:
     azureSubscription: $(service_connection)
-    scriptLocation: inlineScript
-    inlineScript: |
-      @echo off
-      SET /P AZURE_CLIENT_ID= | C:\windows\system32\cmd.exe /D /S /C ""C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin\az.cmd" keyvault secret show --vault-name "rdo-uks-bastion-kvs" --name "client-id" --query value -o tsv"
-      SET /P AZURE_CLIENT_SECRET= | C:\windows\system32\cmd.exe /D /S /C ""C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin\az.cmd" keyvault secret show --vault-name "rdo-uks-bastion-kvs" --name "client-secret" --query value -o tsv"
-      SET /P AZURE_TENANT_ID= | C:\windows\system32\cmd.exe /D /S /C ""C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin\az.cmd" keyvault secret show --vault-name "rdo-uks-bastion-kvs" --name "tenant-id" --query value -o tsv"
-
-      echo %AZURE_CLIENT_ID%
-      echo %AZURE_CLIENT_SECRET%
-      echo %AZURE_TENANT_ID%
-
-      C:\\opscode\\inspec\\bin\\inspec.bat exec tests -t azure://
+    ScriptType: InlineScript
+    Inline: |
+      $env:AZURE_CLIENT_ID=(Get-AzKeyVaultSecret -vaultName "$(bastion_name)-kvs" -name "client-id").SecretValueText
+      write-host $env:AZURE_CLIENT_ID
+    azurePowerShellVersion: LatestVersion  
