@@ -6,6 +6,9 @@ steps:
     echo ($env:path).split(“;”)
     Get-ChildItem -path "C:\Opscode\inspec\bin" -Recurse
     }
+    write-host $(client-id)
+    write-host $(client-secret)
+
   displayName: Inspec Setup
 
 - task: qetza.replacetokens.replacetokens-task.replacetokens@3
@@ -22,14 +25,14 @@ steps:
     scriptLocation: inlineScript
     inlineScript: |
       @echo off
-      SET AZURE_CLIENT_SECRET=$(client-secret) 
+      SET AZURE_CLIENT_SECRET=(call az keyvault secret show --vault-name "rdo-uks-bastion-kvs" --name "client-id" --query value -o tsv)
       Echo %AZURE_CLIENT_SECRET%
       #echo (az keyvault secret show --vault-name "rdo-uks-bastion-kvs" --name "client-id" --query value -o tsv)
       #echo $(client-secret)
       #echo $(tenant-id)
 
 
-      #$env:AZURE_CLIENT_ID=(az keyvault secret show --vault-name "rdo-uks-bastion-kvs" --name "client-id" --query value -o tsv)
+      #$env:AZURE_CLIENT_ID=(call az keyvault secret show --vault-name "rdo-uks-bastion-kvs" --name "client-id" --query value -o tsv)
       #$env:AZURE_CLIENT_SECRET=$(client-secret) 
       #$env:AZURE_TENANT_ID=$(tenant-id)
       #C:\\opscode\\inspec\\bin\\inspec.bat exec tests -t azure://
