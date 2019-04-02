@@ -21,6 +21,6 @@ steps:
     azureSubscription: $(service_connection)
     ScriptType: InlineScript
     Inline: |
-      $env:AZURE_CLIENT_ID=(Get-AzKeyVaultSecret -vaultName "$(bastion_name)-kvs" -name "client-id").SecretValueText
+      $env:AZURE_CLIENT_ID=(Get-AzureKeyVaultSecret -VaultName "$(bastion_name)-kvs" -name "client-id")
       write-host $env:AZURE_CLIENT_ID
     azurePowerShellVersion: LatestVersion  
