@@ -21,8 +21,8 @@ steps:
     azureSubscription: $(service_connection)
     ScriptType: InlineScript
     Inline: |
-      $env:AZURE_CLIENT_ID=(Get-AzureKeyVaultSecret -VaultName "$(bastion_name)-kvs" -name "client-id").SecretValueText
-      $env:AZURE_CLIENT_SECRET=(Get-AzureKeyVaultSecret -VaultName "$(bastion_name)-kvs" -name "client-secret").SecretValueText
-      $env:AZURE_TENANT_ID=(Get-AzureKeyVaultSecret -VaultName "$(bastion_name)-kvs" -name "tenant-id").SecretValueText
+      $env:AZURE_CLIENT_ID=(Get-AzureKeyVaultSecret -VaultName "$(bastion_name)-kvs" -name "client-id").SecretValueText \
+      $env:AZURE_CLIENT_SECRET=(Get-AzureKeyVaultSecret -VaultName "$(bastion_name)-kvs" -name "client-secret").SecretValueText \
+      $env:AZURE_TENANT_ID=(Get-AzureKeyVaultSecret -VaultName "$(bastion_name)-kvs" -name "tenant-id").SecretValueText \
       C:\\opscode\\inspec\\bin\\inspec.bat exec tests -t azure://
     azurePowerShellVersion: LatestVersion  
