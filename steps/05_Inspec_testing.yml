@@ -1,9 +1,11 @@
 steps:
 
 - powershell: |
+    if (!(Test-Path -Path C:\Users\VSSADM~1\AppData\Local\Temp\inspec-3.9.0-1-x64.msi) {
     . { iwr -useb https://omnitruck.chef.io/install.ps1 } | iex; install -project inspec
     echo ($env:path).split(“;”)
     Get-ChildItem -path "C:\Opscode\inspec\bin" -Recurse
+    }
   displayName: Inspec Setup
 
 - task: qetza.replacetokens.replacetokens-task.replacetokens@3
@@ -13,7 +15,12 @@ steps:
     tokenPrefix: '__'
     tokenSuffix: '__'
 
-- powershell: |
+- task: AzureCLI@1
+  displayName: 'Inspec Testing'
+  inputs:
+    azureSubscription: $(service_connection)
+    scriptLocation: inlineScript
+    inlineScript: |
       echo (az keyvault secret show --vault-name "rdo-uks-bastion-kvs" --name "client-id" --query value -o tsv)
       #echo $(client-secret)
       #echo $(tenant-id)
