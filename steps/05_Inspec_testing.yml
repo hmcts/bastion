@@ -6,9 +6,6 @@ steps:
     echo ($env:path).split(“;”)
     Get-ChildItem -path "C:\Opscode\inspec\bin" -Recurse
     }
-    write-host $(client-id)
-    write-host $(client-secret)
-
   displayName: Inspec Setup
 
 - task: qetza.replacetokens.replacetokens-task.replacetokens@3
