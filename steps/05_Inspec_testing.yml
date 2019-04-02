@@ -24,9 +24,9 @@ steps:
       echo $(tenant-id)
 
 
-      $env:AZURE_CLIENT_ID=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "client-id" --query value -o tsv) \
-      $env:AZURE_CLIENT_SECRET=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "client-secret" --query value -o tsv) \
-      $env:AZURE_TENANT_ID=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "tenant-id" --query value -o tsv) 
+      $env:AZURE_CLIENT_ID=$(client-id) 
+      $env:AZURE_CLIENT_SECRET=$(client-secret) 
+      $env:AZURE_TENANT_ID=$(tenant-id)
       #C:\\opscode\\inspec\\bin\\inspec.bat exec tests -t azure://
 
       echo $AZURE_CLIENT_ID
