@@ -124,16 +124,6 @@ resource "azurerm_virtual_machine" "bastion_vm" {
   }
   }
 
-#  os_profile_linux_config {
-#    disable_password_authentication = false
-#  }
-
-#   connection {
-#    type     = "ssh"
-#    user     = "webserver"
-#    password = "Passw0rd1234"
-#  }
-
     tags {
     environment = "rdo-bastion"
   }
@@ -176,24 +166,22 @@ resource "null_resource" "ansible-runs" {
   
     connection {
       type     = "ssh"
-      user     = "${var.username}"
-      password = "${data.azurerm_key_vault_secret.admin-password.value}"
-      host     = "${azurerm_public_ip.pip-ansible.*.ip_address}"
+      user     = "${data.azurerm_key_vault_secret.admin-user-kvs.value}"
+      password = "${data.azurerm_key_vault_secret.admin-pass-kvs.value}"
+      host     = "${azurerm_public_ip.bastion_public_ip.ip_address}"
     }
   }
 
   provisioner "remote-exec" {
     inline = [
-      "ansible-playbook ~/ansible/playbooks/ansible.yml",
-      "ansible-playbook -i ~/ansible/inventory ~/ansible/playbooks/windows.yml",
-      "ansible-playbook -i ~/ansible/inventory ~/ansible/playbooks/eftservers.yml",
+      "ansible-playbook ~/ansible/playbooks/playbooks.yml"
     ]
 
     connection {
       type     = "ssh"
       user     = "${data.azurerm_key_vault_secret.admin-user-kvs.value}"
       password = "${data.azurerm_key_vault_secret.admin-pass-kvs.value}"
-      host     = "${azurerm_public_ip.bastion_public_ip.*.ip_address}"
+      host     = "${azurerm_public_ip.bastion_public_ip.ip_address}"
     }
   }
 }
