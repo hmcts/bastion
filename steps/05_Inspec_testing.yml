@@ -13,12 +13,7 @@ steps:
     tokenPrefix: '__'
     tokenSuffix: '__'
 
-- task: AzureCLI@1
-  displayName: 'Inspec Testing'
-  inputs:
-    azureSubscription: $(service_connection)
-    scriptLocation: inlineScript
-    inlineScript: |
+- powershell: |
       echo $(client-id)
       echo $(client-secret)
       echo $(tenant-id)
