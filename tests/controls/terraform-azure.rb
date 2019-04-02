@@ -15,8 +15,8 @@ control 'azurerm_virtual_network' do
       it                              { should exist }
       its('location')                 { should eq '__bastion_location__' }
       its('subnets')                  { should eq ["bastion_subnet"] }
-      its('enable_ddos_protection')   { should eq false }
-      its('enable_vm_protection')     { should eq false }
+      #its('enable_ddos_protection')   { should eq false }
+      #its('enable_vm_protection')     { should eq false }
       its('type')                     { should eq 'Microsoft.Network/virtualNetworks' }
     end
 end
@@ -26,8 +26,8 @@ control 'azurerm_network_security_group' do
     it                                { should exist }
     it                                { should allow_ssh_from_internet }
     it                                { should_not allow_rdp_from_internet }
-    its('security_rules')             { should_not be_empty }
-    its('default_security_rules')     { should_not be_empty }
+    #its('security_rules')             { should_not be_empty }
+    #its('default_security_rules')     { should_not be_empty }
   end
 end
 

@@ -4,8 +4,11 @@
   connection: local
   gather_facts: false
   become: true
+  roles:
+    - dev-sec.os-hardening
+    - dev-sec.ssh-hardening
   tasks:
-  - name: ansible create directory example
-    file:
-      path: /tmp/devops_directory
-      state: directory
+    - name: ansible create directory example
+      file:
+        path: /tmp/devops_directory
+        state: directory
