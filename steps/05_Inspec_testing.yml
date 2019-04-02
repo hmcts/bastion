@@ -14,16 +14,16 @@ steps:
     tokenSuffix: '__'
 
 - powershell: |
-      echo $(client-id)
-      echo $(client-secret)
-      echo $(tenant-id)
+      echo (az keyvault secret show --vault-name "rdo-uks-bastion-kvs" --name "client-id" --query value -o tsv)
+      #echo $(client-secret)
+      #echo $(tenant-id)
 
 
-      $env:AZURE_CLIENT_ID=$(client-id) 
-      $env:AZURE_CLIENT_SECRET=$(client-secret) 
-      $env:AZURE_TENANT_ID=$(tenant-id)
+      $env:AZURE_CLIENT_ID=(az keyvault secret show --vault-name "rdo-uks-bastion-kvs" --name "client-id" --query value -o tsv)
+      #$env:AZURE_CLIENT_SECRET=$(client-secret) 
+      #$env:AZURE_TENANT_ID=$(tenant-id)
       #C:\\opscode\\inspec\\bin\\inspec.bat exec tests -t azure://
 
       echo $AZURE_CLIENT_ID
-      echo $AZURE_CLIENT_SECRET
-      echo $AZURE_TENANT_ID
+      #echo $AZURE_CLIENT_SECRET
+      #echo $AZURE_TENANT_ID
