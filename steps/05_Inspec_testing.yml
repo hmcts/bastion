@@ -13,7 +13,12 @@ steps:
     tokenPrefix: '__'
     tokenSuffix: '__'
 
-- powershell: |
+- task: AzureCLI@1
+  displayName: 'Inspec Testing'
+  inputs:
+    azureSubscription: $(service_connection)
+    scriptLocation: inlineScript
+    inlineScript: |
       $env:AZURE_CLIENT_ID=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "client-id" --query value -o tsv) \
       $env:AZURE_CLIENT_SECRET=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "client-secret" --query value -o tsv) \
       $env:AZURE_TENANT_ID=(az keyvault secret show --vault-name "rdo-bastion-kvs" --name "tenant-id" --query value -o tsv) \

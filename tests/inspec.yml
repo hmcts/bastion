@@ -1,0 +1,9 @@
+name: test
+title: Azure TDD
+version: 0.1.0
+inspec_version: '>= 3.6.0'
+depends:
+  - name: inspec-azure
+    git: https://github.com/inspec/inspec-azure.git
+supports:
+  - platform: azure
