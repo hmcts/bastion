@@ -26,5 +26,5 @@ steps:
       $env:AZURE_TENANT_ID=(Get-AzureKeyVaultSecret -VaultName "$(bastion_name)-kvs" -name "tenant-id").SecretValueText
       $env:AZURE_SUBSCRIPTION_ID=(Get-AzureKeyVaultSecret -VaultName "$(bastion_name)-kvs" -name "subscription-id").SecretValueText
 
-      C:\\opscode\\inspec\\bin\\inspec.bat exec tests -t azure://
+      C:\\opscode\\inspec\\bin\\inspec.bat exec $(build.artifactstagingdirectory)/tests -t azure://
     azurePowerShellVersion: LatestVersion  

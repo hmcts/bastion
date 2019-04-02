@@ -14,6 +14,13 @@ steps:
       contents: '**'
       TargetFolder: '$(build.artifactstagingdirectory)/ansible'
 
+  - task: CopyFiles@2
+    displayName: 'Copy Inspec Tests'
+    inputs:
+      SourceFolder: tests
+      contents: '**'
+      TargetFolder: '$(build.artifactstagingdirectory)/tests'
+
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
     inputs:
