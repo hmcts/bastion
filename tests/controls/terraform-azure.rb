@@ -1,5 +1,5 @@
 # encoding: utf-8
-# copyright: 2018, The Authors
+# 
 
 title 'Azure Testing'
 
@@ -11,7 +11,7 @@ control 'azurerm_resource_group' do
 end
 
 control 'azurerm_virtual_network' do
-    describe azurerm_virtual_network(resource_group: '__bastion_rg__', name: '__bastion_rg__-vn') do
+    describe azurerm_virtual_network(resource_group: '__bastion_rg__', name: '__bastion_name__-vn') do
       it                              { should exist }
       its('location')                 { should eq '__bastion_location__' }
       its('subnets')                  { should eq ["bastion_subnet"] }
@@ -22,7 +22,7 @@ control 'azurerm_virtual_network' do
 end
 
 control 'azurerm_network_security_group' do
-  describe azurerm_network_security_group(resource_group: '__bastion_rg__', name: '__bastion_rg__-nsg') do
+  describe azurerm_network_security_group(resource_group: '__bastion_rg__', name: '__bastion_name__-nsg') do
     it                                { should exist }
     it                                { should allow_ssh_from_internet }
     it                                { should_not allow_rdp_from_internet }
@@ -47,7 +47,7 @@ describe azure_virtual_machine_data_disk(group_name: '__bastion_rg__', name: '__
   end
 end
 
-describe azurerm_storage_account_blob_container(resource_group: '__bastion_rg__', storage_account_name: 'rdobastionsa', blob_container_name: 'rdo-bastion') do
+describe azurerm_storage_account_blob_container(resource_group: '__bastion_rg__', storage_account_name: '__bastion_sa__', blob_container_name: '__bastion_name__') do
     it                                { should exist }
       its('properties') { should have_attributes(publicAccess: 'None') }
 end
