@@ -19,7 +19,7 @@ steps:
     azureSubscription: $(service_connection)
     scriptLocation: inlineScript
     inlineScript: |
-      $env:AZURE_CLIENT_ID="<Client ID>" \
-      $env:AZURE_CLIENT_SECRET="<Tenant ID>" \
-      $env:AZURE_TENANT_ID="<Client Secret>" \
+      $env:AZURE_CLIENT_ID=$(client-id) \
+      $env:AZURE_CLIENT_SECRET=$(client-secret) \
+      $env:AZURE_TENANT_ID=$(tenant-id) \
       C:\\opscode\\inspec\\bin\\inspec.bat exec tests -t azure://
