@@ -11,7 +11,6 @@
   roles:
     - dev-sec.os-hardening
     #- dev-sec.ssh-hardening
-    - wtanaka.ab
   tasks:
     - name: ansible create directory example
       file:
