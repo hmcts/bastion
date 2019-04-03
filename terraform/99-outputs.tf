@@ -1,4 +1,5 @@
 
+
 output "bastion_priv_ip" {
   description = "private ip addresses of the vm nics"
   value       = "${azurerm_network_interface.bastion_nic.*.private_ip_address}"

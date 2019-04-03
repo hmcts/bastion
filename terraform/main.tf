@@ -1,11 +1,4 @@
-terraform {
-  backend "azurerm" {
-  storage_account_name    = "__bastion_sa__"
-    container_name        = "__bastion_name__"
-    key                   = "__bastion_name__/terraform.tfstate"
-	  access_key            = "__bastion_sk__"
-  }
-}
+
 
 data "azurerm_resource_group" "bastion_rg" {
   name = "__bastion_rg__"
