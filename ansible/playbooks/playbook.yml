@@ -7,10 +7,9 @@
   vars:
     ssh_permit_root_login: yes
     ssh_kerberos_support: true
-    ssh_allow_users: '*@hmcts.net'
   roles:
     - dev-sec.os-hardening
-    #- dev-sec.ssh-hardening
+    - dev-sec.ssh-hardening
   tasks:
     - name: ansible create directory example
       file:
