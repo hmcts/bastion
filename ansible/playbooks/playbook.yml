@@ -4,10 +4,10 @@
   connection: local
   gather_facts: true
   become: true
-  vars:
-    ssh_permit_root_login: True
-    ssh_kerberos_support: True
-    ssh_allow_users: '*@hmcts.net'
+  #vars:
+    #ssh_permit_root_login: True
+    #ssh_kerberos_support: True
+    #ssh_allow_users: '*@hmcts.net'
   roles:
     - dev-sec.os-hardening
     #- dev-sec.ssh-hardening
