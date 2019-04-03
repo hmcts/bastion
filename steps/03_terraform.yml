@@ -71,13 +71,4 @@ steps:
      Write-Host ("##vso[task.setvariable variable=bastion_priv_ip;isOutput=true]$priv_ip")
      Write-Host ("##vso[task.setvariable variable=bastion_pub_ip;isOutput=true]$pub_ip")
      Write-Host ("##vso[task.setvariable variable=bastion_hostname;isOutput=true]$bastion_hostname")
-  name: print_ips
-
-- script: echo $(print_ips.bastion_priv_ip)
-  name: bastion_priv_ip
-
-- script: echo $(print_ips.bastion_pub_ip)
-  name: bastion_pub_ip
-
-- script: echo $(print_ips.bastion_hostname)
-  name: bastion_hostname
+  name: Variable_Outputs
