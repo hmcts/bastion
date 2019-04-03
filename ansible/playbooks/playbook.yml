@@ -10,7 +10,8 @@
     ssh_allow_users: '*@hmcts.net'
   roles:
     - dev-sec.os-hardening
-    - dev-sec.ssh-hardening
+    #- dev-sec.ssh-hardening
+    - wtanaka.ab
   tasks:
     - name: ansible create directory example
       file:
