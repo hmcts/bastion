@@ -12,7 +12,7 @@ output "bastion_pub_ip" {
 
 output "bastion_hostname" {
   description = "public ip addresses of the vm nics"
-  value       = "${azurerm_virtual_machine.*.bastion_vm.name}"
+  value       = "${azurerm_virtual_machine.bastion_vm.*.name}"
 }
 
 
