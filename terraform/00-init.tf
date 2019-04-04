@@ -8,7 +8,3 @@ terraform {
 	  access_key            = "__bastion_sk__"
   }
 }
-
-providers {
-  azurerm = "1.24"
-}
