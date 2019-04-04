@@ -1,3 +1,7 @@
+variable "key_vault_uri" {
+  default = "https://__bastion_name__-kvs.vault.azure.net/"
+}
+
 variable "resource_group" {
   default = "__bastion_name__-rg"
 }

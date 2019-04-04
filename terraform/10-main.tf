@@ -13,12 +13,12 @@ data "azurerm_resource_group" "bastion_rg" {
 
 data "azurerm_key_vault_secret" "admin-pass-kvs" {
 name = "admin-password"
-vault_uri = "https://${var.bastion_name}-kvs.vault.azure.net/"
+vault_uri = "${var.key_vault_uri}"
 }
 
 data "azurerm_key_vault_secret" "admin-user-kvs" {
 name = "admin-username"
-vault_uri = "https://${var.bastion_name}-kvs.vault.azure.net/"
+vault_uri = "${var.key_vault_uri}"
 }
 
 resource "azurerm_subnet" "bastion_subnet" {
