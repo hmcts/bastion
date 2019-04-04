@@ -4,6 +4,13 @@ data "azurerm_resource_group" "bastion_rg" {
   name = "${var.resource_group}"
 }
 
+# resource "azurerm_management_lock" "resource-group-lock" {
+#   name       = "${var.resource_group}-lock"
+#   scope      = "${azurerm_resource_group.perftest_resource_group.id}"
+#   lock_level = "CanNotDelete"
+# }
+
+
 data "azurerm_key_vault_secret" "admin-pass-kvs" {
 name = "admin-password"
 vault_uri = "https://${var.bastion_name}-kvs.vault.azure.net/"
