@@ -1,5 +1,5 @@
 variable "resource_group" {
-  default = "__bastion_rg__"
+  default = "__bastion_name__-rg"
 }
 
 variable "location" {
