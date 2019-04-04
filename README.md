@@ -33,3 +33,22 @@ Ansible-Galaxy Roles:
 - src: dev-sec.os-hardening
 
 Running these roles, will help reduce your Surface Area of attack, ensure your Server and Core configurations is Secure to industry Standards, these 2 roles will NOT maintain your Patch Management and more complex configurations like Firewalls / SELinux etc.
+
+
+# Terraform Modile
+
+This is a terraform module for creating an bastion host in Azure
+
+## Usage
+```
+module "rdo-uks-bastion" {
+  source                = "git@github.com:hmcts/rdo-uks-bastion//terraform"
+  bastion_name          = "HOST / STROAGE Name"
+  resource_group        = "RESOURCE GROUP MATCH BASTION NAME WITH -RG at END"
+  key_vault_uri         = "https://KEY_VAULT_LOOKUP_NAME.vault.azure.net/"
+  location              = "LOCATION"
+  virtual_machine_count = 1
+  address_space         = "IP_RANGE"
+  ssh_key               = "SSH_PUBLIC_KEY_PATH"
+}
+```
