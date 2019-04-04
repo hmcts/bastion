@@ -11,7 +11,6 @@ variable "virtual_machine_name" {
 }
 
 variable "bastion_name" {
-  type    = "string"
   default = "__bastion_name__"
 }
 variable "virtual_machine_count" {
