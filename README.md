@@ -7,13 +7,13 @@ This will build a Bastion host in the desired DMZ network and peer into all the 
 As part of the build this will create an empty KeyVault - You will need to populate this keyvault before running the job a second time, as the 
 build requires the following vaules
 
-Need to add following to keyvault
-admin-password
-admin-username
-client-id
-client-secret
-subscription-id
-tenant-id
+Need to add following to keyvault:
+- admin-password
+- admin-username
+- client-id
+- client-secret
+- subscription-id
+- tenant-id
 
 ## Build Pipeline
 
