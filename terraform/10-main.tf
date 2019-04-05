@@ -163,7 +163,7 @@ resource "null_resource" "ansible-runs" {
     ]
 
   provisioner "file" {
-    source      = "git@github.com:hmcts/rdo-uks-bastion//terraform/ansible/"
+    source      = "${file("${path.module}/ansible/")}"
     destination = "~/ansible/"
   
     connection {
