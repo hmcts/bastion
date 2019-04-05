@@ -163,7 +163,7 @@ resource "null_resource" "ansible-runs" {
     ]
 
   provisioner "file" {
-    source      = "ansible/"
+    source      = "${path.cwd}/ansible"
     destination = "~/ansible/"
   
     connection {
