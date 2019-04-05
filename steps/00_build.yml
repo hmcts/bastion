@@ -2,7 +2,7 @@
 steps:
 
   - powershell: |
-      gci $(build.artifactstagingdirectory)
+      get-childitem
       pwd
 
   - task: CopyFiles@2
