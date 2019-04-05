@@ -1,12 +1,12 @@
 
 
 data "azurerm_resource_group" "bastion_rg" {
-  name = "${var.resource_group}"
+  name = "${var.bastion_name}-rg"
 }
 
 # resource "azurerm_management_lock" "resource-group-lock" {
-#   name       = "${var.resource_group}-lock"
-#   scope      = "${azurerm_resource_group.perftest_resource_group.id}"
+#   name       = "${var.bastion_name}-lock"
+#   scope      = "${azurerm_resource_group.bastion_rg.id}"
 #   lock_level = "CanNotDelete"
 # }
 
@@ -24,7 +24,7 @@ vault_uri = "${var.key_vault_uri}"
 resource "azurerm_subnet" "bastion_subnet" {
   name                            = "bastion_subnet"
   virtual_network_name            = "${azurerm_virtual_network.bastion_vnet.name}"
-  resource_group_name             = "${var.resource_group}"
+  resource_group_name             = "${var.bastion_name}-rg"
   address_prefix                  = "${var.address_space}"
 }
 
@@ -32,14 +32,14 @@ resource "azurerm_virtual_network" "bastion_vnet" {
   address_space                   = ["${var.address_space}"]
   location                        = "${var.location}"
   name                            = "${var.bastion_name}-vn"
-  resource_group_name             = "${var.resource_group}"
+  resource_group_name             = "${var.bastion_name}-rg"
   tags                            = "${var.tags}"
 }
 
 resource "azurerm_network_interface" "bastion_nic" {
   name                            = "${var.virtual_machine_name}-${format("%02d",count.index)}-nic"
   location                        = "${var.location}"
-  resource_group_name             = "${var.resource_group}"
+  resource_group_name             = "${var.bastion_name}-rg"
   count                           = "${var.virtual_machine_count}"
   tags                            = "${var.tags}"
 
@@ -54,7 +54,7 @@ resource "azurerm_network_interface" "bastion_nic" {
 resource "azurerm_public_ip" "bastion_public_ip" {
   name                            = "${var.virtual_machine_name}-${format("%02d",count.index)}-pip"
   location                        = "${var.location}"
-  resource_group_name             = "${var.resource_group}"
+  resource_group_name             = "${var.bastion_name}-rg"
   public_ip_address_allocation    = "static"
   count                           = "${var.virtual_machine_count}"
   tags                            = "${var.tags}"
@@ -63,7 +63,7 @@ resource "azurerm_public_ip" "bastion_public_ip" {
 resource "azurerm_network_security_group" "bastion_nsg" {
   name                            = "${var.bastion_name}-nsg"
   location                        = "${var.location}"
-  resource_group_name             = "${var.resource_group}"
+  resource_group_name             = "${var.bastion_name}-rg"
   tags                            = "${var.tags}"
 }
 
@@ -77,14 +77,14 @@ resource "azurerm_network_security_rule" "bastion_nsg_rule_ssh" {
   destination_port_range          = 22
   source_address_prefix           = "*"
   destination_address_prefix      = "*"
-  resource_group_name             = "${var.resource_group}"
+  resource_group_name             = "${var.bastion_name}-rg"
   network_security_group_name     = "${azurerm_network_security_group.bastion_nsg.name}" 
 }
 
 resource "azurerm_virtual_machine" "bastion_vm" {
   name                            = "${var.virtual_machine_name}-${format("%02d",count.index)}"
   location                        = "${var.location}"
-  resource_group_name             = "${var.resource_group}" 
+  resource_group_name             = "${var.bastion_name}-rg" 
   network_interface_ids           = ["${azurerm_network_interface.bastion_nic.*.id[count.index]}"]
   vm_size                         = "Standard_B1s"
   count                           = "${var.virtual_machine_count}"
@@ -135,7 +135,7 @@ resource "azurerm_virtual_machine" "bastion_vm" {
 resource "azurerm_virtual_machine_extension" "ansible_extension" {
   name                              = "Ansible-Agent-Install"
   location                          = "${var.location}"
-  resource_group_name               = "${var.resource_group}"
+  resource_group_name               = "${var.bastion_name}-rg"
   virtual_machine_name              = "${azurerm_virtual_machine.bastion_vm.name}"
   publisher                         = "Microsoft.Azure.Extensions"
   type                              = "CustomScript"
