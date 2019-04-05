@@ -1,6 +1,11 @@
   
 steps:
-
+  - task: CopyFiles@2
+    displayName: 'Copy Terraform files to artifacts'
+    inputs:
+      SourceFolder: terraform
+      contents: '**'
+      TargetFolder: '$(build.artifactstagingdirectory)/'
 
   - task: CopyFiles@2
     displayName: 'Copy Ansible files to artifacts'
