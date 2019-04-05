@@ -5,27 +5,6 @@ steps:
       get-childitem
       pwd
 
-  - task: CopyFiles@2
-    displayName: 'Copy Terraform files to artifacts'
-    inputs:
-      SourceFolder: terraform
-      contents: '**'
-      TargetFolder: '$(build.artifactstagingdirectory)/terraform'
-
-  - task: CopyFiles@2
-    displayName: 'Copy Ansible files to artifacts'
-    inputs:
-      SourceFolder: ansible
-      contents: '**'
-      TargetFolder: '$(build.artifactstagingdirectory)/ansible'
-
-  - task: CopyFiles@2
-    displayName: 'Copy Inspec Tests'
-    inputs:
-      SourceFolder: tests
-      contents: '**'
-      TargetFolder: '$(build.artifactstagingdirectory)/tests'
-
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
     inputs:
