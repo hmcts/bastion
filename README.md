@@ -42,7 +42,7 @@ This is a terraform module for creating an bastion host in Azure
 ## Usage
 ```
 module "rdo-uks-bastion" {
-  source                = "git@github.com:hmcts/rdo-uks-bastion//terraform"
+  source                = "git@github.com:hmcts/rdo-uks-bastion?ref=master"
   bastion_name          = "HOST / STROAGE Name"
   resource_group        = "RESOURCE GROUP MATCH BASTION NAME WITH -RG at END"
   key_vault_uri         = "https://KEY_VAULT_LOOKUP_NAME.vault.azure.net/"
