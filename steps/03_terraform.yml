@@ -14,7 +14,7 @@ steps:
 - task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Release-Terraform.Xpirit-Vsts-Release-Terraform.Terraform@2
   displayName: 'Terraform init'
   inputs:
-    TemplatePath: '$(build.artifactstagingdirectory)/terraform'
+    TemplatePath: '$(build.artifactstagingdirectory)'
     Arguments: init
     InstallTerraform: true
     UseAzureSub: true
@@ -28,8 +28,8 @@ steps:
 - task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Release-Terraform.Xpirit-Vsts-Release-Terraform.Terraform@2
   displayName: 'Terraform plan'
   inputs:
-    TemplatePath: '$(build.artifactstagingdirectory)/terraform'
-    Arguments: 'plan -out=$(build.artifactstagingdirectory)\terraform\tfplan -var ssh_key=$(System.DefaultWorkingDirectory)\$(pubkeysecfile) -var private_key=$(System.DefaultWorkingDirectory)\$(privkeysecfile)'
+    TemplatePath: '$(build.artifactstagingdirectory)'
+    Arguments: 'plan -out=$(build.artifactstagingdirectory)\tfplan -var ssh_key=$(System.DefaultWorkingDirectory)\$(pubkeysecfile) -var private_key=$(System.DefaultWorkingDirectory)\$(privkeysecfile)'
     InstallTerraform: true
     UseAzureSub: true
     ConnectedServiceNameARM: $(service_connection)
@@ -42,9 +42,9 @@ steps:
 - task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Release-Terraform.Xpirit-Vsts-Release-Terraform.Terraform@2
   displayName: 'Terraform apply'
   inputs:
-    TemplatePath: '$(build.artifactstagingdirectory)/terraform'
+    TemplatePath: '$(build.artifactstagingdirectory)'
     Arguments: apply
-    PlanPath: '$(build.artifactstagingdirectory)\terraform\tfplan'
+    PlanPath: '$(build.artifactstagingdirectory)\tfplan'
     InstallTerraform: true
     UseAzureSub: true
     ConnectedServiceNameARM: $(service_connection)
@@ -52,7 +52,7 @@ steps:
 - task: raul-arrieta.terraform-outputs.terraform-outputs.terraform-outputs@0
   displayName: 'Terraform Outputs'
   inputs:
-    workingDirectory: '$(build.artifactstagingdirectory)/terraform'
+    workingDirectory: '$(build.artifactstagingdirectory)'
     pathToTerraform: 'C:\terraform-download'
 
 - powershell: |
