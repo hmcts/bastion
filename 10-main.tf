@@ -162,6 +162,12 @@ resource "null_resource" "ansible-runs" {
         "azurerm_virtual_machine.bastion_vm"
     ]
 
+
+  provisioner "local-exec" {
+    inline = [
+      "cp -r ../ansible/ ${path.module/ansible}"
+    ]
+  }
   provisioner "file" {
     source      = "ansible/"
     destination = "~/ansible/"
