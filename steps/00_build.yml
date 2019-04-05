@@ -4,11 +4,12 @@ steps:
   - powershell: |
       get-childitem
       pwd
+      ls -al $(System.DefaultWorkingDirectory)
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
     inputs:
-      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      pathtoPublish: '$(System.DefaultWorkingDirectory)'
       artifactName: 'drop' 
       publishLocation: 'Container'
       targetPath: '$(build.artifactstagingdirectory)'
