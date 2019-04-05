@@ -11,7 +11,7 @@ steps:
 - task: qetza.replacetokens.replacetokens-task.replacetokens@3
   displayName: 'Replace tokens in **/*.*'
   inputs:
-    targetFiles: '$(build.artifactstagingdirectory)/**/*.rb'
+    targetFiles: '$(System.DefaultWorkingDirectory)/**/*.rb'
     tokenPrefix: '__'
     tokenSuffix: '__'
 
@@ -26,5 +26,5 @@ steps:
       $env:AZURE_TENANT_ID=(Get-AzureKeyVaultSecret -VaultName "$(bastion_name)-kvs" -name "tenant-id").SecretValueText
       $env:AZURE_SUBSCRIPTION_ID=(Get-AzureKeyVaultSecret -VaultName "$(bastion_name)-kvs" -name "subscription-id").SecretValueText
 
-      C:\\opscode\\inspec\\bin\\inspec.bat exec $(build.artifactstagingdirectory)/tests -t azure://
+      C:\\opscode\\inspec\\bin\\inspec.bat exec $(System.DefaultWorkingDirectory)/tests -t azure://
     azurePowerShellVersion: LatestVersion  
