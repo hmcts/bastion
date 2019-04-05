@@ -3,7 +3,7 @@ steps:
   - task: CopyFiles@2
     displayName: 'Copy Root files to artifacts'
     inputs:
-      SourceFolder: /
+      SourceFolder: '/'
       contents: '**'
       TargetFolder: '$(build.artifactstagingdirectory)/'
 
