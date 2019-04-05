@@ -14,7 +14,7 @@ steps:
 - task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Release-Terraform.Xpirit-Vsts-Release-Terraform.Terraform@2
   displayName: 'Terraform init'
   inputs:
-    TemplatePath: '$(build.artifactstagingdirectory)'
+    TemplatePath: '$(System.DefaultWorkingDirectory)'
     Arguments: init
     InstallTerraform: true
     UseAzureSub: true
@@ -28,8 +28,8 @@ steps:
 - task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Release-Terraform.Xpirit-Vsts-Release-Terraform.Terraform@2
   displayName: 'Terraform plan'
   inputs:
-    TemplatePath: '$(build.artifactstagingdirectory)'
-    Arguments: 'plan -out=$(build.artifactstagingdirectory)\tfplan -var ssh_key=$(System.DefaultWorkingDirectory)\$(pubkeysecfile) -var private_key=$(System.DefaultWorkingDirectory)\$(privkeysecfile)'
+    TemplatePath: '$(System.DefaultWorkingDirectory)'
+    Arguments: 'plan -out=$(System.DefaultWorkingDirectory)\tfplan -var ssh_key=$(System.DefaultWorkingDirectory)\$(pubkeysecfile) -var private_key=$(System.DefaultWorkingDirectory)\$(privkeysecfile)'
     InstallTerraform: true
     UseAzureSub: true
     ConnectedServiceNameARM: $(service_connection)
@@ -42,9 +42,9 @@ steps:
 - task: petergroenewegen.PeterGroenewegen-Xpirit-Vsts-Release-Terraform.Xpirit-Vsts-Release-Terraform.Terraform@2
   displayName: 'Terraform apply'
   inputs:
-    TemplatePath: '$(build.artifactstagingdirectory)'
+    TemplatePath: '$(System.DefaultWorkingDirectory)'
     Arguments: apply
-    PlanPath: '$(build.artifactstagingdirectory)\tfplan'
+    PlanPath: '$(System.DefaultWorkingDirectory)\tfplan'
     InstallTerraform: true
     UseAzureSub: true
     ConnectedServiceNameARM: $(service_connection)
@@ -52,11 +52,11 @@ steps:
 - task: raul-arrieta.terraform-outputs.terraform-outputs.terraform-outputs@0
   displayName: 'Terraform Outputs'
   inputs:
-    workingDirectory: '$(build.artifactstagingdirectory)'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
     pathToTerraform: 'C:\terraform-download'
 
 - powershell: |
-     $loc = '$(build.artifactstagingdirectory)/terraform'
+     $loc = '$(System.DefaultWorkingDirectory)'
 
      set-location $loc
      & C:\terraform-download\terraform.exe output bastion_priv_ip >"priv_ip"
