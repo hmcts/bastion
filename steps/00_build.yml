@@ -4,7 +4,7 @@ steps:
   - powershell: |
       get-childitem
       pwd
-      ls -al $(System.DefaultWorkingDirectory)
+      ls $(System.DefaultWorkingDirectory)
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
