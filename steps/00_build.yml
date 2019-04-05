@@ -3,6 +3,7 @@ steps:
 
   - powershell: |
       gci $(build.artifactstagingdirectory)
+      pwd
 
   - task: CopyFiles@2
     displayName: 'Copy Terraform files to artifacts'
