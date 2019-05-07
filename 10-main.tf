@@ -1,7 +1,7 @@
 
 
 data "azurerm_resource_group" "bastion_rg" {
-  name = "${var.bastion_name}-rg"
+  name = "${var.name}-rg"
 }
 
 # resource "azurerm_management_lock" "resource-group-lock" {
