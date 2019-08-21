@@ -137,7 +137,7 @@ resource "azurerm_virtual_machine_extension" "ansible_extension" {
   name                              = "Ansible-Agent-Install"
   location                          = "${var.location}"
   resource_group_name               = "${var.bastion_name}-rg"
-  virtual_machine_name              = "${azurerm_virtual_machine.bastion_vm.name}"
+  virtual_machine_name              = "${azurerm_virtual_machine.bastion_vm.*.name}"
   publisher                         = "Microsoft.Azure.Extensions"
   type                              = "CustomScript"
   type_handler_version              = "2.0"
@@ -171,7 +171,7 @@ resource "null_resource" "ansible-runs" {
       type                        = "ssh"
       user                        = "${data.azurerm_key_vault_secret.admin-user-kvs.value}"
       password                    = "${data.azurerm_key_vault_secret.admin-pass-kvs.value}"
-      host                        = "${azurerm_public_ip.bastion_public_ip.ip_address}"
+      host                        = "${azurerm_public_ip.bastion_public_ip.*.ip_address}"
     }
   }
 
@@ -185,7 +185,7 @@ resource "null_resource" "ansible-runs" {
       type                          = "ssh"
       user                          = "${data.azurerm_key_vault_secret.admin-user-kvs.value}"
       password                      = "${data.azurerm_key_vault_secret.admin-pass-kvs.value}"
-      host                          = "${azurerm_public_ip.bastion_public_ip.ip_address}"
+      host                          = "${azurerm_public_ip.bastion_public_ip.*.ip_address}"
     }
   }
 }
