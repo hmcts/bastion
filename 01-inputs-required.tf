@@ -23,3 +23,6 @@ variable "address_space" {
 }
 
 variable "ssh_key" {}
+
+variable "private_key" { }
+
