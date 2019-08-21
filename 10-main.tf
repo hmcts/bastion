@@ -125,7 +125,7 @@ resource "azurerm_virtual_machine" "bastion_vm" {
       type                          = "ssh"
       user                          = "${data.azurerm_key_vault_secret.admin-user-kvs.value}"
       password                      = "${data.azurerm_key_vault_secret.admin-pass-kvs.value}"
-      host                          = "${azurerm_public_ip.bastion_public_ip.ip_address}"
+      host                          = "${azurerm_public_ip.bastion_public_ip.*.ip_address}"
   }
   }
 
