@@ -1,7 +1,7 @@
 
 
 data "azurerm_resource_group" "bastion_rg" {
-  name = "${var.name}-rg"
+  name = "${var.bastion_name}-rg"
 }
 
 # resource "azurerm_management_lock" "resource-group-lock" {
@@ -55,7 +55,7 @@ resource "azurerm_public_ip" "bastion_public_ip" {
   name                            = "${var.virtual_machine_name}-${format("%02d",count.index)}-pip"
   location                        = "${var.location}"
   resource_group_name             = "${var.bastion_name}-rg"
-  public_ip_address_allocation    = "static"
+  allocation_method               = "static"
   count                           = "${var.virtual_machine_count}"
   tags                            = "${var.tags}"
 }
