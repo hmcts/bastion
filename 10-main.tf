@@ -121,10 +121,11 @@ resource "azurerm_virtual_machine" "bastion_vm" {
       inline = [
         "mkdir ~/ansible"
       ]
-    connection = {
+    connection {
       type                          = "ssh"
       user                          = "${data.azurerm_key_vault_secret.admin-user-kvs.value}"
       password                      = "${data.azurerm_key_vault_secret.admin-pass-kvs.value}"
+      host                          = "${azurerm_public_ip.bastion_public_ip.ip_address}"
   }
   }
 
@@ -166,7 +167,7 @@ resource "null_resource" "ansible-runs" {
     source      = "${path.module}/ansible/"
     destination = "~/ansible/"
   
-    connection = {
+    connection {
       type                        = "ssh"
       user                        = "${data.azurerm_key_vault_secret.admin-user-kvs.value}"
       password                    = "${data.azurerm_key_vault_secret.admin-pass-kvs.value}"
@@ -180,7 +181,7 @@ resource "null_resource" "ansible-runs" {
       "ansible-playbook ~/ansible/playbooks/playbook.yml"
     ]
 
-    connection = {
+    connection {
       type                          = "ssh"
       user                          = "${data.azurerm_key_vault_secret.admin-user-kvs.value}"
       password                      = "${data.azurerm_key_vault_secret.admin-pass-kvs.value}"
