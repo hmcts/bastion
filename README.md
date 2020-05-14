@@ -39,6 +39,17 @@ To use this repo, you need to do the following
     virtual_machine_count = 1
     '''
 
+    Once filled out, you need to run
+
+    '''terraform
+    terraform init -input=false \
+    -backend=true \
+    -backend-config="storage_account_name=#####TOO_FILL_OUT###" \
+    -backend-config="key=bastion/terraform.tfstate" \
+    -backend-config="container_name=terraform-state" \
+    -backend-config="resource_group_name=####TOO_FILL_OUT###"
+    '''
+
 To-Do's
     Fix Ansible provisioning with tf 12 - error: inappropriate value for attribute "host": string required.
     Wait for Solution for|:
