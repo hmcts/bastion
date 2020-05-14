@@ -1,28 +1,11 @@
-variable "key_vault_uri" {
-  default = "https://__bastion_name__-kvs.vault.azure.net/"
-}
-
-variable "location" {
-  default = "__bastion_location__"
-}
-
-variable "virtual_machine_name" {
-  default = "__bastion_name__-vm"
-}
-
-variable "bastion_name" {
-  default = "__bastion_name__"
-}
-variable "virtual_machine_count" {
-    default = 1
-}
-
+variable "bastion_name" {}
+variable "location" {}
 variable "address_space" {
-  description = "The address space used by the new vnet"
-  default     = "10.97.101.0/28"
+    type = list
 }
+variable "environment" {}
+variable "subnet" {}
 
-variable "ssh_key" {}
 
-variable "private_key" { }
-
+variable "virtual_machine_name" {}
+variable "virtual_machine_count" {}

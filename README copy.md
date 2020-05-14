@@ -8,7 +8,7 @@ To use this repo, you need to do the following
     terraform init
     terraform apply
 
-    Note: Place a .tfvars file in the run_once folder with these variables filled out
+    Note: Place a .tfvars file with these variables filled out
 
     ```bash
     bastion_name = ""
@@ -24,20 +24,6 @@ To use this repo, you need to do the following
 
     In the root folder should have the basic's terraform to build a Resource Group and Virtual Network, when you copy either Paas or Iaas files into the root folder,
     this will provision which ever bastion you require.
-
-   Note: Place a .tfvars file in the root folder with these variables filled out
-
-    '''bash
-    bastion_name = ""
-    location = ""
-    address_space = [""]
-    subnet = ""
-    environment = ""
-    bastion_infra_rg = ""
-    bastion_infra_key_vault = ""
-    virtual_machine_name = ""
-    virtual_machine_count = 1
-    '''
 
 To-Do's
     Fix Ansible provisioning with tf 12 - error: inappropriate value for attribute "host": string required.
