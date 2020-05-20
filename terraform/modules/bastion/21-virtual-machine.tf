@@ -1,8 +1,8 @@
 
 resource "azurerm_linux_virtual_machine" "bastion" {
   name                  = var.bastion_name
-  resource_group_name   = azurerm_resource_group.bastion.name
-  location              = azurerm_resource_group.bastion.location
+  resource_group_name   = var.resource_group_name
+  location              = var.location
   tags                  = local.common_tags
 
   size                  = "Standard_B1s"

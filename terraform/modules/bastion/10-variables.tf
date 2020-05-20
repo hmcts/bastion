@@ -10,18 +10,8 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "vnet_name" {
-  description = "Virtual network name that contains the bastion host"
-  type        = string
-}
-
-variable "vnet_address_space" {
-  description = "Virtual network address space that contains the bastion host"
-  type        = list
-}
-
-variable "vnet_subnet_address" {
-  description = "Virtual network subnet address that contains the bastion host"
+variable "subnet_id" {
+  description = "Virtual network subnet id that contains the bastion host"
   type        = string
 }
 
