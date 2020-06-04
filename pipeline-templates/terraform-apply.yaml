@@ -1,0 +1,26 @@
+jobs:
+- job: Deploy
+  pool:
+    vmImage: ${{ variables.agentPool }}
+
+  steps:
+
+  - task: TerraformInstaller@0
+    displayName: "Install terraform"
+    inputs:
+    terraformVersion: ${{ variables.terraformVersion }}
+
+  - task: TerraformCLI@0
+    displayName: terraform init
+    inputs:
+      command: init
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform
+      backendType: azurerm
+      ensurebackend: true
+      backendServiceArm: dcd-cft-sandbox
+      backendAzureRmResourceGroupName: gh-asb-test
+      backendAzureRmResourceGroupLocation: uksouth
+      backendAzureRmStorageAccountName: ghasbtest
+      backendAzureRmStorageAccountSku: Standard_LRS
+      backendAzureRmContainerName: tfstate
+      backendAzureRmKey: storagebackup/terraform.tfstate

@@ -1,0 +1,38 @@
+trigger:
+- master
+
+variables:
+  terraformVersion: 0.12.25
+  agentPool: Ubuntu-18.04
+
+stages:
+- stage: TestValidatePlan
+  displayName: "Test, validate and plan terraform"
+
+  - template: pipeline-steps/terraform-test.yaml
+    parameters:
+      terraformVersion: ${{ variables.terraformVersion }}
+      tfstate_serviceConnection: dcd-cft-sandbox
+      tfstate_rg: dcd-cft-sandbox-tfstate
+      tfstate_location: uksouth
+      tfstate_storage_account: tfstate531ff96dc0b42082
+      component: sbox
+
+  - template: pipeline-steps/terraform-plan.yaml
+    parameters:
+      terraformVersion: ${{ variables.terraformVersion }}
+      deployment_serviceConnection: dcd-cft-sandbox
+      component: sbox
+
+  jobs:
+  - job: Test
+    pool:
+      vmImage: ${{ variables.agentPool }}
+
+    steps:
+
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Artifact: drop'
+      inputs:
+        targetPath: $(System.DefaultWorkingDirectory)
+        artifactName: drop

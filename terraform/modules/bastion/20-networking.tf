@@ -1,4 +1,3 @@
-
 resource "azurerm_public_ip" "bastion" {
   name                = "${var.bastion_name}-pip"
   resource_group_name = var.resource_group_name
@@ -38,12 +37,12 @@ resource "azurerm_network_security_rule" "bastion" {
   network_security_group_name = azurerm_network_security_group.bastion.name 
   resource_group_name = var.resource_group_name
   name                        = "SSH-in"
-  priority                    = 200
+  priority                    = 1000
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
   source_port_range           = "*"
   destination_port_range      = 22
-  source_address_prefix       = "*"
+  source_address_prefix       = "149.22.10.11"
   destination_address_prefix  = "*"
 }

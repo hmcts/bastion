@@ -1,4 +1,3 @@
-
 variable "location" {
   description = "Azure resource location"
   default     = "uksouth"
@@ -27,6 +26,11 @@ variable "subnet_name" {
 
 variable "subnet_address" {
   description = "Virtual network subnet address that contains the bastion host"
+  type        = string
+}
+
+variable "keyvault_name" {
+  description = "Name of the key vault that contains the bastion host secrets"
   type        = string
 }
 

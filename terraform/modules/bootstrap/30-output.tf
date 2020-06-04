@@ -7,3 +7,8 @@ output "subnet" {
   description = "The subnet that contains the bastion host"
   value       = azurerm_subnet.bastion
 }
+
+output "keyvault" {
+  description = "The keyvault that contains the bastion host secrets"
+  value       = azurerm_key_vault.bastion
+}

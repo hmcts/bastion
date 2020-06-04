@@ -1,4 +1,3 @@
-
 variable "location" {
   description = "Azure resource location"
   default     = "uksouth"
@@ -12,6 +11,11 @@ variable "resource_group_name" {
 
 variable "subnet_id" {
   description = "Virtual network subnet id that contains the bastion host"
+  type        = string
+}
+
+variable "keyvault_id" {
+  description = "Keyvault id that contains the bastion host secrets"
   type        = string
 }
 
@@ -29,4 +33,8 @@ variable "bastion_username" {
 variable "environment" {
   description = "Name of the environment for which the bastion is being deployed"
   type        = string
+}
+
+variable "subscription_id" {
+  type = string
 }
