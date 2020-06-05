@@ -7,27 +7,39 @@ variables:
   agentPool: Ubuntu-18.04
 
 stages:
-- stage: TestValidatePlan
-  displayName: "Test, validate and plan terraform"
+- stage: Test
+  displayName: "Test and validate"
 
   jobs:
 
-  - template: pipeline-templates/terraform-test.yaml
-    parameters:
-      agentPool: ${{ variables.agentPool }}
-      terraformVersion: ${{ variables.terraformVersion }}
-      tfstate_serviceConnection: dcd-cft-sandbox
-      tfstate_rg: dcd-cft-sandbox-tfstate
-      tfstate_location: uksouth
-      tfstate_storage_account: tfstate531ff96dc0b42082
-      component: sbox
+  - job: Test
+    pool:
+      vmImage: ${{ variables.agentPool }}
+    
+    steps:
 
-  - template: pipeline-templates/terraform-plan.yaml
-    parameters:
-      agentPool: ${{ variables.agentPool }}
-      terraformVersion: ${{ variables.terraformVersion }}
-      deployment_serviceConnection: dcd-cft-sandbox
-      component: sbox
+    - template: pipeline-templates/terraform-test.yaml
+      parameters:
+        terraformVersion: ${{ variables.terraformVersion }}
+        tfstate_serviceConnection: dcd-cft-sandbox
+        tfstate_rg: dcd-cft-sandbox-tfstate
+        tfstate_location: uksouth
+        tfstate_storage_account: tfstate531ff96dc0b42082
+        component: sbox
+  
+  - job: Plan
+    dependsOn: Test
+    pool:
+      vmImage: ${{ variables.agentPool }}
+
+    steps:
+  
+    - template: pipeline-templates/terraform-plan.yaml
+      parameters:
+        agentPool: ${{ variables.agentPool }}
+        terraformVersion: ${{ variables.terraformVersion }}
+        deployment_serviceConnection: dcd-cft-sandbox
+        component: sbox
 
   # jobs:
   # - job: Test

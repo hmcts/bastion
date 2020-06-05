@@ -1,48 +1,48 @@
-jobs:
-- job: Test
-  pool:
-    vmImage: ${{ parameters.agentPool }}
+# jobs:
+# - job: Test
+#   pool:
+#     vmImage: ${{ parameters.agentPool }}
 
-  steps:
+#   steps:
 
-  - task: PowerShell@2
-    displayName: Run tests
-    inputs:
-      targetType: 'inline'
-      script: |
-        Install-Module -Name Pester -MaximumVersion 4.99.99 -Force -Verbose -Scope CurrentUser
-        Invoke-Pester ../ci -OutputFormat NUnitXml -OutputFile ./TEST-CI.xml -EnableExit
-      pwsh: true
+- task: PowerShell@2
+  displayName: Run tests
+  inputs:
+    targetType: 'inline'
+    script: |
+      Install-Module -Name Pester -MaximumVersion 4.99.99 -Force -Verbose -Scope CurrentUser
+      Invoke-Pester ../ci -OutputFormat NUnitXml -OutputFile ./TEST-CI.xml -EnableExit
+    pwsh: true
 
-  - task: PublishTestResults@2
-    displayName: "Publish Test Results **/TEST-*.xml"
-    inputs:
-      testResultsFormat: NUnit
-      failTaskOnFailedTests: true
-    condition: always()
+- task: PublishTestResults@2
+  displayName: "Publish Test Results **/TEST-*.xml"
+  inputs:
+    testResultsFormat: NUnit
+    failTaskOnFailedTests: true
+  condition: always()
 
-  - task: TerraformInstaller@0
-    displayName: Terraform install
-    inputs:
-      terraformVersion: ${{ variables.terraformVersion }}
+- task: TerraformInstaller@0
+  displayName: Terraform install
+  inputs:
+    terraformVersion: ${{ variables.terraformVersion }}
 
-  - task: TerraformCLI@0
-    displayName: Terraform initialize
-    inputs:
-      command: init
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
-      backendType: azurerm
-      ensurebackend: true
-      backendServiceArm: ${{ parameters.tfstate_serviceConnection }}
-      backendAzureRmResourceGroupName: ${{ parameters.tfstate_rg }}
-      backendAzureRmResourceGroupLocation: ${{ parameters.tfstate_location }}
-      backendAzureRmStorageAccountName: ${{ parameters.tfstate_storage_account }}
-      backendAzureRmStorageAccountSku: Standard_LRS
-      backendAzureRmContainerName: tfstate
-      backendAzureRmKey: rdo-bastion/${{ parameters.component }}/tfstate-${{ parameters.component }}.tfstate
-  
-  - task: TerraformCLI@0
-    displayName: Terraform validate
-    inputs:
-      command: validate
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+- task: TerraformCLI@0
+  displayName: Terraform initialize
+  inputs:
+    command: init
+    workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+    backendType: azurerm
+    ensurebackend: true
+    backendServiceArm: ${{ parameters.tfstate_serviceConnection }}
+    backendAzureRmResourceGroupName: ${{ parameters.tfstate_rg }}
+    backendAzureRmResourceGroupLocation: ${{ parameters.tfstate_location }}
+    backendAzureRmStorageAccountName: ${{ parameters.tfstate_storage_account }}
+    backendAzureRmStorageAccountSku: Standard_LRS
+    backendAzureRmContainerName: tfstate
+    backendAzureRmKey: rdo-bastion/${{ parameters.component }}/tfstate-${{ parameters.component }}.tfstate
+
+- task: TerraformCLI@0
+  displayName: Terraform validate
+  inputs:
+    command: validate
+    workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
