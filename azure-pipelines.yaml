@@ -14,6 +14,7 @@ stages:
 
   - template: pipeline-templates/terraform-test.yaml
     parameters:
+      agentPool: ${{ variables.agentPool }}
       terraformVersion: ${{ variables.terraformVersion }}
       tfstate_serviceConnection: dcd-cft-sandbox
       tfstate_rg: dcd-cft-sandbox-tfstate
@@ -23,6 +24,7 @@ stages:
 
   - template: pipeline-templates/terraform-plan.yaml
     parameters:
+      agentPool: ${{ variables.agentPool }}
       terraformVersion: ${{ variables.terraformVersion }}
       deployment_serviceConnection: dcd-cft-sandbox
       component: sbox
