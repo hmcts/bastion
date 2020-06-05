@@ -30,7 +30,7 @@ jobs:
     displayName: Terraform initialize
     inputs:
       command: init
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
       backendType: azurerm
       ensurebackend: true
       backendServiceArm: ${{ parameters.tfstate_serviceConnection }}

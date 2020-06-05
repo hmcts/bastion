@@ -1,5 +1,6 @@
 trigger:
 - master
+- iaas-only
 
 variables:
   terraformVersion: 0.12.25
