@@ -45,4 +45,4 @@ jobs:
     displayName: Terraform validate
     inputs:
       command: validate
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
