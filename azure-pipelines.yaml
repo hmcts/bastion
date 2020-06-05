@@ -10,6 +10,8 @@ stages:
 - stage: TestValidatePlan
   displayName: "Test, validate and plan terraform"
 
+  jobs:
+
   - template: pipeline-templates/terraform-test.yaml
     parameters:
       terraformVersion: ${{ variables.terraformVersion }}
@@ -25,15 +27,15 @@ stages:
       deployment_serviceConnection: dcd-cft-sandbox
       component: sbox
 
-  jobs:
-  - job: Test
-    pool:
-      vmImage: ${{ variables.agentPool }}
+  # jobs:
+  # - job: Test
+  #   pool:
+  #     vmImage: ${{ variables.agentPool }}
 
-    steps:
+  #   steps:
 
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish Artifact: drop'
-      inputs:
-        targetPath: $(System.DefaultWorkingDirectory)
-        artifactName: drop
+  #   - task: PublishPipelineArtifact@1
+  #     displayName: 'Publish Artifact: drop'
+  #     inputs:
+  #       targetPath: $(System.DefaultWorkingDirectory)
+  #       artifactName: drop
