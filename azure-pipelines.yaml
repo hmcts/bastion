@@ -9,7 +9,7 @@ stages:
 - stage: TestValidatePlan
   displayName: "Test, validate and plan terraform"
 
-  - template: pipeline-steps/terraform-test.yaml
+  - template: pipeline-templates/terraform-test.yaml
     parameters:
       terraformVersion: ${{ variables.terraformVersion }}
       tfstate_serviceConnection: dcd-cft-sandbox
@@ -18,7 +18,7 @@ stages:
       tfstate_storage_account: tfstate531ff96dc0b42082
       component: sbox
 
-  - template: pipeline-steps/terraform-plan.yaml
+  - template: pipeline-templates/terraform-plan.yaml
     parameters:
       terraformVersion: ${{ variables.terraformVersion }}
       deployment_serviceConnection: dcd-cft-sandbox
