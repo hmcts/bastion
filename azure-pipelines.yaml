@@ -44,7 +44,7 @@ stages:
   - ${{ each bastion in parameters.bastionHosts }}:
 
     - stage: ${{ bastion.environment }}
-      dependsOn: ${{ bastion.dependent_stage }}
+      # dependsOn: ${{ bastion.dependent_stage }}
         
       jobs:
       - job: Test
