@@ -34,7 +34,3 @@ variable "environment" {
   description = "Name of the environment for which the bastion is being deployed"
   type        = string
 }
-
-variable "subscription_id" {
-  type = string
-}
