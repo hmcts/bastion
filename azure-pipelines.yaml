@@ -20,7 +20,6 @@ stages:
     displayName: Plan
     pool:
       vmImage: ${{ variables.agentPool }} 
-    steps:
 
     - template: pipeline-templates/terraform-plan.yaml
       parameters:
