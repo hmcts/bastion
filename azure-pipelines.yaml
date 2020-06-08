@@ -23,12 +23,12 @@ stages:
       tfstate_storage_account: tfstate531ff96dc0b42082
       component: sbox
 
-  # - template: pipeline-templates/terraform-plan.yaml
-  #   parameters:
-  #     agentPool: ${{ variables.agentPool }}
-  #     terraformVersion: ${{ variables.terraformVersion }}
-  #     deployment_serviceConnection: dcd-cft-sandbox
-  #     component: sbox
+  - template: pipeline-templates/terraform-plan.yaml
+    parameters:
+      agentPool: ${{ variables.agentPool }}
+      terraformVersion: ${{ variables.terraformVersion }}
+      deployment_serviceConnection: dcd-cft-sandbox
+      component: sbox
 
 # jobs:
 # - job: Test
