@@ -7,7 +7,7 @@ resource "azurerm_key_vault_secret" "bastion_admin_username" {
 
 resource "azurerm_key_vault_secret" "bastion_ssh_public_key" {
   name         = "${var.bastion_name}-public-key"
-  value        = file("../../component/${var.environment}/id_rsa_bastion.pub")
+  value        = file("../../environment/${var.environment}/id_rsa_bastion.pub")
   key_vault_id = var.keyvault_id
 }
 

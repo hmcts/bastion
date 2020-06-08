@@ -17,7 +17,7 @@ parameters:
   - name: deployment_serviceConnection
     type: string
 
-  - name: component
+  - name: environment
     type: string
 
   - name: deploy
@@ -34,7 +34,7 @@ steps:
   displayName: Terraform initialize
   inputs:
     command: init
-    workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+    workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
     backendType: azurerm
     ensurebackend: true
     backendServiceArm: ${{ parameters.tfstate_serviceConnection }}
@@ -43,7 +43,7 @@ steps:
     backendAzureRmStorageAccountName: ${{ parameters.tfstate_storage_account }}
     backendAzureRmStorageAccountSku: Standard_LRS
     backendAzureRmContainerName: tfstate
-    backendAzureRmKey: rdo-bastion/${{ parameters.component }}/tfstate-${{ parameters.component }}.tfstate
+    backendAzureRmKey: rdo-bastion/${{ parameters.environment }}/tfstate-${{ parameters.environment }}.tfstate
 
 - ${{ if eq(false, parameters.deploy) }}:
 
@@ -51,13 +51,13 @@ steps:
     displayName: Terraform validate
     inputs:
       command: validate
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
 
   - task: TerraformCLI@0
     displayName: Terraform plan
     inputs:
       command: plan
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
       environmentServiceName: ${{ parameters.deployment_serviceConnection }}
 
 - ${{ if parameters.deploy }}:
@@ -66,6 +66,6 @@ steps:
     displayName: Terraform apply
     inputs:
       command: apply
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
       environmentServiceName: ${{ parameters.deployment_serviceConnection }}
       commandOptions: --auto-approve

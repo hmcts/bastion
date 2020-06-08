@@ -1,8 +1,8 @@
 parameters:
-  - name: bastions
+  - name: bastionHosts
     type: object
     default: 
-    - component: sbox
+    - environment: sbox
       tfstate_serviceConnection: dcd-cft-sandbox
       tfstate_rg: dcd-cft-sandbox-tfstate
       tfstate_location: uksouth
@@ -10,14 +10,14 @@ parameters:
       deployment_serviceConnection: dcd-cft-sandbox
       dependent_stage: 
 
-    - component: sbox2
+    - environment: sbox2
       tfstate_serviceConnection: dcd-cft-sandbox
       tfstate_rg: dcd-cft-sandbox-tfstate
       tfstate_location: uksouth
       tfstate_storage_account: tfstate531ff96dc0b42082
       deployment_serviceConnection: dcd-cft-sandbox
 
-    # - component: prod
+    # - environment: prod
     #   tfstate_serviceConnection: dcd-cft-sandbox
     #   tfstate_rg: dcd-cft-sandbox-tfstate
     #   tfstate_location: uksouth
@@ -40,9 +40,9 @@ variables:
   agentPool: ubuntu-18.04
 
 stages:
-  - ${{ each bastion in parameters.bastions }}:
+  - ${{ each bastion in parameters.bastionHosts }}:
 
-    - stage: ${{ bastion.component }}
+    - stage: ${{ bastion.environment }}
       dependsOn: ${{ bastion.dependent_stage }}
         
       jobs:
