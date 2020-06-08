@@ -58,6 +58,8 @@ stages:
         script: |
           echo "check files in staging directory"
           ls $(Build.ArtifactStagingDirectory)
+          cd $(Build.ArtifactStagingDirectory)
+          ls
         pwsh: true
 
 # - stage: PublishArtifacts
