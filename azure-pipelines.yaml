@@ -44,20 +44,21 @@ stages:
         deployment_serviceConnection: dcd-cft-sandbox
         component: sbox2
 
-  # - job: Publish
-  #   displayName: Publish
-  #   pool:
-  #     vmImage: ${{ variables.agentPool }}
-  #   steps:
+  - job: Publish
+    displayName: Publish
+    dependsOn: Plan
+    pool:
+      vmImage: ${{ variables.agentPool }}
+    steps:
 
-  #   - task: PowerShell@2
-  #     displayName: Run tests
-  #     inputs:
-  #       targetType: 'inline'
-  #       script: |
-  #         echo "check files in staging directory"
-  #         ls $(Build.ArtifactStagingDirectory)
-  #       pwsh: true
+    - task: PowerShell@2
+      displayName: Run tests
+      inputs:
+        targetType: 'inline'
+        script: |
+          echo "check files in staging directory"
+          ls $(Build.ArtifactStagingDirectory)
+        pwsh: true
 
 # - stage: PublishArtifacts
 
