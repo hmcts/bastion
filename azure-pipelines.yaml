@@ -8,7 +8,6 @@ parameters:
       tfstate_location: uksouth
       tfstate_storage_account: tfstate531ff96dc0b42082
       deployment_serviceConnection: dcd-cft-sandbox
-      dependent_stage: 
 
     - environment: sbox2
       tfstate_serviceConnection: dcd-cft-sandbox
@@ -16,7 +15,6 @@ parameters:
       tfstate_location: uksouth
       tfstate_storage_account: tfstate531ff96dc0b42082
       deployment_serviceConnection: dcd-cft-sandbox
-      dependent_stage:
 
     # - environment: prod
     #   tfstate_serviceConnection: dcd-cft-sandbox
@@ -44,7 +42,7 @@ stages:
   - ${{ each bastion in parameters.bastionHosts }}:
 
     - stage: ${{ bastion.environment }}
-      # dependsOn: ${{ bastion.dependent_stage }}
+      dependsOn: ${{ bastion.dependent_stage }}
         
       jobs:
       - job: Test
