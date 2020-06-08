@@ -8,6 +8,7 @@ parameters:
       tfstate_location: uksouth
       tfstate_storage_account: tfstate531ff96dc0b42082
       deployment_serviceConnection: dcd-cft-sandbox
+      dependent_stage: 
 
     - component: sbox2
       tfstate_serviceConnection: dcd-cft-sandbox
@@ -15,6 +16,15 @@ parameters:
       tfstate_location: uksouth
       tfstate_storage_account: tfstate531ff96dc0b42082
       deployment_serviceConnection: dcd-cft-sandbox
+
+    # - component: prod
+    #   tfstate_serviceConnection: dcd-cft-sandbox
+    #   tfstate_rg: dcd-cft-sandbox-tfstate
+    #   tfstate_location: uksouth
+    #   tfstate_storage_account: tfstate531ff96dc0b42082
+    #   deployment_serviceConnection: dcd-cft-sandbox
+    #   dependent_stage:
+    #     - sbox
 
 trigger:
 - master
@@ -33,7 +43,8 @@ stages:
   - ${{ each bastion in parameters.bastions }}:
 
     - stage: ${{ bastion.component }}
-
+      dependsOn: ${{ bastion.dependent_stage }}
+        
       jobs:
       - job: Test
         condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
