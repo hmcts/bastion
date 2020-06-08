@@ -1,9 +1,9 @@
-# jobs:
-# - job: Plan_${{ parameters.component }}
-#   pool:
-#     vmImage: ${{ parameters.agentPool }}
+jobs:
+- job: Plan_${{ parameters.component }}
+  pool:
+    vmImage: ${{ parameters.agentPool }}
 
-#   steps:
+  steps:
 
   - task: TerraformInstaller@0
     displayName: Terraform install
