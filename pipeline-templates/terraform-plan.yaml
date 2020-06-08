@@ -35,6 +35,7 @@ jobs:
     displayName: Terraform plan
     inputs:
       command: plan
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+      # workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+      workingDirectory: $(Build.ArtifactStagingDirectory)
       environmentServiceName: ${{ parameters.deployment_serviceConnection }}
       commandOptions: -out=tfplan-${{ parameters.component }}
