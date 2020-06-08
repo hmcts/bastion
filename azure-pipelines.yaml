@@ -4,7 +4,7 @@ trigger:
 
 variables:
   terraformVersion: 0.12.25
-  agentPool: Ubuntu-18.04
+  agentPool: ubuntu-18.04
 
 stages:
 
