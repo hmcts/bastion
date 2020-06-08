@@ -21,6 +21,8 @@ stages:
   jobs:
   - job: Plan
 
+    steps:
+
     - template: pipeline-templates/terraform-plan.yaml
       parameters:
         terraformVersion: ${{ variables.terraformVersion }}
