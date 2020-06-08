@@ -7,9 +7,7 @@ variables:
   agentPool: ubuntu-18.04
 
 stages:
-
 - stage: Test
-
   jobs:
 
   - template: pipeline-templates/terraform-test.yaml
@@ -17,13 +15,11 @@ stages:
       agentPool: ${{ variables.agentPool }}
 
 - stage: Build
-
   jobs:
-
   - job: Plan
-    # pool:
-    #   vmImage: ${{ variables.agentPool }}
-    
+    displayName: Plan
+    pool:
+      vmImage: ${{ variables.agentPool }} 
     steps:
 
     - template: pipeline-templates/terraform-plan.yaml
@@ -47,6 +43,21 @@ stages:
         tfstate_storage_account: tfstate531ff96dc0b42082
         deployment_serviceConnection: dcd-cft-sandbox
         component: sbox2
+
+  - job: Publish
+    displayName: Publish
+    pool:
+      vmImage: ${{ variables.agentPool }}
+    steps:
+
+    - task: PowerShell@2
+      displayName: Run tests
+      inputs:
+        targetType: 'inline'
+        script: |
+          echo "check files in staging directory"
+          ls $(Build.ArtifactStagingDirectory)
+        pwsh: true
 
 # - stage: PublishArtifacts
 

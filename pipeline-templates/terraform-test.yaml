@@ -2,7 +2,6 @@ jobs:
 - job: Test
   pool:
     vmImage: ${{ parameters.agentPool }}
-
   steps:
 
   - task: PowerShell@2
