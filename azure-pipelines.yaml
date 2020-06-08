@@ -13,20 +13,18 @@ stages:
 
   - template: pipeline-templates/terraform-test.yaml
     parameters:
+      agentPool: ${{ variables.agentPool }}
+
+- stage: Plan
+
+  - template: pipeline-templates/terraform-plan.yaml
+    parameters:
       terraformVersion: ${{ variables.terraformVersion }}
       agentPool: ${{ variables.agentPool }}
       tfstate_serviceConnection: dcd-cft-sandbox
       tfstate_rg: dcd-cft-sandbox-tfstate
       tfstate_location: uksouth
       tfstate_storage_account: tfstate531ff96dc0b42082
-      component: sbox
-
-- stage: Plan
-
-  - template: pipeline-templates/terraform-plan.yaml
-    parameters:
-      agentPool: ${{ variables.agentPool }}
-      terraformVersion: ${{ variables.terraformVersion }}
       deployment_serviceConnection: dcd-cft-sandbox
       component: sbox
 
