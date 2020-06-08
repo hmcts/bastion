@@ -3,7 +3,7 @@
 #   pool:
 #     vmImage: ${{ parameters.agentPool }}
 
-#   steps:
+steps:
 
 - task: TerraformInstaller@0
   displayName: Terraform install
