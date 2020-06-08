@@ -7,50 +7,37 @@ variables:
   agentPool: Ubuntu-18.04
 
 stages:
-  
+
 - stage: Test
   displayName: "Test and validate"
 
   jobs:
 
-  - job: Test
-    pool:
-      vmImage: ${{ variables.agentPool }}
-    
-    steps:
+  - template: pipeline-templates/terraform-test.yaml
+    parameters:
+      terraformVersion: ${{ variables.terraformVersion }}
+      tfstate_serviceConnection: dcd-cft-sandbox
+      tfstate_rg: dcd-cft-sandbox-tfstate
+      tfstate_location: uksouth
+      tfstate_storage_account: tfstate531ff96dc0b42082
+      component: sbox
 
-    - template: pipeline-templates/terraform-test.yaml
-      parameters:
-        terraformVersion: ${{ variables.terraformVersion }}
-        tfstate_serviceConnection: dcd-cft-sandbox
-        tfstate_rg: dcd-cft-sandbox-tfstate
-        tfstate_location: uksouth
-        tfstate_storage_account: tfstate531ff96dc0b42082
-        component: sbox
-  
-  - job: Plan
-    dependsOn: Test
-    pool:
-      vmImage: ${{ variables.agentPool }}
+  - template: pipeline-templates/terraform-plan.yaml
+    parameters:
+      agentPool: ${{ variables.agentPool }}
+      terraformVersion: ${{ variables.terraformVersion }}
+      deployment_serviceConnection: dcd-cft-sandbox
+      component: sbox
 
-    steps:
-  
-    - template: pipeline-templates/terraform-plan.yaml
-      parameters:
-        agentPool: ${{ variables.agentPool }}
-        terraformVersion: ${{ variables.terraformVersion }}
-        deployment_serviceConnection: dcd-cft-sandbox
-        component: sbox
+# jobs:
+# - job: Test
+#   pool:
+#     vmImage: ${{ variables.agentPool }}
 
-  # jobs:
-  # - job: Test
-  #   pool:
-  #     vmImage: ${{ variables.agentPool }}
+#   steps:
 
-  #   steps:
-
-  #   - task: PublishPipelineArtifact@1
-  #     displayName: 'Publish Artifact: drop'
-  #     inputs:
-  #       targetPath: $(System.DefaultWorkingDirectory)
-  #       artifactName: drop
+#   - task: PublishPipelineArtifact@1
+#     displayName: 'Publish Artifact: drop'
+#     inputs:
+#       targetPath: $(System.DefaultWorkingDirectory)
+#       artifactName: drop
