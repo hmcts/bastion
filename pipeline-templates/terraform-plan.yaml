@@ -1,4 +1,4 @@
-jobs:
+# jobs:
 - job: Plan_${{ parameters.component }}
   pool:
     vmImage: ${{ parameters.agentPool }}
