@@ -27,7 +27,7 @@
 #   provisioner "file" {
 #     source      = "${path.module}/ansible/"
 #     destination = "~/ansible/"
-  
+
 #     connection {
 #       type                        = "ssh"
 #       user                        = data.azurerm_key_vault_secret.admin-username.value

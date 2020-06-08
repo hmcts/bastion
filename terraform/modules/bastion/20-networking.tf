@@ -4,7 +4,7 @@ resource "azurerm_public_ip" "bastion" {
   location            = var.location
   tags                = local.common_tags
 
-  allocation_method   = "Static"
+  allocation_method = "Static"
 }
 
 resource "azurerm_network_interface" "bastion" {
@@ -34,8 +34,8 @@ resource "azurerm_network_security_group" "bastion" {
 }
 
 resource "azurerm_network_security_rule" "bastion" {
-  network_security_group_name = azurerm_network_security_group.bastion.name 
-  resource_group_name = var.resource_group_name
+  network_security_group_name = azurerm_network_security_group.bastion.name
+  resource_group_name         = var.resource_group_name
   name                        = "SSH-in"
   priority                    = 1000
   direction                   = "Inbound"
