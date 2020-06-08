@@ -10,13 +10,13 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |  
-        echo "$(Pipeline.Workspace)"
+        echo "Pipeline.Workspace"
         cd $(Pipeline.Workspace)
         pwd
-        echo "$(Build.ArtifactStagingDirectory)"
+        echo "Build.ArtifactStagingDirectory"
         cd $(Build.ArtifactStagingDirectory)
         pwd
-        echo "$(System.DefaultWorkingDirectory)"
+        echo "System.DefaultWorkingDirectory"
         cd $(System.DefaultWorkingDirectory)
         pwd
       pwsh: true
