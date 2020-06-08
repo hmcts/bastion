@@ -1,96 +1,61 @@
+parameters:
+  - name: bastions
+    default: 
+      - component: sbox
+        tfstate_serviceConnection: dcd-cft-sandbox
+        tfstate_rg: dcd-cft-sandbox-tfstate
+        tfstate_location: uksouth
+        tfstate_storage_account: tfstate531ff96dc0b42082
+        deployment_serviceConnection: dcd-cft-sandbox
+
+      - component: sbox2
+        tfstate_serviceConnection: dcd-cft-sandbox
+        tfstate_rg: dcd-cft-sandbox-tfstate
+        tfstate_location: uksouth
+        tfstate_storage_account: tfstate531ff96dc0b42082
+        deployment_serviceConnection: dcd-cft-sandbox
+
 trigger:
 - master
 - iaas-only
+
+pr:
+  branches:
+    includes:
+      - master
 
 variables:
   terraformVersion: 0.12.25
   agentPool: ubuntu-18.04
 
 stages:
-- stage: Test
-  jobs:
+  - ${{ each bastion in parameters.bastions }}:
 
-  - template: pipeline-templates/terraform-test.yaml
-    parameters:
-      agentPool: ${{ variables.agentPool }}
+    - stage: ${{ bastion.component }}
 
-- stage: Build
-  jobs:
-  - job: Plan
-    displayName: Plan
-    pool:
-      vmImage: ${{ variables.agentPool }} 
-    steps:
+      jobs:
+      - job: Test
+        condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
 
-    - template: pipeline-templates/terraform-plan.yaml
-      parameters:
-        terraformVersion: ${{ variables.terraformVersion }}
-        agentPool: ${{ variables.agentPool }}
-        tfstate_serviceConnection: dcd-cft-sandbox
-        tfstate_rg: dcd-cft-sandbox-tfstate
-        tfstate_location: uksouth
-        tfstate_storage_account: tfstate531ff96dc0b42082
-        deployment_serviceConnection: dcd-cft-sandbox
-        component: sbox
+        steps:
+        - template: pipeline-templates/terraform-test.yaml
+          parameters:
+            agentPool: ${{ variables.agentPool }}
 
-    - template: pipeline-templates/terraform-plan.yaml
-      parameters:
-        terraformVersion: ${{ variables.terraformVersion }}
-        agentPool: ${{ variables.agentPool }}
-        tfstate_serviceConnection: dcd-cft-sandbox
-        tfstate_rg: dcd-cft-sandbox-tfstate
-        tfstate_location: uksouth
-        tfstate_storage_account: tfstate531ff96dc0b42082
-        deployment_serviceConnection: dcd-cft-sandbox
-        component: sbox2
+        - template: pipeline-templates/terraform-execute.yaml
+          parameters:
+            ${{ insert }}: ${{ bastion }}
+            terraformVersion: ${{ variables.terraformVersion }}
+            agentPool: ${{ variables.agentPool }}
+            deploy: false
 
-  - job: Publish
-    displayName: Publish
-    dependsOn: Plan
-    pool:
-      vmImage: ${{ variables.agentPool }}
-    steps:
+      - job: Deploy
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
-    - task: PowerShell@2
-      displayName: Run tests
-      inputs:
-        targetType: 'inline'
-        script: |
-          echo "check files in staging directory"
-          ls $(Build.ArtifactStagingDirectory)
-          cd $(Build.ArtifactStagingDirectory)
-          ls
-        pwsh: true
-
-# - stage: PublishArtifacts
-
-#   jobs:
-
-#   - job: Publish
-#     pool:
-#       vmImage: ${{ variables.agentPool }}
-    
-#     steps:
-
-#     - task: PowerShell@2
-#       displayName: Run tests
-#       inputs:
-#         targetType: 'inline'
-#         script: |
-
-#           echo "check files in staging directory"
-#           ls $(Build.ArtifactStagingDirectory)
-#         pwsh: true
-
-# jobs:
-# - job: Test
-#   pool:
-#     vmImage: ${{ variables.agentPool }}
-
-#   steps:
-
-#   - task: PublishPipelineArtifact@1
-#     displayName: 'Publish Artifact: drop'
-#     inputs:
-#       targetPath: $(System.DefaultWorkingDirectory)
-#       artifactName: drop
+        steps:
+        - template: pipeline-templates/terraform-execute.yaml
+          parameters:
+            ${{ insert }}: ${{ bastion }}
+            terraformVersion: ${{ variables.terraformVersion }}
+            agentPool: ${{ variables.agentPool }}
+            deploy: true

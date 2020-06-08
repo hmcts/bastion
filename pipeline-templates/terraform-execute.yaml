@@ -1,0 +1,57 @@
+parameters:
+  terraformVersion: ${{ variables.terraformVersion }}
+  agentPool: ${{ variables.agentPool }}
+  tfstate_serviceConnection: dcd-cft-sandbox
+  tfstate_rg: dcd-cft-sandbox-tfstate
+  tfstate_location: uksouth
+  tfstate_storage_account: tfstate531ff96dc0b42082
+  deployment_serviceConnection: dcd-cft-sandbox
+  component: sbox
+  deploy: true
+
+steps:
+
+- task: TerraformInstaller@0
+  displayName: Terraform install
+  inputs:
+    terraformVersion: ${{ parameters.terraformVersion }}
+
+- task: TerraformCLI@0
+  displayName: Terraform initialize
+  inputs:
+    command: init
+    workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+    backendType: azurerm
+    ensurebackend: true
+    backendServiceArm: ${{ parameters.tfstate_serviceConnection }}
+    backendAzureRmResourceGroupName: ${{ parameters.tfstate_rg }}
+    backendAzureRmResourceGroupLocation: ${{ parameters.tfstate_location }}
+    backendAzureRmStorageAccountName: ${{ parameters.tfstate_storage_account }}
+    backendAzureRmStorageAccountSku: Standard_LRS
+    backendAzureRmContainerName: tfstate
+    backendAzureRmKey: rdo-bastion/${{ parameters.component }}/tfstate-${{ parameters.component }}.tfstate
+
+- ${{ if eq(false, parameters.deploy) }}:
+
+  - task: TerraformCLI@0
+    displayName: Terraform validate
+    inputs:
+      command: validate
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+
+  - task: TerraformCLI@0
+    displayName: Terraform plan
+    inputs:
+      command: plan
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+      environmentServiceName: ${{ parameters.deployment_serviceConnection }}
+
+- ${{ if parameters.deploy }}:
+
+  - task: TerraformCLI@0
+    displayName: Terraform apply
+    inputs:
+      command: apply
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+      environmentServiceName: ${{ parameters.deployment_serviceConnection }}
+      commandOptions: --auto-approve
