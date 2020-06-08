@@ -7,5 +7,5 @@ module "bootstrap" {
   subnet_name         = "bastion-test-subnet"
   subnet_address      = "10.200.103.0/24"
   keyvault_name       = "bastion-test-kv"
-  environment         = "prod"
+  environment         = "test"
 }
