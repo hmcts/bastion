@@ -25,7 +25,7 @@ jobs:
   - task: TerraformInstaller@0
     displayName: Terraform install
     inputs:
-      terraformVersion: ${{ variables.terraformVersion }}
+      terraformVersion: ${{ parameters.terraformVersion }}
 
   - task: TerraformCLI@0
     displayName: Terraform initialize
