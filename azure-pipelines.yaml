@@ -20,46 +20,53 @@ stages:
 
   jobs:
 
-  - template: pipeline-templates/terraform-plan.yaml
-    parameters:
-      terraformVersion: ${{ variables.terraformVersion }}
-      agentPool: ${{ variables.agentPool }}
-      tfstate_serviceConnection: dcd-cft-sandbox
-      tfstate_rg: dcd-cft-sandbox-tfstate
-      tfstate_location: uksouth
-      tfstate_storage_account: tfstate531ff96dc0b42082
-      deployment_serviceConnection: dcd-cft-sandbox
-      component: sbox
-
-  - template: pipeline-templates/terraform-plan.yaml
-    parameters:
-      terraformVersion: ${{ variables.terraformVersion }}
-      agentPool: ${{ variables.agentPool }}
-      tfstate_serviceConnection: dcd-cft-sandbox
-      tfstate_rg: dcd-cft-sandbox-tfstate
-      tfstate_location: uksouth
-      tfstate_storage_account: tfstate531ff96dc0b42082
-      deployment_serviceConnection: dcd-cft-sandbox
-      component: sbox2
-
-- stage: PublishArtifacts
-
-  jobs:
-
-  - job: Publish
-    pool:
+  - job: Plan
+      pool:
       vmImage: ${{ variables.agentPool }}
-    
+
     steps:
 
-    - task: PowerShell@2
-      displayName: Run tests
-      inputs:
-        targetType: 'inline'
-        script: |
-          echo "check files in staging directory"
-          ls $(Build.ArtifactStagingDirectory)
-        pwsh: true
+    - template: pipeline-templates/terraform-plan.yaml
+      parameters:
+        terraformVersion: ${{ variables.terraformVersion }}
+        agentPool: ${{ variables.agentPool }}
+        tfstate_serviceConnection: dcd-cft-sandbox
+        tfstate_rg: dcd-cft-sandbox-tfstate
+        tfstate_location: uksouth
+        tfstate_storage_account: tfstate531ff96dc0b42082
+        deployment_serviceConnection: dcd-cft-sandbox
+        component: sbox
+
+    - template: pipeline-templates/terraform-plan.yaml
+      parameters:
+        terraformVersion: ${{ variables.terraformVersion }}
+        agentPool: ${{ variables.agentPool }}
+        tfstate_serviceConnection: dcd-cft-sandbox
+        tfstate_rg: dcd-cft-sandbox-tfstate
+        tfstate_location: uksouth
+        tfstate_storage_account: tfstate531ff96dc0b42082
+        deployment_serviceConnection: dcd-cft-sandbox
+        component: sbox2
+
+# - stage: PublishArtifacts
+
+#   jobs:
+
+#   - job: Publish
+#     pool:
+#       vmImage: ${{ variables.agentPool }}
+    
+#     steps:
+
+#     - task: PowerShell@2
+#       displayName: Run tests
+#       inputs:
+#         targetType: 'inline'
+#         script: |
+
+#           echo "check files in staging directory"
+#           ls $(Build.ArtifactStagingDirectory)
+#         pwsh: true
 
 # jobs:
 # - job: Test

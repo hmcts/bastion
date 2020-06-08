@@ -1,40 +1,40 @@
-jobs:
-- job: Plan_${{ parameters.component }}
-  pool:
-    vmImage: ${{ parameters.agentPool }}
+# jobs:
+# - job: Plan_${{ parameters.component }}
+#   pool:
+#     vmImage: ${{ parameters.agentPool }}
 
-  steps:
+#   steps:
 
-  - task: TerraformInstaller@0
-    displayName: Terraform install
-    inputs:
-      terraformVersion: ${{ parameters.terraformVersion }}
+- task: TerraformInstaller@0
+  displayName: Terraform install
+  inputs:
+    terraformVersion: ${{ parameters.terraformVersion }}
 
-  - task: TerraformCLI@0
-    displayName: Terraform initialize
-    inputs:
-      command: init
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
-      backendType: azurerm
-      ensurebackend: true
-      backendServiceArm: ${{ parameters.tfstate_serviceConnection }}
-      backendAzureRmResourceGroupName: ${{ parameters.tfstate_rg }}
-      backendAzureRmResourceGroupLocation: ${{ parameters.tfstate_location }}
-      backendAzureRmStorageAccountName: ${{ parameters.tfstate_storage_account }}
-      backendAzureRmStorageAccountSku: Standard_LRS
-      backendAzureRmContainerName: tfstate
-      backendAzureRmKey: rdo-bastion/${{ parameters.component }}/tfstate-${{ parameters.component }}.tfstate
+- task: TerraformCLI@0
+  displayName: Terraform initialize
+  inputs:
+    command: init
+    workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+    backendType: azurerm
+    ensurebackend: true
+    backendServiceArm: ${{ parameters.tfstate_serviceConnection }}
+    backendAzureRmResourceGroupName: ${{ parameters.tfstate_rg }}
+    backendAzureRmResourceGroupLocation: ${{ parameters.tfstate_location }}
+    backendAzureRmStorageAccountName: ${{ parameters.tfstate_storage_account }}
+    backendAzureRmStorageAccountSku: Standard_LRS
+    backendAzureRmContainerName: tfstate
+    backendAzureRmKey: rdo-bastion/${{ parameters.component }}/tfstate-${{ parameters.component }}.tfstate
 
-  - task: TerraformCLI@0
-    displayName: Terraform validate
-    inputs:
-      command: validate
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+- task: TerraformCLI@0
+  displayName: Terraform validate
+  inputs:
+    command: validate
+    workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
 
-  - task: TerraformCLI@0
-    displayName: Terraform plan
-    inputs:
-      command: plan
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
-      environmentServiceName: ${{ parameters.deployment_serviceConnection }}
-      commandOptions: -out=$(Build.ArtifactStagingDirectory)/tfplan-${{ parameters.component }}
+- task: TerraformCLI@0
+  displayName: Terraform plan
+  inputs:
+    command: plan
+    workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
+    environmentServiceName: ${{ parameters.deployment_serviceConnection }}
+    commandOptions: -out=$(Build.ArtifactStagingDirectory)/tfplan-${{ parameters.component }}
