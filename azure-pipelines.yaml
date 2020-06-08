@@ -7,6 +7,7 @@ variables:
   agentPool: Ubuntu-18.04
 
 stages:
+  
 - stage: Test
   displayName: "Test and validate"
 
