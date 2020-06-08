@@ -11,28 +11,24 @@ stages:
 - stage: Test
   displayName: "Test and validate"
 
-  jobs:
+  - template: pipeline-templates/terraform-test.yaml
+    parameters:
+      terraformVersion: ${{ variables.terraformVersion }}
+      agentPool: ${{ variables.agentPool }}
+      tfstate_serviceConnection: dcd-cft-sandbox
+      tfstate_rg: dcd-cft-sandbox-tfstate
+      tfstate_location: uksouth
+      tfstate_storage_account: tfstate531ff96dc0b42082
+      component: sbox
 
-  - jobs: test
+- stage: Plan
 
-    - template: pipeline-templates/terraform-test.yaml
-      parameters:
-        terraformVersion: ${{ variables.terraformVersion }}
-        agentPool: ${{ variables.agentPool }}
-        tfstate_serviceConnection: dcd-cft-sandbox
-        tfstate_rg: dcd-cft-sandbox-tfstate
-        tfstate_location: uksouth
-        tfstate_storage_account: tfstate531ff96dc0b42082
-        component: sbox
-
-  - job: plan
-
-    - template: pipeline-templates/terraform-plan.yaml
-      parameters:
-        agentPool: ${{ variables.agentPool }}
-        terraformVersion: ${{ variables.terraformVersion }}
-        deployment_serviceConnection: dcd-cft-sandbox
-        component: sbox
+  - template: pipeline-templates/terraform-plan.yaml
+    parameters:
+      agentPool: ${{ variables.agentPool }}
+      terraformVersion: ${{ variables.terraformVersion }}
+      deployment_serviceConnection: dcd-cft-sandbox
+      component: sbox
 
 # jobs:
 # - job: Test
