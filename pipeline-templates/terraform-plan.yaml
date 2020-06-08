@@ -33,3 +33,14 @@ steps:
     workingDirectory: $(System.DefaultWorkingDirectory)/terraform/component/${{ parameters.component }}
     environmentServiceName: ${{ parameters.deployment_serviceConnection }}
     commandOptions: -out=$(Build.ArtifactStagingDirectory)/tfplan-${{ parameters.component }}
+
+- task: PowerShell@2
+    displayName: Run tests
+    inputs:
+      targetType: 'inline'
+      script: |
+        echo "check files in staging directory"
+        ls $(Build.ArtifactStagingDirectory)
+        cd $(Build.ArtifactStagingDirectory)
+        ls
+      pwsh: true
