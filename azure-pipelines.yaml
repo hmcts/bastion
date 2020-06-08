@@ -9,12 +9,19 @@ parameters:
       tfstate_storage_account: tfstate531ff96dc0b42082
       deployment_serviceConnection: dcd-cft-sandbox
 
-    - environment: sbox2
-      tfstate_serviceConnection: dcd-cft-sandbox
-      tfstate_rg: dcd-cft-sandbox-tfstate
-      tfstate_location: uksouth
-      tfstate_storage_account: tfstate531ff96dc0b42082
-      deployment_serviceConnection: dcd-cft-sandbox
+    # - environment: test
+    #   tfstate_serviceConnection: dcd-cft-sandbox
+    #   tfstate_rg: dcd-cft-sandbox-tfstate
+    #   tfstate_location: uksouth
+    #   tfstate_storage_account: tfstate531ff96dc0b42082
+    #   deployment_serviceConnection: dcd-cft-sandbox
+
+    # - environment: nonprod
+    #   tfstate_serviceConnection: dcd-cft-sandbox
+    #   tfstate_rg: dcd-cft-sandbox-tfstate
+    #   tfstate_location: uksouth
+    #   tfstate_storage_account: tfstate531ff96dc0b42082
+    #   deployment_serviceConnection: dcd-cft-sandbox
 
     # - environment: prod
     #   tfstate_serviceConnection: dcd-cft-sandbox
@@ -22,8 +29,6 @@ parameters:
     #   tfstate_location: uksouth
     #   tfstate_storage_account: tfstate531ff96dc0b42082
     #   deployment_serviceConnection: dcd-cft-sandbox
-    #   dependent_stage:
-    #     - sbox
 
 trigger:
 - master
