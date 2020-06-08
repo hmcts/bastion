@@ -27,7 +27,8 @@ pr:
 
 variables:
   terraformVersion: 0.12.25
-  agentPool: ubuntu-18.04
+  agentPool:
+    vmImage: ubuntu-18.04
 
 stages:
   - ${{ each bastion in parameters.bastions }}:
