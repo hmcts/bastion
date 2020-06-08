@@ -27,8 +27,7 @@ pr:
 
 variables:
   terraformVersion: 0.12.25
-  agentPool:
-    vmImage: ubuntu-18.04
+  agentPool: ubuntu-18.04
 
 stages:
   - ${{ each bastion in parameters.bastions }}:
@@ -38,7 +37,8 @@ stages:
       jobs:
       - job: Test
         condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
-        pool: ${{ variables.agentPool }}
+        pool:
+          vmImage: ${{ variables.agentPool }}
 
         steps:
         - template: pipeline-templates/terraform-test.yaml
@@ -47,17 +47,16 @@ stages:
           parameters:
             ${{ insert }}: ${{ bastion }}
             terraformVersion: ${{ variables.terraformVersion }}
-            agentPool: ${{ variables.agentPool }}
             deploy: false
 
       - job: Deploy
         condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-        pool: ${{ variables.agentPool }}
+        pool:
+          vmImage: ${{ variables.agentPool }}
 
         steps:
         - template: pipeline-templates/terraform-execute.yaml
           parameters:
             ${{ insert }}: ${{ bastion }}
             terraformVersion: ${{ variables.terraformVersion }}
-            agentPool: ${{ variables.agentPool }}
             deploy: true

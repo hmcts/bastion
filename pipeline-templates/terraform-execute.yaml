@@ -2,9 +2,6 @@ parameters:
   - name: terraformVersion
     type: string
 
-  - name: agentPool
-    type: string
-
   - name: tfstate_serviceConnection
     type: string
 
