@@ -1,9 +1,9 @@
 locals {
   env_display_names = {
-    sbox = "Sandbox"
-    prod = "Production"
+    sbox    = "Sandbox"
+    prod    = "Production"
     nonprod = "Non-Production"
-    test = "Test"
+    test    = "Test"
   }
 
   common_tags = {
