@@ -21,7 +21,7 @@ trigger:
 
 pr:
   branches:
-    includes:
+    include:
       - master
 
 variables:
