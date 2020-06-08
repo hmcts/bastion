@@ -9,13 +9,16 @@ variables:
 stages:
 
 - stage: Test
-  displayName: "Test and validate"
+
+  jobs:
 
   - template: pipeline-templates/terraform-test.yaml
     parameters:
       agentPool: ${{ variables.agentPool }}
 
-- stage: Plan
+- stage: Build
+
+  jobs:
 
   - template: pipeline-templates/terraform-plan.yaml
     parameters:
