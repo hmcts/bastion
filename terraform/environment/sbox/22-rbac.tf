@@ -1,5 +1,5 @@
 module "rbac_bastion_devops" {
-  source                = "../../modules/role_definition/"
+  source                = "../../modules/rbac/"
   bastion_name          = module.bastion_devops.virtual_machine.name
   role_assignment_scope = module.bastion_devops.virtual_machine.id
   role_def_assignable_scopes = [
