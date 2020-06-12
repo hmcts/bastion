@@ -6,4 +6,5 @@ module "bastion-devops" {
   keyvault_id         = module.bootstrap.keyvault.id
   bastion_name        = "bastion-devops-test"
   environment         = "test"
+  public_key          = "bastion-devops-test.pub"
 }

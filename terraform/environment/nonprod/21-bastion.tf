@@ -6,4 +6,5 @@ module "bastion-dev" {
   keyvault_id         = module.bootstrap.keyvault.id
   bastion_name        = "bastion-dev-nonprod"
   environment         = "nonprod"
+  public_key          = "bastion-dev-nonprod.pub"
 }

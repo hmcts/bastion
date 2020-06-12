@@ -5,9 +5,9 @@
 #     }
 
 #     depends_on = [
-#         azurerm_public_ip.bastion_public_ip,
-#         azurerm_virtual_machine_extension.ansible_extension,
-#         azurerm_virtual_machine.bastion_vm
+#         azurerm_public_ip.bastion,
+#         azurerm_virtual_machine_extension.bastion_ansible,
+#         azurerm_virtual_machine.bastion
 #     ]
 
 #   provisioner "remote-exec" {

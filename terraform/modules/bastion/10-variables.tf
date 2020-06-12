@@ -34,3 +34,8 @@ variable "environment" {
   description = "Name of the environment for which the bastion is being deployed"
   type        = string
 }
+
+variable "public_key" {
+  description = "Name of the SSH public key.  This file should be placed with the parent module Terraform files"
+  type        = string
+}

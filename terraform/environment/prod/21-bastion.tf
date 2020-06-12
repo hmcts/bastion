@@ -6,6 +6,7 @@ module "bastion-devops" {
   keyvault_id         = module.bootstrap.keyvault.id
   bastion_name        = "bastion-devops-prod"
   environment         = "prod"
+  public_key          = "bastion-devops-prod.pub"
 }
 
 module "bastion-secops" {
@@ -16,4 +17,5 @@ module "bastion-secops" {
   keyvault_id         = module.bootstrap.keyvault.id
   bastion_name        = "bastion-secops-prod"
   environment         = "prod"
+  public_key          = "bastion-secops-prod.pub"
 }
