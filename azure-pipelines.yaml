@@ -4,7 +4,8 @@ parameters:
     default: 
 
     - environment: sbox
-      tfstate_serviceConnection: dcd-cft-sandbox
+      serviceConnection: dcd-cft-sandbox
+      serviceConnection_privileged: dcd-cft-sandbox-ops
       tfstate_rg: dcd-cft-sandbox-tfstate
       tfstate_location: uksouth
       tfstate_storage_account: tfstateed302caf1c3ce90e

@@ -1,11 +1,11 @@
 module "bootstrap" {
   source              = "../../modules/bootstrap/"
-  location            = "uksouth"
-  resource_group_name = "bastion-sbox-rg"
-  vnet_name           = "bastion-sbox-vnet"
-  vnet_address_space  = ["10.20.20.96/27"]
-  subnet_name         = "bastion-sbox-subnet"
-  subnet_address      = "10.20.20.96/27"
-  keyvault_name       = "bastion-sbox-kv"
-  environment         = "sbox"
+  location            = local.location
+  environment         = local.environment
+  resource_group_name = "bastion-${local.environment}-rg"
+  vnet_name           = "bastion-${local.environment}-vnet"
+  keyvault_name       = "bastion-${local.environment}-kv"
+  subnet_name         = "bastion-${local.environment}-subnet"
+  subnet_address      = local.subnet
+  vnet_address_space  = [local.subnet]
 }

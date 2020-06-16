@@ -37,7 +37,7 @@ steps:
     workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
     backendType: azurerm
     ensurebackend: true
-    backendServiceArm: ${{ parameters.serviceConnection }}
+    backendServiceArm: ${{ parameters.tfstate_serviceConnection }}
     backendAzureRmResourceGroupName: ${{ parameters.tfstate_rg }}
     backendAzureRmResourceGroupLocation: ${{ parameters.tfstate_location }}
     backendAzureRmStorageAccountName: ${{ parameters.tfstate_storage_account }}
@@ -67,5 +67,5 @@ steps:
     inputs:
       command: apply
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
-      environmentServiceName: ${{ parameters.serviceConnection_privileged }}
+      environmentServiceName: ${{ parameters.deployment_serviceConnection }}
       commandOptions: --auto-approve
