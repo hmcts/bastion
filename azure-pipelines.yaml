@@ -38,6 +38,7 @@ pr:
 variables:
   terraformVersion: 0.12.25
   agentPool: ubuntu-18.04
+  rbac: false
 
 stages:
   - ${{ each bastion in parameters.bastionHosts }}:

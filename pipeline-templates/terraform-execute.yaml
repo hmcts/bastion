@@ -5,6 +5,9 @@ parameters:
   - name: serviceConnection
     type: string
 
+  - name: serviceConnection_privileged
+    type: string
+
   - name: rg
     type: string
 
