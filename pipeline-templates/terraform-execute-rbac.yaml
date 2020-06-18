@@ -5,6 +5,9 @@ parameters:
   - name: serviceConnection
     type: string
 
+  - name: serviceConnection_privileged
+    type: string
+
   - name: rg
     type: string
 
@@ -14,13 +17,13 @@ parameters:
   - name: storage_account
     type: string
 
-  - name: serviceConnection_privileged
-    type: string
-
   - name: environment
     type: string
 
   - name: deploy
+    type: boolean
+
+  - name: rbac
     type: boolean
 
 steps:
@@ -61,11 +64,12 @@ steps:
       environmentServiceName: ${{ parameters.serviceConnection }}
 
 - ${{ if parameters.deploy }}:
+  - ${{ if parameters.rbac }}:
 
-  - task: TerraformCLI@0
-    displayName: Terraform apply RBAC
-    inputs:
-      command: apply
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
-      environmentServiceName: ${{ parameters.serviceConnection_privileged }}
-      commandOptions: --auto-approve
+    - task: TerraformCLI@0
+      displayName: Terraform apply RBAC
+      inputs:
+        command: apply
+        workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
+        environmentServiceName: ${{ parameters.serviceConnection_privileged }}
+        commandOptions: --auto-approve
