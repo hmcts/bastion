@@ -14,6 +14,9 @@ parameters:
   - name: storage_account
     type: string
 
+  - name: serviceConnection_privileged
+    type: string
+
   - name: environment
     type: string
 
@@ -31,7 +34,7 @@ steps:
   displayName: Terraform initialize
   inputs:
     command: init
-    workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
+    workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
     backendType: azurerm
     ensurebackend: true
     backendServiceArm: ${{ parameters.serviceConnection }}
@@ -40,29 +43,29 @@ steps:
     backendAzureRmStorageAccountName: ${{ parameters.storage_account }}
     backendAzureRmStorageAccountSku: Standard_LRS
     backendAzureRmContainerName: tfstate
-    backendAzureRmKey: rdo-bastion/${{ parameters.environment }}/tfstate-${{ parameters.environment }}.tfstate
+    backendAzureRmKey: rdo-bastion/${{ parameters.environment }}/tfstate-${{ parameters.environment }}-rbac.tfstate
 
 - ${{ if eq(false, parameters.deploy) }}:
 
   - task: TerraformCLI@0
-    displayName: Terraform validate
+    displayName: Terraform validate RBAC
     inputs:
       command: validate
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
 
   - task: TerraformCLI@0
-    displayName: Terraform plan
+    displayName: Terraform plan RBAC
     inputs:
       command: plan
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
       environmentServiceName: ${{ parameters.serviceConnection }}
 
-- ${{ if parameters.deploy }}:
+- ${{ if parameters.rbac }}:
 
   - task: TerraformCLI@0
-    displayName: Terraform apply
+    displayName: Terraform apply RBAC
     inputs:
       command: apply
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
-      environmentServiceName: ${{ parameters.serviceConnection }}
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
+      environmentServiceName: ${{ parameters.serviceConnection_privileged }}
       commandOptions: --auto-approve
