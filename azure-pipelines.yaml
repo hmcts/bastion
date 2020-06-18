@@ -3,30 +3,30 @@ parameters:
     type: object
     default: 
 
-    - environment: sbox
-      serviceConnection: dcd-cft-sandbox
-      serviceConnection_privileged: dcd-cft-sandbox-ops
-      rg: dcd-cft-sandbox-tfstate
-      location: uksouth
-      storage_account: tfstateed302caf1c3ce90e
+    # - environment: sbox
+    #   serviceConnection: dcd-cft-sandbox
+    #   serviceConnection_privileged: dcd-cft-sandbox-ops
+    #   rg: dcd-cft-sandbox-tfstate
+    #   location: uksouth
+    #   storage_account: tfstateed302caf1c3ce90e
 
-    # - environment: test
-    #   tfstate_serviceConnection: dts-management-test
-    #   tfstate_rg: dts-management-test-tfstate
-    #   tfstate_location: uksouth
-    #   tfstate_storage_account: tfstated7b54c7febbb5bde
+    - environment: test
+      serviceConnection: dts-management-test-intsvc
+      rg: dts-management-test-intsvc-tfstate
+      location: uksouth
+      storage_account: tfstated7b54c7febbb5bde
 
     # - environment: nonprod
-    #   tfstate_serviceConnection: dts-management-nonprod-intsvc
-    #   tfstate_rg: dts-management-nonprod-intsvc-tfstate
-    #   tfstate_location: uksouth
-    #   tfstate_storage_account: tfstateb44eb47999719b6f
+    #   serviceConnection: dts-management-nonprod-intsvc
+    #   rg: dts-management-nonprod-intsvc-tfstate
+    #   location: uksouth
+    #   storage_account: tfstateb44eb47999719b6f
 
     # - environment: prod
-    #   tfstate_serviceConnection: dts-management-prod-intsvc
-    #   tfstate_rg: dts-management-prod-intsvc-tfstate
-    #   tfstate_location: uksouth
-    #   tfstate_storage_account: tfstate2b1afc1958670244
+    #   serviceConnection: dts-management-prod-intsvc
+    #   rg: dts-management-prod-intsvc-tfstate
+    #   location: uksouth
+    #   storage_account: tfstate2b1afc1958670244
 
 trigger:
 - master
