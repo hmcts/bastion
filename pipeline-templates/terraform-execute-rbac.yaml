@@ -48,7 +48,7 @@ steps:
     backendAzureRmContainerName: tfstate
     backendAzureRmKey: rdo-bastion/${{ parameters.environment }}/tfstate-${{ parameters.environment }}-rbac.tfstate
 
-- ${{ if eq(false, parameters.deploy) }}:
+- ${{ if eq(parameters.deploy, false) }}:
 
   - task: TerraformCLI@0
     displayName: Terraform validate RBAC
@@ -63,8 +63,8 @@ steps:
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
       environmentServiceName: ${{ parameters.serviceConnection }}
 
-- ${{ if eq(true, parameters.deploy) }}:
-  - ${{ if eq(true, parameters.rbac) }}:
+- ${{ if eq(parameters.deploy, true) }}:
+  - ${{ if eq(parameters.rbac, true) }}:
 
     - task: TerraformCLI@0
       displayName: Terraform apply RBAC
