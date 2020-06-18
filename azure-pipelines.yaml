@@ -86,3 +86,4 @@ stages:
             ${{ insert }}: ${{ bastion }}
             terraformVersion: ${{ variables.terraformVersion }}
             deploy: true
+            rbac: ${{ variables.rbac }}
