@@ -68,6 +68,7 @@ stages:
               ${{ insert }}: ${{ bastion }}
               terraformVersion: ${{ variables.terraformVersion }}
               deploy: false
+              rbac: ${{ variables.rbac }}
 
       - job: Deploy
         condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
