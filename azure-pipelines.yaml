@@ -11,9 +11,9 @@ parameters:
     #   storage_account: tfstateed302caf1c3ce90e
 
     - environment: test
-      serviceConnection: dts-management-test-intsvc
+      serviceConnection: dts-management-test
       serviceConnection_privileged: ops-approval-gate-test-envs
-      rg: dts-management-test-intsvc-tfstate
+      rg: dts-management-test-tfstate
       location: uksouth
       storage_account: tfstated7b54c7febbb5bde
 
