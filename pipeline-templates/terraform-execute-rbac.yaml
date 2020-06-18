@@ -23,6 +23,9 @@ parameters:
   - name: deploy
     type: boolean
 
+  - name: rbac
+    type: boolean
+
 steps:
 
 - task: TerraformInstaller@0
