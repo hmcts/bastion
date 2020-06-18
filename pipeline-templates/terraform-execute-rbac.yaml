@@ -20,9 +20,6 @@ parameters:
   - name: environment
     type: string
 
-  - name: deploy
-    type: boolean
-
   - name: rbac
     type: boolean
 
@@ -48,7 +45,7 @@ steps:
     backendAzureRmContainerName: tfstate
     backendAzureRmKey: rdo-bastion/${{ parameters.environment }}/tfstate-${{ parameters.environment }}-rbac.tfstate
 
-- ${{ if eq(false, parameters.deploy) }}:
+- ${{ if eq(false, parameters.rbac) }}:
 
   - task: TerraformCLI@0
     displayName: Terraform validate RBAC
