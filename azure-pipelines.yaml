@@ -78,7 +78,7 @@ stages:
             terraformVersion: ${{ variables.terraformVersion }}
             deploy: true
 
-        - template: pipeline-templates/terraform-execute.yaml
+        - template: pipeline-templates/terraform-execute-rbac.yaml
           parameters:
             ${{ insert }}: ${{ bastion }}
             terraformVersion: ${{ variables.terraformVersion }}
