@@ -12,6 +12,7 @@ parameters:
 
     - environment: test
       serviceConnection: dts-management-test-intsvc
+      serviceConnection_privileged: ops-approval-gate-test-envs
       rg: dts-management-test-intsvc-tfstate
       location: uksouth
       storage_account: tfstated7b54c7febbb5bde
