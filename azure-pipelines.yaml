@@ -1,0 +1,89 @@
+parameters:
+  - name: bastionHosts
+    type: object
+    default: 
+
+    # - environment: sbox
+    #   serviceConnection: dcd-cft-sandbox
+    #   serviceConnection_privileged: dcd-cft-sandbox-ops
+    #   rg: dcd-cft-sandbox-tfstate
+    #   location: uksouth
+    #   storage_account: tfstateed302caf1c3ce90e
+
+    - environment: test
+      serviceConnection: dts-management-test
+      serviceConnection_privileged: ops-approval-gate-test-envs
+      rg: dts-management-test-tfstate
+      location: uksouth
+      storage_account: tfstated7b54c7febbb5bde
+
+    # - environment: nonprod
+    #   serviceConnection: dts-management-nonprod-intsvc
+    #   rg: dts-management-nonprod-intsvc-tfstate
+    #   location: uksouth
+    #   storage_account: tfstateb44eb47999719b6f
+
+    # - environment: prod
+    #   serviceConnection: dts-management-prod-intsvc
+    #   rg: dts-management-prod-intsvc-tfstate
+    #   location: uksouth
+    #   storage_account: tfstate2b1afc1958670244
+
+trigger:
+- master
+- iaas-only
+
+pr:
+- master
+
+variables:
+  terraformVersion: 0.12.25
+  agentPool: ubuntu-18.04
+  rbac: false
+
+stages:
+  - ${{ each bastion in parameters.bastionHosts }}:
+
+    - stage: ${{ bastion.environment }}
+      dependsOn: ${{ bastion.dependent_stage }}
+
+      jobs:
+      - job: Test
+        condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+        pool:
+          vmImage: ${{ variables.agentPool }}
+
+        steps:
+        - template: pipeline-templates/terraform-test.yaml
+
+        - template: pipeline-templates/terraform-execute.yaml
+          parameters:
+            ${{ insert }}: ${{ bastion }}
+            terraformVersion: ${{ variables.terraformVersion }}
+            deploy: false
+
+        - ${{ if eq(variables.rbac, true) }}:
+          - template: pipeline-templates/terraform-execute-rbac.yaml
+            parameters:
+              ${{ insert }}: ${{ bastion }}
+              terraformVersion: ${{ variables.terraformVersion }}
+              deploy: false
+
+      - job: Deploy
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+        pool:
+          vmImage: ${{ variables.agentPool }}
+
+        steps:
+        - template: pipeline-templates/terraform-execute.yaml
+          parameters:
+            ${{ insert }}: ${{ bastion }}
+            terraformVersion: ${{ variables.terraformVersion }}
+            deploy: true
+
+        - ${{ if eq(variables.rbac, true) }}:
+          - template: pipeline-templates/terraform-execute-rbac.yaml
+            parameters:
+              ${{ insert }}: ${{ bastion }}
+              terraformVersion: ${{ variables.terraformVersion }}
+              deploy: true

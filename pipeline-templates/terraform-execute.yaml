@@ -1,0 +1,71 @@
+parameters:
+  - name: terraformVersion
+    type: string
+
+  - name: serviceConnection
+    type: string
+
+  - name: serviceConnection_privileged
+    type: string
+
+  - name: rg
+    type: string
+
+  - name: location
+    type: string
+
+  - name: storage_account
+    type: string
+
+  - name: environment
+    type: string
+
+  - name: deploy
+    type: boolean
+
+steps:
+
+- task: TerraformInstaller@0
+  displayName: Terraform install
+  inputs:
+    terraformVersion: ${{ parameters.terraformVersion }}
+
+- task: TerraformCLI@0
+  displayName: Terraform initialize
+  inputs:
+    command: init
+    workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
+    backendType: azurerm
+    ensurebackend: true
+    backendServiceArm: ${{ parameters.serviceConnection }}
+    backendAzureRmResourceGroupName: ${{ parameters.rg }}
+    backendAzureRmResourceGroupLocation: ${{ parameters.location }}
+    backendAzureRmStorageAccountName: ${{ parameters.storage_account }}
+    backendAzureRmStorageAccountSku: Standard_LRS
+    backendAzureRmContainerName: tfstate
+    backendAzureRmKey: rdo-bastion/${{ parameters.environment }}/tfstate-${{ parameters.environment }}.tfstate
+
+- ${{ if eq(false, parameters.deploy) }}:
+
+  - task: TerraformCLI@0
+    displayName: Terraform validate
+    inputs:
+      command: validate
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
+
+  - task: TerraformCLI@0
+    displayName: Terraform plan
+    inputs:
+      command: plan
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
+      environmentServiceName: ${{ parameters.serviceConnection }}
+
+- ${{ if parameters.deploy }}:
+
+  - task: TerraformCLI@0
+    displayName: Terraform apply
+    inputs:
+      command: apply
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
+      environmentServiceName: ${{ parameters.serviceConnection }}
+      commandOptions: --auto-approve
