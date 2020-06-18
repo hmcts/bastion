@@ -23,9 +23,6 @@ parameters:
   - name: deploy
     type: boolean
 
-  - name: rbac
-    type: boolean
-
 steps:
 
 - task: TerraformInstaller@0
@@ -63,13 +60,12 @@ steps:
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
       environmentServiceName: ${{ parameters.serviceConnection }}
 
-- ${{ if eq(parameters.rbac, true) }}:
-  - ${{ if eq(parameters.deploy, true) }}:
+- ${{ if eq(parameters.deploy, true) }}:
 
-    - task: TerraformCLI@0
-      displayName: Terraform apply RBAC
-      inputs:
-        command: apply
-        workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
-        environmentServiceName: ${{ parameters.serviceConnection_privileged }}
-        commandOptions: --auto-approve
+  - task: TerraformCLI@0
+    displayName: Terraform apply RBAC
+    inputs:
+      command: apply
+      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
+      environmentServiceName: ${{ parameters.serviceConnection_privileged }}
+      commandOptions: --auto-approve
