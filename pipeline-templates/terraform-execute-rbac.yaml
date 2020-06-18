@@ -20,18 +20,18 @@ parameters:
   - name: environment
     type: string
 
-  - name: rbac
+  - name: deploy
     type: boolean
 
 steps:
 
 - task: TerraformInstaller@0
-  displayName: Terraform install
+  displayName: Terraform install RBAC
   inputs:
     terraformVersion: ${{ parameters.terraformVersion }}
 
 - task: TerraformCLI@0
-  displayName: Terraform initialize
+  displayName: Terraform initialize RBAC
   inputs:
     command: init
     workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
@@ -45,7 +45,7 @@ steps:
     backendAzureRmContainerName: tfstate
     backendAzureRmKey: rdo-bastion/${{ parameters.environment }}/tfstate-${{ parameters.environment }}-rbac.tfstate
 
-- ${{ if eq(false, parameters.rbac) }}:
+- ${{ if eq(false, parameters.deploy) }}:
 
   - task: TerraformCLI@0
     displayName: Terraform validate RBAC
@@ -60,7 +60,7 @@ steps:
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
       environmentServiceName: ${{ parameters.serviceConnection }}
 
-- ${{ if parameters.rbac }}:
+- ${{ if parameters.deploy }}:
 
   - task: TerraformCLI@0
     displayName: Terraform apply RBAC
