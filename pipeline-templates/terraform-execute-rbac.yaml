@@ -63,8 +63,8 @@ steps:
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
       environmentServiceName: ${{ parameters.serviceConnection }}
 
-- ${{ if parameters.deploy }}:
-  - ${{ if parameters.rbac }}:
+- ${{ if eq(true, parameters.deploy) }}:
+  - ${{ if eq(true, parameters.rbac) }}:
 
     - task: TerraformCLI@0
       displayName: Terraform apply RBAC
