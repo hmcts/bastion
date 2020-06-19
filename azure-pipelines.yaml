@@ -63,12 +63,12 @@ stages:
             terraformVersion: ${{ variables.terraformVersion }}
             deploy: false
 
-        - ${{ if eq("$(deploy_rbac)", true) }}:
+        - ${{ if eq('$(deploy_rbac)', true) }}:
           - template: pipeline-templates/terraform-execute-rbac.yaml
             parameters:
               ${{ insert }}: ${{ bastion }}
               terraformVersion: ${{ variables.terraformVersion }}
-              deploy: false
+              deploy: false 
 
       - job: Deploy
         condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
