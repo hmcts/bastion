@@ -17,17 +17,17 @@ parameters:
       location: uksouth
       storage_account: tfstated7b54c7febbb5bde
 
-    # - environment: nonprod
-    #   serviceConnection: dts-management-nonprod-intsvc
-    #   rg: dts-management-nonprod-intsvc-tfstate
-    #   location: uksouth
-    #   storage_account: tfstateb44eb47999719b6f
+    - environment: nonprod
+      serviceConnection: dts-management-nonprod-intsvc
+      rg: dts-management-nonprod-intsvc-tfstate
+      location: uksouth
+      storage_account: tfstateb44eb47999719b6f
 
-    # - environment: prod
-    #   serviceConnection: dts-management-prod-intsvc
-    #   rg: dts-management-prod-intsvc-tfstate
-    #   location: uksouth
-    #   storage_account: tfstate2b1afc1958670244
+    - environment: prod
+      serviceConnection: dts-management-prod-intsvc
+      rg: dts-management-prod-intsvc-tfstate
+      location: uksouth
+      storage_account: tfstate2b1afc1958670244
 
 trigger:
 - master
@@ -39,7 +39,7 @@ pr:
 variables:
   terraformVersion: 0.12.25
   agentPool: ubuntu-18.04
-  rbac: false
+  # rbac: false
 
 stages:
   - ${{ each bastion in parameters.bastionHosts }}:
