@@ -41,7 +41,6 @@ pr:
 variables:
   terraformVersion: 0.12.25
   agentPool: ubuntu-18.04
-  rbac: $[deploy_rbac]
 
 stages:
   - ${{ each bastion in parameters.bastionHosts }}:
@@ -64,7 +63,7 @@ stages:
             terraformVersion: ${{ variables.terraformVersion }}
             deploy: false
 
-        - ${{ if eq(variables.rbac, true) }}:
+        - ${{ if eq(variables.deploy_rbac, true) }}:
           - template: pipeline-templates/terraform-execute-rbac.yaml
             parameters:
               ${{ insert }}: ${{ bastion }}
@@ -83,7 +82,7 @@ stages:
             terraformVersion: ${{ variables.terraformVersion }}
             deploy: true
 
-        - ${{ if eq(variables.rbac, true) }}:
+        - ${{ if eq(variables.deploy_rbac, true) }}:
           - template: pipeline-templates/terraform-execute-rbac.yaml
             parameters:
               ${{ insert }}: ${{ bastion }}
