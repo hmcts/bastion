@@ -43,7 +43,7 @@ steps:
     backendAzureRmStorageAccountName: ${{ parameters.storage_account }}
     backendAzureRmStorageAccountSku: Standard_LRS
     backendAzureRmContainerName: tfstate
-    backendAzureRmKey: rdo-bastion/${{ parameters.environment }}/tfstate-${{ parameters.environment }}-rbac.tfstate
+    backendAzureRmKey: rdo-bastion/bastion-${{ parameters.environment }}-rbac.tfstate
 
 - ${{ if eq(parameters.deploy, false) }}:
 
