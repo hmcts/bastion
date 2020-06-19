@@ -19,12 +19,14 @@ parameters:
 
     - environment: nonprod
       serviceConnection: dts-management-nonprod-intsvc
+      serviceConnection_privileged: ops-approval-gate-nonprod-envs
       rg: dts-management-nonprod-intsvc-tfstate
       location: uksouth
       storage_account: tfstateb44eb47999719b6f
 
     - environment: prod
       serviceConnection: dts-management-prod-intsvc
+      serviceConnection_privileged: ops-approval-gate-prod-envs
       rg: dts-management-prod-intsvc-tfstate
       location: uksouth
       storage_account: tfstate2b1afc1958670244
