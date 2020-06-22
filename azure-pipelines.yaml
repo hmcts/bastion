@@ -38,7 +38,7 @@ parameters:
 
 trigger:
 - master
-- iaas-only
+- pipeline-development
 
 pr:
 - master
