@@ -63,7 +63,7 @@ stages:
             terraformVersion: ${{ variables.terraformVersion }}
             deploy: false
 
-        - ${{ if eq(variables.deploy_rbac, true) }}:
+        - ${{ if eq(true, variables.deploy_rbac) }}:
           - template: pipeline-templates/terraform-execute-rbac.yaml
             parameters:
               ${{ insert }}: ${{ bastion }}
@@ -82,7 +82,7 @@ stages:
             terraformVersion: ${{ variables.terraformVersion }}
             deploy: true
 
-        - ${{ if eq(variables.deploy_rbac, true) }}:
+        - ${{ if eq(true, variables.deploy_rbac) }}:
           - template: pipeline-templates/terraform-execute-rbac.yaml
             parameters:
               ${{ insert }}: ${{ bastion }}
