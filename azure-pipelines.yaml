@@ -1,4 +1,9 @@
 parameters:
+  - name: deploy_rbac
+    displayName: Deploy RBAC
+    type: boolean
+    default: false
+
   - name: bastionHosts
     type: object
     default: 
@@ -19,12 +24,14 @@ parameters:
 
     # - environment: nonprod
     #   serviceConnection: dts-management-nonprod-intsvc
+    #   serviceConnection_privileged: ops-approval-gate-nonprod-envs
     #   rg: dts-management-nonprod-intsvc-tfstate
     #   location: uksouth
     #   storage_account: tfstateb44eb47999719b6f
 
     # - environment: prod
     #   serviceConnection: dts-management-prod-intsvc
+    #   serviceConnection_privileged: ops-approval-gate-prod-envs
     #   rg: dts-management-prod-intsvc-tfstate
     #   location: uksouth
     #   storage_account: tfstate2b1afc1958670244
@@ -39,7 +46,6 @@ pr:
 variables:
   terraformVersion: 0.12.25
   agentPool: ubuntu-18.04
-  rbac: false
 
 stages:
   - ${{ each bastion in parameters.bastionHosts }}:
@@ -62,12 +68,12 @@ stages:
             terraformVersion: ${{ variables.terraformVersion }}
             deploy: false
 
-        - ${{ if eq(variables.rbac, true) }}:
+        - ${{ if parameters.deploy_rbac }}:
           - template: pipeline-templates/terraform-execute-rbac.yaml
             parameters:
               ${{ insert }}: ${{ bastion }}
               terraformVersion: ${{ variables.terraformVersion }}
-              deploy: false
+              deploy: false 
 
       - job: Deploy
         condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -81,7 +87,7 @@ stages:
             terraformVersion: ${{ variables.terraformVersion }}
             deploy: true
 
-        - ${{ if eq(variables.rbac, true) }}:
+        - ${{ if parameters.deploy_rbac }}:
           - template: pipeline-templates/terraform-execute-rbac.yaml
             parameters:
               ${{ insert }}: ${{ bastion }}
