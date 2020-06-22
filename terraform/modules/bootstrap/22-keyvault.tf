@@ -19,4 +19,15 @@ resource "azurerm_key_vault" "bastion" {
       "set"
     ]
   }
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azuread_group.devops.id
+
+    secret_permissions = [
+      "get",
+      "list",
+      "set"
+    ]
+  }
 }
