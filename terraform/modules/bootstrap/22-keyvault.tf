@@ -22,7 +22,7 @@ resource "azurerm_key_vault" "bastion" {
 
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azuread_group.devops.id
+    object_id = "300e771f-856c-45cc-b899-40d78281e9c1"
 
     secret_permissions = [
       "get",
