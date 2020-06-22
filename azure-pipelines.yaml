@@ -1,4 +1,9 @@
 parameters:
+  - name: deploy_rbac
+    displayName: Deploy RBAC
+    type: boolean
+    default: false
+
   - name: bastionHosts
     type: object
     default: 
@@ -41,6 +46,7 @@ pr:
 variables:
   terraformVersion: 0.12.25
   agentPool: ubuntu-18.04
+  deploy_rbac: false
 
 stages:
   - ${{ each bastion in parameters.bastionHosts }}:
@@ -63,7 +69,7 @@ stages:
             terraformVersion: ${{ variables.terraformVersion }}
             deploy: false
 
-        - ${{ if eq(true, variables.deploy_rbac) }}:
+        - ${{ if parameters.deploy_rbac }}:
           - template: pipeline-templates/terraform-execute-rbac.yaml
             parameters:
               ${{ insert }}: ${{ bastion }}
@@ -82,7 +88,7 @@ stages:
             terraformVersion: ${{ variables.terraformVersion }}
             deploy: true
 
-        - ${{ if eq(true, variables.deploy_rbac) }}:
+        - ${{ if parameters.deploy_rbac }}:
           - template: pipeline-templates/terraform-execute-rbac.yaml
             parameters:
               ${{ insert }}: ${{ bastion }}
