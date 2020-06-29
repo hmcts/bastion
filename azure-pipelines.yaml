@@ -36,6 +36,8 @@ parameters:
     #   location: uksouth
     #   storage_account: tfstate2b1afc1958670244
 
+    # test
+
 trigger:
 - master
 - pipeline-development
