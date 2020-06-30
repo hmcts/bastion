@@ -1,5 +1,5 @@
 locals {
-  environment = "sbox"
+  environment = "sbox-intsvc"
   location    = "uksouth"
   subnet      = "10.20.20.96/27"
 }

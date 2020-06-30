@@ -58,7 +58,7 @@ stages:
       dependsOn: ${{ bastion.dependent_stage }}
 
       jobs:
-      - job: Test
+      - job: Test & Plan
         condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
         pool:
           vmImage: ${{ variables.agentPool }}
