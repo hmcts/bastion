@@ -5,8 +5,8 @@ module "bastion-devops" {
   resource_group_name = module.bootstrap.resource_group.name
   subnet_id           = module.bootstrap.subnet.id
   keyvault_id         = module.bootstrap.keyvault.id
-  bastion_name        = "bastion-devops-prod"
-  public_key          = "bastion-devops-prod.pub"
+  bastion_name        = "bastion-devops-prod-intsvc"
+  public_key          = "bastion-devops-prod-intsvc.pub"
 }
 
 module "bastion-secops" {
@@ -16,6 +16,6 @@ module "bastion-secops" {
   resource_group_name = module.bootstrap.resource_group.name
   subnet_id           = module.bootstrap.subnet.id
   keyvault_id         = module.bootstrap.keyvault.id
-  bastion_name        = "bastion-secops-prod"
-  public_key          = "bastion-secops-prod.pub"
+  bastion_name        = "bastion-secops-prod-intsvc"
+  public_key          = "bastion-secops-prod-intsvc.pub"
 }
