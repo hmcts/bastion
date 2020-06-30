@@ -24,16 +24,16 @@ parameters:
       location: uksouth
       storage_account: tfstated7b54c7febbb5bde
 
-    - bastionHost: bastion_nonprod_intsvc
-      environment: nonprod-intsvc
+    - bastionHost: bastion_nonprod
+      environment: nonprod
       serviceConnection: dts-management-nonprod-intsvc
       serviceConnection_privileged: ops-approval-gate-nonprod-envs
       rg: dts-management-nonprod-intsvc-tfstate
       location: uksouth
       storage_account: tfstateb44eb47999719b6f
 
-    # - bastionHost: bastion_prod_intsvc
-    #   environment: prod-intsvc
+    # - bastionHost: bastion_prod
+    #   environment: prod
     #   serviceConnection: dts-management-prod-intsvc
     #   serviceConnection_privileged: ops-approval-gate-prod-envs
     #   rg: dts-management-prod-intsvc-tfstate
