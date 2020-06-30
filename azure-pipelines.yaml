@@ -8,28 +8,32 @@ parameters:
     type: object
     default: 
 
-    # - environment: sbox-intsvc
+    # - bastionHost: sbox
+    #   environment: sbox-intsvc
     #   serviceConnection: dcd-cft-sandbox
     #   serviceConnection_privileged: dcd-cft-sandbox-ops
     #   rg: dcd-cft-sandbox-tfstate
     #   location: uksouth
     #   storage_account: tfstateed302caf1c3ce90e
 
-    - environment: test
+    - bastionHost: bastion_test
+      environment: test
       serviceConnection: dts-management-test
       serviceConnection_privileged: ops-approval-gate-test-envs
       rg: dts-management-test-tfstate
       location: uksouth
       storage_account: tfstated7b54c7febbb5bde
 
-    - environment: nonprod-intsvc
+    - bastionHost: bastion_nonprod_intsvc
+      environment: nonprod-intsvc
       serviceConnection: dts-management-nonprod-intsvc
       serviceConnection_privileged: ops-approval-gate-nonprod-envs
       rg: dts-management-nonprod-intsvc-tfstate
       location: uksouth
       storage_account: tfstateb44eb47999719b6f
 
-    # - environment: prod-intsvc
+    # - bastionHost: bastion_prod_intsvc
+    #   environment: prod-intsvc
     #   serviceConnection: dts-management-prod-intsvc
     #   serviceConnection_privileged: ops-approval-gate-prod-envs
     #   rg: dts-management-prod-intsvc-tfstate
@@ -50,7 +54,7 @@ variables:
 stages:
   - ${{ each bastion in parameters.bastionHosts }}:
 
-    - stage: ${{ bastion.environment }}
+    - stage: ${{ bastion.bastionHost }}
       dependsOn: ${{ bastion.dependent_stage }}
 
       jobs:
