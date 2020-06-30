@@ -8,7 +8,7 @@ parameters:
     type: object
     default: 
 
-    # - environment: sbox
+    # - environment: sbox-intsvc
     #   serviceConnection: dcd-cft-sandbox
     #   serviceConnection_privileged: dcd-cft-sandbox-ops
     #   rg: dcd-cft-sandbox-tfstate
@@ -22,21 +22,19 @@ parameters:
       location: uksouth
       storage_account: tfstated7b54c7febbb5bde
 
-    - environment: nonprod
+    - environment: nonprod-intsvc
       serviceConnection: dts-management-nonprod-intsvc
       serviceConnection_privileged: ops-approval-gate-nonprod-envs
       rg: dts-management-nonprod-intsvc-tfstate
       location: uksouth
       storage_account: tfstateb44eb47999719b6f
 
-    # - environment: prod
+    # - environment: prod-intsvc
     #   serviceConnection: dts-management-prod-intsvc
     #   serviceConnection_privileged: ops-approval-gate-prod-envs
     #   rg: dts-management-prod-intsvc-tfstate
     #   location: uksouth
     #   storage_account: tfstate2b1afc1958670244
-
-    # test
 
 trigger:
 - master
