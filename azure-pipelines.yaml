@@ -52,7 +52,7 @@ variables:
   agentPool: ubuntu-18.04
 
 stages:
-  - ${{ each bastion in parameters.bastionHost }}:
+  - ${{ each bastion in parameters.bastionHosts }}:
 
     - stage: ${{ bastion.bastionHost }}
       dependsOn: ${{ bastion.dependent_stage }}

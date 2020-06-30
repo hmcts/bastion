@@ -17,6 +17,9 @@ parameters:
   - name: storage_account
     type: string
 
+  - name: bastionHost
+    type: string
+
   - name: environment
     type: string
 
