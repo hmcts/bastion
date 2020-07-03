@@ -27,7 +27,7 @@ parameters:
     - bastionHost: bastion_nonprod
       environment: nonprod
       serviceConnection: dts-management-nonprod-intsvc
-      serviceConnection_privileged: ops-approval-gate-nonprod-envs
+      serviceConnection_privileged: ops-approval-gate-mgmt-envs
       rg: dts-management-nonprod-intsvc-tfstate
       location: uksouth
       storage_account: tfstateb44eb47999719b6f
