@@ -61,7 +61,7 @@ steps:
     inputs:
       command: plan
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
-      environmentServiceName: ${{ parameters.serviceConnection }}
+      environmentServiceName: ${{ parameters.serviceConnection_privileged }}
 
 - ${{ if eq(parameters.deploy, true) }}:
 
