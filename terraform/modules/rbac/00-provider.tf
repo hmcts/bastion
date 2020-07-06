@@ -7,5 +7,5 @@ provider "azurerm" {
 provider "azurerm" {
   features {}
   subscription_id = var.provider_sub_id
-  alias = "bastion"
+  alias           = "bastion"
 }

@@ -10,7 +10,7 @@ resource "azurerm_role_assignment" "bastion-admin" {
 
 resource "azurerm_role_assignment" "bastion-user" {
   provider = azurerm.bastion
-  
+
   count = var.bastion_access_user_group_name == "" ? 0 : 1
 
   scope              = data.azurerm_virtual_machine.bastion.id
