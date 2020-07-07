@@ -62,6 +62,7 @@ steps:
       command: plan
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
       environmentServiceName: ${{ parameters.serviceConnection_privileged }}
+      commandOptions: "-out=tfplan.tf"
 
 - ${{ if eq(parameters.deploy, true) }}:
 
