@@ -19,6 +19,6 @@ variable "bastion_access_user_group_name" {
 }
 
 variable "provider_sub_id" {
-  description = "Sausage"
+  description = "The subscription ID of the bastion host"
   type        = string
 }
