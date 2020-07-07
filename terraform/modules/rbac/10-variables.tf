@@ -17,3 +17,8 @@ variable "bastion_access_user_group_name" {
   description = "The user group name used to assign user login rights to the bastion host"
   type        = string
 }
+
+variable "provider_sub_id" {
+  description = "The subscription ID of the bastion host"
+  type        = string
+}

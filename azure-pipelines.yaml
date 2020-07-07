@@ -16,18 +16,18 @@ parameters:
     #   location: uksouth
     #   storage_account: tfstateed302caf1c3ce90e
 
-    - bastionHost: bastion_test
-      environment: test
-      serviceConnection: dts-management-test
-      serviceConnection_privileged: ops-approval-gate-test-envs
-      rg: dts-management-test-tfstate
-      location: uksouth
-      storage_account: tfstated7b54c7febbb5bde
+    # - bastionHost: bastion_test
+    #   environment: test
+    #   serviceConnection: dts-management-test
+    #   serviceConnection_privileged: ops-approval-gate-test-envs
+    #   rg: dts-management-test-tfstate
+    #   location: uksouth
+    #   storage_account: tfstated7b54c7febbb5bde
 
     - bastionHost: bastion_nonprod
       environment: nonprod
       serviceConnection: dts-management-nonprod-intsvc
-      serviceConnection_privileged: ops-approval-gate-nonprod-envs
+      serviceConnection_privileged: ops-approval-gate-mgmt-envs
       rg: dts-management-nonprod-intsvc-tfstate
       location: uksouth
       storage_account: tfstateb44eb47999719b6f
