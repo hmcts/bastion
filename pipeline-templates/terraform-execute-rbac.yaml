@@ -33,6 +33,16 @@ steps:
   inputs:
     terraformVersion: ${{ parameters.terraformVersion }}
 
+- task: AzureCLI@1
+  displayName: 'Set subscription'
+  inputs:
+    azureSubscription:  ${{ parameters.serviceConnection_privileged }}
+    addSpnToEnvironment: true
+    scriptLocation: inlineScript
+    failOnStandardError: 'true'
+    inlineScript: |   
+        az account set --subscription DTS-MANAGEMENT-NONPROD-INTSVC
+
 - task: TerraformCLI@0
   displayName: Terraform initialize RBAC
   inputs:
