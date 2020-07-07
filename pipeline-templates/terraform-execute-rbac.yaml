@@ -40,7 +40,7 @@ steps:
     workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
     backendType: azurerm
     ensurebackend: true
-    backendServiceArm: ${{ parameters.serviceConnection }}
+    backendServiceArm: ${{ parameters.serviceConnection_privileged }}
     backendAzureRmResourceGroupName: ${{ parameters.rg }}
     backendAzureRmResourceGroupLocation: ${{ parameters.location }}
     backendAzureRmStorageAccountName: ${{ parameters.storage_account }}
