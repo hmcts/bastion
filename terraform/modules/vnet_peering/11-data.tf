@@ -1,6 +1,6 @@
 data "azurerm_virtual_machine" "bastion" {
   provider = azurerm.bastion
-  
+
   name                = var.bastion_vnet_name
   resource_group_name = var.bastion_vnet_resource_group
 }
