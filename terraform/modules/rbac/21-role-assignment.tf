@@ -1,19 +1,15 @@
 resource "azurerm_role_assignment" "bastion-admin" {
   provider = azurerm.bastion
 
-  count = var.bastion_access_admin_group_name == "" ? 0 : 1
-
   scope              = data.azurerm_virtual_machine.bastion.id
-  role_definition_id = "Virtual Machine Admin Login"
+  role_definition_id = var.aad_role_def_id_admin
   principal_id       = data.azuread_group.bastion-admin.id
 }
 
 resource "azurerm_role_assignment" "bastion-user" {
   provider = azurerm.bastion
 
-  count = var.bastion_access_user_group_name == "" ? 0 : 1
-
   scope              = data.azurerm_virtual_machine.bastion.id
-  role_definition_id = "Virtual Machine User Login"
+  role_definition_id = var.aad_role_def_id_user
   principal_id       = data.azuread_group.bastion-user.id
 }

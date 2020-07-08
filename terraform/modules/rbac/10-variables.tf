@@ -18,7 +18,17 @@ variable "bastion_access_user_group_name" {
   type        = string
 }
 
-variable "provider_sub_id" {
+variable "bastion_subscription_id" {
   description = "The subscription ID of the bastion host"
+  type        = string
+}
+
+variable "aad_role_def_id_admin" {
+  description = "The role definition ID for Virtual Machine Administrator Login"
+  type        = string
+}
+
+variable "aad_role_def_id_user" {
+  description = "The role definition ID for Virtual Machine User Login"
   type        = string
 }
