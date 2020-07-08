@@ -4,17 +4,17 @@ variable "bastion_vnet_name" {
 }
 
 variable "bastion_vnet_resource_group" {
-  description = "The resource group name of the bastion host.  Used for role assignment"
+  description = "The resource group name of the bastion host"
   type        = string
 }
 
 variable "hub_vnet_name" {
-  description = "The resource group name of the bastion host.  Used for role assignment"
+  description = "The resource group name of the bastion host"
   type        = string
 }
 
 variable "hub_vnet_resource_group" {
-  description = "The resource group name of the bastion host.  Used for role assignment"
+  description = "The resource group name of the bastion host"
   type        = string
 }
 

@@ -1,7 +1,7 @@
 resource "azurerm_virtual_network_peering" "bastion-to-hub" {
-  name                      = "${var.bastion_vnet_name}-to-hub"
-  resource_group_name       = var.bastion_vnet_name
-  virtual_network_name      = var.bastion_vnet_resource_group
+  name                      = "${data.azurerm_virtual_machine.bastion.name}-to-hub"
+  resource_group_name       = data.azurerm_virtual_machine.bastion.name
+  virtual_network_name      = data.azurerm_virtual_machine.bastion.resource_group_name
   remote_virtual_network_id = data.azurerm_virtual_network.hub.id
 
   allow_virtual_network_access = "true"
@@ -11,10 +11,10 @@ resource "azurerm_virtual_network_peering" "bastion-to-hub" {
 resource "azurerm_virtual_network_peering" "hub-to-bastion" {
   provider = azurerm.hub
 
-  name                      = "hub-to-${var.bastion_vnet_name}"
+  name                      = "hub-to-${data.azurerm_virtual_machine.bastion.name}"
   resource_group_name       = data.azurerm_virtual_network.hub.resource_group_name
   virtual_network_name      = data.azurerm_virtual_network.hub.name
-  remote_virtual_network_id = var.bastion_vnet_id
+  remote_virtual_network_id = data.azurerm_virtual_machine.bastion.id
 
   allow_virtual_network_access = "true"
   allow_forwarded_traffic      = "true"
