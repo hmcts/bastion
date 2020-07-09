@@ -1,4 +1,4 @@
-data "azurerm_virtual_machine" "bastion" {
+data "azurerm_virtual_network" "bastion" {
   provider = azurerm.bastion
 
   name                = var.bastion_vnet_name
