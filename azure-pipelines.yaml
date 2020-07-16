@@ -6,15 +6,7 @@ parameters:
 
   - name: bastionHosts
     type: object
-    default: 
-
-    # - bastionHost: sbox
-    #   environment: sbox-intsvc
-    #   serviceConnection: dcd-cft-sandbox
-    #   serviceConnection_privileged: dcd-cft-sandbox-ops
-    #   rg: dcd-cft-sandbox-tfstate
-    #   location: uksouth
-    #   storage_account: tfstateed302caf1c3ce90e
+    default:
 
     # - bastionHost: bastion_test
     #   environment: test
@@ -23,6 +15,14 @@ parameters:
     #   rg: dts-management-test-tfstate
     #   location: uksouth
     #   storage_account: tfstated7b54c7febbb5bde
+
+    - bastionHost: bastion_sbox
+      environment: sbox
+      serviceConnection: dts-management-sbox-intsvc
+      serviceConnection_privileged: ops-approval-gate-mgmt-envs
+      rg: dts-management-sbox-intsvc-tfstate
+      location: uksouth
+      storage_account: tfstateed302caf1c3ce90e
 
     - bastionHost: bastion_nonprod
       environment: nonprod
