@@ -5,6 +5,6 @@ module "bastion" {
   resource_group_name = module.bootstrap.resource_group.name
   subnet_id           = module.bootstrap.subnet.id
   keyvault_id         = module.bootstrap.keyvault.id
-  bastion_name        = "bastion-devops-sbox"
-  public_key          = "bastion-devops-sbox.pub"
+  bastion_name        = "bastion-dev-sbox"
+  public_key          = "bastion-dev-sbox.pub"
 }

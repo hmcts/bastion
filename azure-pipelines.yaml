@@ -32,17 +32,16 @@ parameters:
       location: uksouth
       storage_account: tfstateb44eb47999719b6f
 
-    # - bastionHost: bastion_prod
-    #   environment: prod
-    #   serviceConnection: dts-management-prod-intsvc
-    #   serviceConnection_privileged: ops-approval-gate-prod-envs
-    #   rg: dts-management-prod-intsvc-tfstate
-    #   location: uksouth
-    #   storage_account: tfstate2b1afc1958670244
+    - bastionHost: bastion_prod
+      environment: prod
+      serviceConnection: dts-management-prod-intsvc
+      serviceConnection_privileged: ops-approval-gate-prod-envs
+      rg: dts-management-prod-intsvc-tfstate
+      location: uksouth
+      storage_account: tfstate2b1afc1958670244
 
-trigger:
-- master
-- pipeline-development
+# trigger:
+# - master
 
 pr:
 - master
