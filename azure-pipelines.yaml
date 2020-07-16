@@ -22,7 +22,7 @@ parameters:
       serviceConnection_privileged: ops-approval-gate-mgmt-envs
       rg: dts-management-sbox-intsvc-tfstate
       location: uksouth
-      storage_account: tfstateed302caf1c3ce90e
+      storage_account: tfstateb33943408bd1f9ac
 
     - bastionHost: bastion_nonprod
       environment: nonprod
