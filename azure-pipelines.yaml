@@ -40,8 +40,8 @@ parameters:
       location: uksouth
       storage_account: tfstate2b1afc1958670244
 
-# trigger:
-# - master
+trigger:
+- master
 
 pr:
 - master
