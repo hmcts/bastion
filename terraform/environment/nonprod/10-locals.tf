@@ -1,5 +1,5 @@
 locals {
   environment = "nonprod"
   location    = "uksouth"
-  subnet      = "10.20.20.32/27"
+  subnet      = "10.48.0.32/27"
 }
