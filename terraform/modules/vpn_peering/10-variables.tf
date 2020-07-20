@@ -17,3 +17,8 @@ variable "vpn_vnet_resource_group" {
   description = "The resource group name of the bastion host"
   type        = string
 }
+
+variable "vpn_subscription_id" {
+  description = "The subscription Id of the vpn network"
+  type        = string
+}
