@@ -5,7 +5,7 @@ data "azurerm_virtual_network" "bastion" {
   resource_group_name = var.bastion_vnet_resource_group
 }
 
-data "azurerm_virtual_network" "hub" {
+data "azurerm_virtual_network" "vpn" {
   provider = azurerm.vpn
 
   name                = var.vpn_vnet_name
