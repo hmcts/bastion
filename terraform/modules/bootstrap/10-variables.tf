@@ -40,7 +40,7 @@ variable "environment" {
 }
 
 variable "hub_subscription_id" {
-  description = "The subscription id of the hub network"
+  description = "The subscription Id of the hub network"
   type        = string
 }
 
