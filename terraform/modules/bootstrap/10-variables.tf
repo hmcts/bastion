@@ -39,6 +39,11 @@ variable "environment" {
   type        = string
 }
 
+variable "hub_subscription_id" {
+  description = "The subscription id of the hub network"
+  type        = string
+}
+
 variable "hub_lb_name" {
   description = "Name of the hub palo alto load balancer"
   type        = string
