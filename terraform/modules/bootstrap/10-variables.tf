@@ -38,3 +38,13 @@ variable "environment" {
   description = "Name of the environment that contains the bastion host"
   type        = string
 }
+
+variable "hub_lb_name" {
+  description = "Name of the hub palo alto load balancer"
+  type        = string
+}
+
+variable "hub_lb_resource_group" {
+  description = "Name of the hub palo alto load balancer resource group"
+  type        = string
+}
