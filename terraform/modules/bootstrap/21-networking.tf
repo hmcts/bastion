@@ -13,7 +13,7 @@ resource "azurerm_subnet" "bastion" {
   address_prefix       = var.subnet_address
 }
 
-resource "azurerm_route_table" "example" {
+resource "azurerm_route_table" "bastion" {
   name                          = "bastion-${var.environment}-udr"
   resource_group_name           = azurerm_resource_group.bastion.name
   location                      = azurerm_resource_group.bastion.location
@@ -26,4 +26,9 @@ resource "azurerm_route_table" "example" {
     next_hop_type          = "VirtualAppliance"
     next_hop_in_ip_address = data.azurerm_lb.hub_palo.private_ip_address
   }
+}
+
+resource "azurerm_subnet_route_table_association" "example" {
+  subnet_id      = azurerm_subnet.bastion.id
+  route_table_id = azurerm_route_table.bastion.id
 }
