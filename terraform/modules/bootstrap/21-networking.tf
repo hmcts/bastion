@@ -29,7 +29,7 @@ resource "azurerm_route_table" "bastion" {
 
   route {
     name                   = "ToVpn"
-    address_prefix         = "10.99.2/23"
+    address_prefix         = "10.99.2.0/23"
     next_hop_type          = "VnetLocal"
   }
 }
