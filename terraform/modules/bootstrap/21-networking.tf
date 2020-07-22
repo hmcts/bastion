@@ -26,6 +26,12 @@ resource "azurerm_route_table" "bastion" {
     next_hop_type          = "VirtualAppliance"
     next_hop_in_ip_address = data.azurerm_lb.hub_palo.private_ip_address
   }
+
+  route {
+    name                   = "ToVpn"
+    address_prefix         = "10.99.2/23"
+    next_hop_type          = "VnetLocal"
+  }
 }
 
 resource "azurerm_subnet_route_table_association" "bastion" {
