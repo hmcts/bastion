@@ -19,6 +19,9 @@ resource "azurerm_route_table" "bastion" {
   location                      = azurerm_resource_group.bastion.location
   disable_bgp_route_propagation = true
   tags                          = local.common_tags
+
+  route {}
+  route {}
 }
 
 resource "azurerm_subnet_route_table_association" "bastion" {
