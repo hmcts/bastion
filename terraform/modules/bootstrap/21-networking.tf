@@ -21,9 +21,24 @@ resource "azurerm_route_table" "bastion" {
   tags                          = local.common_tags
 
   route {
-    name                   = "ToVpn"
-    address_prefix         = "10.99.2.0/23"
-    next_hop_type          = "VnetLocal"
+    name                   = "PrivateA"
+    address_prefix         = "10.0.0.0/8"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = data.azurerm_lb.hub_palo.private_ip_address
+  }
+
+  route {
+    name                   = "PrivateB"
+    address_prefix         = "172.16.0.0/12"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = data.azurerm_lb.hub_palo.private_ip_address
+  }
+
+  route {
+    name                   = "PrivateC"
+    address_prefix         = "192.168.0.0/16"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = data.azurerm_lb.hub_palo.private_ip_address
   }
 }
 
