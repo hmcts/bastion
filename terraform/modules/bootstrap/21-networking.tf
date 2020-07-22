@@ -28,7 +28,7 @@ resource "azurerm_route_table" "bastion" {
   }
 }
 
-resource "azurerm_subnet_route_table_association" "example" {
+resource "azurerm_subnet_route_table_association" "bastion" {
   subnet_id      = azurerm_subnet.bastion.id
   route_table_id = azurerm_route_table.bastion.id
 }
