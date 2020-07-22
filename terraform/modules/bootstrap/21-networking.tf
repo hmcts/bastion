@@ -19,19 +19,6 @@ resource "azurerm_route_table" "bastion" {
   location                      = azurerm_resource_group.bastion.location
   disable_bgp_route_propagation = true
   tags                          = local.common_tags
-
-  route {
-    name                   = "ToHubPaloLoadBalancer"
-    address_prefix         = "0.0.0.0/0"
-    next_hop_type          = "VirtualAppliance"
-    next_hop_in_ip_address = data.azurerm_lb.hub_palo.private_ip_address
-  }
-
-  route {
-    name                   = "ToVpn"
-    address_prefix         = "10.99.2.0/23"
-    next_hop_type          = "VnetLocal"
-  }
 }
 
 resource "azurerm_subnet_route_table_association" "bastion" {
