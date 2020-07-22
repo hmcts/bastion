@@ -20,8 +20,11 @@ resource "azurerm_route_table" "bastion" {
   disable_bgp_route_propagation = true
   tags                          = local.common_tags
 
-  route {}
-  route {}
+  route {
+    name                   = "ToVpn"
+    address_prefix         = "10.99.2.0/23"
+    next_hop_type          = "VnetLocal"
+  }
 }
 
 resource "azurerm_subnet_route_table_association" "bastion" {
