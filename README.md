@@ -66,10 +66,10 @@ terraform/environment/sbox/
 Create SSH key pair:
 ssh-keygen -b 4096 -f id_rsa_mybastion -N "secure-passphrase" -C "mybastion"
 
-3) Update 21-bastion.tf and add a new bastion by calling the bastion module.  Update the bastion name and public_key (the public key must be copied to the bastion directory)
+3) Update 21-bastion.tf and add a new bastion by calling the bastion module, making sure to give it a difference name.  Update the bastion name and public_key (the public key must be copied to the bastion directory)
 
 ```
-module "bastion-dev" {
+module "mybastion" {
   source              = "../../modules/bastion/"
   location            = module.bootstrap.resource_group.location
   environment         = local.environment
