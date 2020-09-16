@@ -20,7 +20,7 @@ resource "null_resource" "ansible-runs" {
       password                      = data.azurerm_key_vault_secret.admin-password.value
       host                          = azurerm_public_ip.bastion_public_ip.*.ip_address
       #azurerm_public_ip.bastion_public_ip.*.ip_address[count.index]
-      azurerm_network_interface.bastion_nic.*.private_ip_address[count.index]
+      #azurerm_network_interface.bastion_nic.*.private_ip_address[count.index]
   }
   }
 
