@@ -5,7 +5,7 @@ resource "null_resource" "ansible-runs" {
   }
 
   depends_on = [
-    azurerm_public_ip.bastion,
+    azurerm_network_interface.bastion,
     azurerm_virtual_machine_extension.bastion_ansible,
     azurerm_virtual_machine.bastion
   ]
