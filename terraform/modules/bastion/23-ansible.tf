@@ -18,9 +18,7 @@ resource "null_resource" "ansible-runs" {
       type     = "ssh"
       user     = data.azurerm_key_vault_secret.admin-username.value
       password = data.azurerm_key_vault_secret.admin-password.value
-      host     = azurerm_public_ip.bastion_public_ip.*.ip_address
-      #azurerm_public_ip.bastion_public_ip.*.ip_address[count.index]
-      #azurerm_network_interface.bastion_nic.*.private_ip_address[count.index]
+      host     = azurerm_network_interface.bastion_nic.*.private_ip_address[count.index]
     }
   }
 
@@ -32,7 +30,7 @@ resource "null_resource" "ansible-runs" {
       type     = "ssh"
       user     = data.azurerm_key_vault_secret.admin-username.value
       password = data.azurerm_key_vault_secret.admin-password.value
-      host     = azurerm_public_ip.bastion_public_ip.*.ip_address
+      host     = azurerm_network_interface.bastion_nic.*.private_ip_address[count.index]
     }
   }
 
@@ -47,7 +45,7 @@ resource "null_resource" "ansible-runs" {
       type     = "ssh"
       user     = data.azurerm_key_vault_secret.admin-username.value
       password = data.azurerm_key_vault_secret.admin-password.value
-      host     = azurerm_public_ip.bastion_public_ip.*.ip_address
+      host     = azurerm_network_interface.bastion_nic.*.private_ip_address[count.index]
     }
   }
 }
