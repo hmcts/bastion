@@ -38,6 +38,7 @@ resource "null_resource" "ansible-runs" {
 
   provisioner "remote-exec" {
     inline = [
+      "sudo apt-get update && apt-get install ansible",
       "ansible-galaxy install -r ~/ansible/requirements.yml",
       "ansible-playbook ~/ansible/playbooks/playbook.yml"
     ]
