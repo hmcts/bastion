@@ -7,7 +7,7 @@ resource "null_resource" "ansible-runs" {
   depends_on = [
     azurerm_network_interface.bastion,
     azurerm_virtual_machine_extension.bastion_ansible,
-    azurerm_virtual_machine.bastion
+    azurerm_linux_virtual_machine.bastion
   ]
 
   provisioner "remote-exec" {
