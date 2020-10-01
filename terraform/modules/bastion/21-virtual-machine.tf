@@ -19,7 +19,5 @@ resource "azurerm_linux_virtual_machine" "bastion" {
     storage_account_type = "Standard_LRS"
   }
 
-  source_image_reference {
-    id = var.image_id
-  }
+  source_image_id = var.image_id
 }
