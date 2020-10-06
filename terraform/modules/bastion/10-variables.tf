@@ -9,6 +9,11 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "image_id" {
+  description = "Image ID to use when building this VM"
+  type        = string
+}
+
 variable "subnet_id" {
   description = "Virtual network subnet id that contains the bastion host"
   type        = string
