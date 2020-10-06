@@ -1,7 +1,7 @@
 locals {
   environment             = "nonprod"
   location                = "uksouth"
-  image_id                = "/subscriptions/fb084706-583f-4c9a-bdab-949aac66ba5c/resourceGroups/rdo-bastion-packer/providers/Microsoft.Compute/images/rdo-bastion-image-85473"
+  image_id                = "/subscriptions/b44eb479-9ae2-42e7-9c63-f3c599719b6f/resourceGroups/rdo-bastion-packer/providers/Microsoft.Compute/images/rdo-bastion-image-85811"
   subnet                  = "10.48.0.32/27"
   hub_subscription_id     = "fb084706-583f-4c9a-bdab-949aac66ba5c"
   hub_vnet_name           = "hmcts-hub-nonprodi"
