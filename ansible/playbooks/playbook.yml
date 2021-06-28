@@ -12,7 +12,7 @@
 
     - name: Install required apt packages
       apt: 
-        name: ['ca-certificates', 'curl', 'apt-transport-https', 'lsb-release', 'gnupg', 'jq', 'curl', 'nmap', 'tcpdump']
+        name: ['ca-certificates', 'curl', 'apt-transport-https', 'lsb-release', 'gnupg', 'jq', 'curl', 'nmap', 'tcpdump', 'postgresql']
         state: present
         update_cache: true
 
