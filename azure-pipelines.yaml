@@ -24,30 +24,30 @@ parameters:
       location: uksouth
       storage_account: tfstateb33943408bd1f9ac
 
-    - bastionHost: bastion_nonprod
-      environment: nonprod
-      serviceConnection: dts-management-nonprod-intsvc
-      serviceConnection_privileged: ops-approval-gate-mgmt-envs
-      rg: dts-management-nonprod-intsvc-tfstate
-      location: uksouth
-      storage_account: tfstateb44eb47999719b6f
+    #- bastionHost: bastion_nonprod
+    #  environment: nonprod
+    #  serviceConnection: dts-management-nonprod-intsvc
+    #  serviceConnection_privileged: ops-approval-gate-mgmt-envs
+    #  rg: dts-management-nonprod-intsvc-tfstate
+    #  location: uksouth
+    #  storage_account: tfstateb44eb47999719b6f
 
-    - bastionHost: bastion_prod
-      environment: prod
-      serviceConnection: dts-management-prod-intsvc
-      serviceConnection_privileged: ops-approval-gate-mgmt-envs
-      rg: dts-management-prod-intsvc-tfstate
-      location: uksouth
-      storage_account: tfstate2b1afc1958670244
+    #- bastionHost: bastion_prod
+    #  environment: prod
+    #  serviceConnection: dts-management-prod-intsvc
+    #  serviceConnection_privileged: ops-approval-gate-mgmt-envs
+    #  rg: dts-management-prod-intsvc-tfstate
+    #  location: uksouth
+    #  storage_account: tfstate2b1afc1958670244
 
 trigger:
   batch: true
   branches:
     include:
-    - master
+    - rdo-bastion-ansible
 
 pr:
-- master
+- rdo-bastion-ansible
 
 variables:
   terraformVersion: 0.12.25
