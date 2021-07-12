@@ -4,15 +4,46 @@
   connection: local
   gather_facts: true
   become: true
-  #vars:
-    #ssh_permit_root_login: True
-    #ssh_kerberos_support: True
-    #ssh_allow_users: '*@hmcts.net'
-  roles:
-    - dev-sec.os-hardening
-    #- dev-sec.ssh-hardening
   tasks:
     - name: ansible create directory example
       file:
         path: /tmp/devops_directory
         state: directory
+
+    - name: Install required apt packages
+      apt: 
+        name: ['ca-certificates', 'curl', 'apt-transport-https', 'lsb-release', 'gnupg', 'jq', 'curl', 'nmap', 'tcpdump', 'postgresql']
+        state: present
+        update_cache: true
+
+    - name: Download and install Microsoft apt signing key
+      apt_key:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+
+    - name: Add the Microsoft software repository
+      apt_repository:
+        repo: deb https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main
+        state: present
+
+    - name: Install Azure CLI
+      apt: 
+        name: azure-cli
+        state: present
+        update_cache: true
+
+    - name: Download and install google apt signing key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: Add the Google software repository
+      apt_repository:
+        repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+        state: present
+
+    - name: Install kubectl
+      apt: 
+        name: kubectl
+        state: present
+        update_cache: true

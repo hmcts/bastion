@@ -44,10 +44,10 @@ trigger:
   batch: true
   branches:
     include:
-    - master
+    - rdo-bastion-ansible
 
 pr:
-- master
+- rdo-bastion-ansible
 
 variables:
   terraformVersion: 0.12.25
@@ -61,7 +61,7 @@ stages:
 
       jobs:
       - job: TestAndPlan
-        condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+        condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/rdo-bastion-ansible'))
         pool:
           vmImage: ${{ variables.agentPool }}
 
@@ -82,7 +82,7 @@ stages:
               deploy: false 
 
       - job: Deploy
-        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/rdo-bastion-ansible'))
         pool:
           vmImage: ${{ variables.agentPool }}
 
