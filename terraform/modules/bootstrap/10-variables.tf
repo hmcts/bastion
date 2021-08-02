@@ -16,7 +16,7 @@ variable "vnet_name" {
 
 variable "vnet_address_space" {
   description = "Virtual network address space that contains the bastion host"
-  type        = list
+  type        = list(any)
 }
 
 variable "subnet_name" {
