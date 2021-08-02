@@ -13,6 +13,10 @@ resource "azurerm_linux_virtual_machine" "bastion" {
     username   = var.bastion_username
     public_key = file("../../environment/${var.environment}/${var.public_key}")
   }
+  
+  identity {
+    type = "SystemAssigned"
+  }
 
   os_disk {
     caching              = "ReadWrite"
