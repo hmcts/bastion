@@ -7,47 +7,46 @@ parameters:
   - name: bastionHosts
     type: object
     default:
+      # - bastionHost: bastion_test
+      #   environment: test
+      #   serviceConnection: dts-management-test
+      #   serviceConnection_privileged: ops-approval-gate-test-envs
+      #   rg: dts-management-test-tfstate
+      #   location: uksouth
+      #   storage_account: tfstated7b54c7febbb5bde
 
-    # - bastionHost: bastion_test
-    #   environment: test
-    #   serviceConnection: dts-management-test
-    #   serviceConnection_privileged: ops-approval-gate-test-envs
-    #   rg: dts-management-test-tfstate
-    #   location: uksouth
-    #   storage_account: tfstated7b54c7febbb5bde
+      - bastionHost: bastion_sbox
+        environment: sbox
+        serviceConnection: dts-management-sbox-intsvc
+        serviceConnection_privileged: ops-approval-gate-mgmt-envs
+        rg: dts-management-sbox-intsvc-tfstate
+        location: uksouth
+        storage_account: tfstateb33943408bd1f9ac
 
-    - bastionHost: bastion_sbox
-      environment: sbox
-      serviceConnection: dts-management-sbox-intsvc
-      serviceConnection_privileged: ops-approval-gate-mgmt-envs
-      rg: dts-management-sbox-intsvc-tfstate
-      location: uksouth
-      storage_account: tfstateb33943408bd1f9ac
+      - bastionHost: bastion_nonprod
+        environment: nonprod
+        serviceConnection: dts-management-nonprod-intsvc
+        serviceConnection_privileged: ops-approval-gate-mgmt-envs
+        rg: dts-management-nonprod-intsvc-tfstate
+        location: uksouth
+        storage_account: tfstateb44eb47999719b6f
 
-    - bastionHost: bastion_nonprod
-      environment: nonprod
-      serviceConnection: dts-management-nonprod-intsvc
-      serviceConnection_privileged: ops-approval-gate-mgmt-envs
-      rg: dts-management-nonprod-intsvc-tfstate
-      location: uksouth
-      storage_account: tfstateb44eb47999719b6f
-
-    - bastionHost: bastion_prod
-      environment: prod
-      serviceConnection: dts-management-prod-intsvc
-      serviceConnection_privileged: ops-approval-gate-mgmt-envs
-      rg: dts-management-prod-intsvc-tfstate
-      location: uksouth
-      storage_account: tfstate2b1afc1958670244
+      - bastionHost: bastion_prod
+        environment: prod
+        serviceConnection: dts-management-prod-intsvc-ad
+        serviceConnection_privileged: ops-approval-gate-mgmt-envs
+        rg: dts-management-prod-intsvc-tfstate
+        location: uksouth
+        storage_account: tfstate2b1afc1958670244
 
 trigger:
   batch: true
   branches:
     include:
-    - master
+      - master
 
 pr:
-- master
+  - master
 
 variables:
   terraformVersion: 0.12.25
@@ -55,47 +54,46 @@ variables:
 
 stages:
   - ${{ each bastion in parameters.bastionHosts }}:
+      - stage: ${{ bastion.bastionHost }}
+        dependsOn: ${{ bastion.dependent_stage }}
 
-    - stage: ${{ bastion.bastionHost }}
-      dependsOn: ${{ bastion.dependent_stage }}
+        jobs:
+          - job: TestAndPlan
+            condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+            pool:
+              vmImage: ${{ variables.agentPool }}
 
-      jobs:
-      - job: TestAndPlan
-        condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
-        pool:
-          vmImage: ${{ variables.agentPool }}
+            steps:
+              - template: pipeline-templates/terraform-test.yaml
 
-        steps:
-        - template: pipeline-templates/terraform-test.yaml
+              - template: pipeline-templates/terraform-execute.yaml
+                parameters:
+                  ${{ insert }}: ${{ bastion }}
+                  terraformVersion: ${{ variables.terraformVersion }}
+                  deploy: false
 
-        - template: pipeline-templates/terraform-execute.yaml
-          parameters:
-            ${{ insert }}: ${{ bastion }}
-            terraformVersion: ${{ variables.terraformVersion }}
-            deploy: false
+              - ${{ if parameters.deploy_rbac }}:
+                  - template: pipeline-templates/terraform-execute-rbac.yaml
+                    parameters:
+                      ${{ insert }}: ${{ bastion }}
+                      terraformVersion: ${{ variables.terraformVersion }}
+                      deploy: false
 
-        - ${{ if parameters.deploy_rbac }}:
-          - template: pipeline-templates/terraform-execute-rbac.yaml
-            parameters:
-              ${{ insert }}: ${{ bastion }}
-              terraformVersion: ${{ variables.terraformVersion }}
-              deploy: false 
+          - job: Deploy
+            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+            pool:
+              vmImage: ${{ variables.agentPool }}
 
-      - job: Deploy
-        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-        pool:
-          vmImage: ${{ variables.agentPool }}
+            steps:
+              - template: pipeline-templates/terraform-execute.yaml
+                parameters:
+                  ${{ insert }}: ${{ bastion }}
+                  terraformVersion: ${{ variables.terraformVersion }}
+                  deploy: true
 
-        steps:
-        - template: pipeline-templates/terraform-execute.yaml
-          parameters:
-            ${{ insert }}: ${{ bastion }}
-            terraformVersion: ${{ variables.terraformVersion }}
-            deploy: true
-
-        - ${{ if parameters.deploy_rbac }}:
-          - template: pipeline-templates/terraform-execute-rbac.yaml
-            parameters:
-              ${{ insert }}: ${{ bastion }}
-              terraformVersion: ${{ variables.terraformVersion }}
-              deploy: true
+              - ${{ if parameters.deploy_rbac }}:
+                  - template: pipeline-templates/terraform-execute-rbac.yaml
+                    parameters:
+                      ${{ insert }}: ${{ bastion }}
+                      terraformVersion: ${{ variables.terraformVersion }}
+                      deploy: true
