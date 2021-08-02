@@ -33,7 +33,7 @@ parameters:
 
       - bastionHost: bastion_prod
         environment: prod
-        serviceConnection: dts-management-prod-intsvc-ad
+        serviceConnection: dts-management-prod-intsvc
         serviceConnection_privileged: ops-approval-gate-mgmt-envs
         rg: dts-management-prod-intsvc-tfstate
         location: uksouth
