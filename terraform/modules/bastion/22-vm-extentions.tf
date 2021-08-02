@@ -7,6 +7,16 @@ resource "azurerm_virtual_machine_extension" "bastion_aad" {
   auto_upgrade_minor_version = true
 }
 
+# *TODO: Remove prior to 2021/08/25 when AADLoginForLinux is deprecated.
+resource "azurerm_virtual_machine_extension" "bastion_aad_legacy" {
+  name                       = "AADLoginForLinux"
+  virtual_machine_id         = azurerm_linux_virtual_machine.bastion.id
+  publisher                  = "Microsoft.Azure.ActiveDirectory.LinuxSSH"
+  type                       = "AADLoginForLinux"
+  type_handler_version       = "1.0"
+  auto_upgrade_minor_version = true
+}
+
 resource "azurerm_virtual_machine_extension" "bastion_ansible" {
   name                 = "Ansible-Agent-Install"
   virtual_machine_id   = azurerm_linux_virtual_machine.bastion.id
