@@ -8,4 +8,7 @@ module "bastion-dev" {
   keyvault_id         = module.bootstrap.keyvault.id
   bastion_name        = "bastion-dev-nonprod"
   public_key          = "bastion-dev-nonprod.pub"
+  disk_name           = "bastion-dev-nonprod-datadisk"
+  disk_size           = "1TB"
+  storage_type        = "StandardSSD_LRS"
 }

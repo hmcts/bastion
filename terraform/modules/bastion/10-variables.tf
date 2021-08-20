@@ -44,3 +44,18 @@ variable "public_key" {
   description = "Name of the SSH public key.  This file should be placed with the parent module Terraform files"
   type        = string
 }
+
+variable "disk_name" {
+  description = "Name of the data disk"
+  type        = string
+}
+
+variable "disk_size" {
+  description = "Size of the data disk"
+  type        = string
+}
+
+variable "storage_type" {
+  description = "Storage type of the data disk"
+  type        = string
+}
