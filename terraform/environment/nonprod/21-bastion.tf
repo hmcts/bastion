@@ -1,4 +1,4 @@
-module "bastion-dev" {
+module "bastion-nonprod" {
   source              = "../../modules/bastion/"
   location            = module.bootstrap.resource_group.location
   environment         = local.environment

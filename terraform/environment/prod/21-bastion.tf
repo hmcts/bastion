@@ -10,7 +10,7 @@ module "bastion-devops" {
   public_key          = "bastion-devops-prod.pub"
 }
 
-module "bastion-devops" {
+module "bastion-prod" {
   source              = "../../modules/bastion/"
   location            = module.bootstrap.resource_group.location
   environment         = local.environment

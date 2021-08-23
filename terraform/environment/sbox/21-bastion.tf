@@ -10,7 +10,7 @@ module "bastion" {
   public_key          = "bastion-dev-sbox.pub"
 }
 
-module "bastion" {
+module "bastion-sbox" {
   source              = "../../modules/bastion/"
   location            = module.bootstrap.resource_group.location
   environment         = local.environment
