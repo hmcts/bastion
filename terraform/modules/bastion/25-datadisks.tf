@@ -1,4 +1,5 @@
 resource "azurerm_managed_disk" "disk" {
+  count                = var.create_disks ? 1 : 0
   name                 = var.disk_name
   location             = var.location
   resource_group_name  = var.resource_group_name
@@ -9,6 +10,7 @@ resource "azurerm_managed_disk" "disk" {
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "diskattach" {
+  count              = var.create_disks ? 1 : 0
   managed_disk_id    = azurerm_managed_disk.disk.id
   virtual_machine_id = azurerm_linux_virtual_machine.bastion.id
   lun                = 0

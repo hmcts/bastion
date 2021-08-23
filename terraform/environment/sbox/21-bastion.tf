@@ -23,4 +23,5 @@ module "bastion-sbox" {
   disk_name           = "bastion-sbox-datadisk"
   disk_size           = "100"
   storage_type        = "StandardSSD_LRS"
+  create_disks        = true
 }

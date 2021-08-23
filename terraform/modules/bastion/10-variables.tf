@@ -52,10 +52,13 @@ variable "disk_name" {
 
 variable "disk_size" {
   description = "Size of the data disk"
-  type        = string
 }
 
 variable "storage_type" {
   description = "Storage type of the data disk"
   type        = string
+}
+
+variable "create_disks" {
+  default = false
 }

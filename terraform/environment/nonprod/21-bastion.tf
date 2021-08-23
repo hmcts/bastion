@@ -1,4 +1,4 @@
-module "bastion-nonprod" {
+module "bastion-dev" {
   source              = "../../modules/bastion/"
   location            = module.bootstrap.resource_group.location
   environment         = local.environment
@@ -10,7 +10,7 @@ module "bastion-nonprod" {
   public_key          = "bastion-dev-nonprod.pub"
 }
 
-module "bastion-dev" {
+module "bastion-nonprod" {
   source              = "../../modules/bastion/"
   location            = module.bootstrap.resource_group.location
   environment         = local.environment
@@ -23,4 +23,5 @@ module "bastion-dev" {
   disk_name           = "bastion-nonprod-datadisk"
   disk_size           = "1000"
   storage_type        = "StandardSSD_LRS"
+  create_disks        = true
 }
