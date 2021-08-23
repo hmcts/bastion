@@ -48,14 +48,17 @@ variable "public_key" {
 variable "disk_name" {
   description = "Name of the data disk"
   type        = string
+  default     = ""
 }
 
 variable "disk_size" {
   description = "Size of the data disk"
   type        = string
+  default     = ""
 }
 
 variable "storage_type" {
   description = "Storage type of the data disk"
   type        = string
+  default     = ""
 }
