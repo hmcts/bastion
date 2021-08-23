@@ -53,7 +53,8 @@ variable "disk_name" {
 
 variable "disk_size" {
   description = "Size of the data disk"
-  default     = {}
+  type        = string
+  default     = "1000"
 }
 
 variable "storage_type" {
