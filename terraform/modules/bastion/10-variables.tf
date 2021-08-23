@@ -60,5 +60,5 @@ variable "disk_size" {
 variable "storage_type" {
   description = "Storage type of the data disk"
   type        = string
-  default     = ""
+  default     = "StandardSSD_LRS"
 }
