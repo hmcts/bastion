@@ -4,7 +4,7 @@ resource "azurerm_managed_disk" "disk" {
   resource_group_name  = var.resource_group_name
   storage_account_type = "StandardSSD_LRS"
   create_option        = "Empty"
-  disk_size_gb         = "1000GB"
+  disk_size_gb         = "1000"
   tags                 = local.common_tags
 }
 
