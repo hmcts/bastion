@@ -50,15 +50,3 @@ variable "disk_name" {
   type        = string
   default     = ""
 }
-
-variable "disk_size" {
-  description = "Size of the data disk"
-  type        = string
-  default     = "1000"
-}
-
-variable "storage_type" {
-  description = "Storage type of the data disk"
-  type        = string
-  default     = "StandardSSD_LRS"
-}

@@ -9,6 +9,4 @@ module "bastion-dev" {
   bastion_name        = "bastion-dev-nonprod"
   public_key          = "bastion-dev-nonprod.pub"
   disk_name           = "bastion-dev-nonprod-datadisk"
-  disk_size           = "1000"
-  storage_type        = "StandardSSD_LRS"
 }
