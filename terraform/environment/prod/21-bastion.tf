@@ -8,7 +8,19 @@ module "bastion-devops" {
   keyvault_id         = module.bootstrap.keyvault.id
   bastion_name        = "bastion-devops-prod"
   public_key          = "bastion-devops-prod.pub"
-  disk_name           = "bastion-dev-prod-datadisk"
+}
+
+module "bastion-devops" {
+  source              = "../../modules/bastion/"
+  location            = module.bootstrap.resource_group.location
+  environment         = local.environment
+  image_id            = local.image_id
+  resource_group_name = module.bootstrap.resource_group.name
+  subnet_id           = module.bootstrap.subnet.id
+  keyvault_id         = module.bootstrap.keyvault.id
+  bastion_name        = "bastion-prod"
+  public_key          = "bastion-prod.pub"
+  disk_name           = "bastion-prod-datadisk"
   disk_size           = "1000"
   storage_type        = "StandardSSD_LRS"
 }
