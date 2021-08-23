@@ -8,6 +8,9 @@ module "bastion-devops" {
   keyvault_id         = module.bootstrap.keyvault.id
   bastion_name        = "bastion-devops-prod"
   public_key          = "bastion-devops-prod.pub"
+  disk_name           = "bastion-dev-prod-datadisk"
+  disk_size           = "1000"
+  storage_type        = "StandardSSD_LRS"
 }
 
 module "bastion-secops" {
