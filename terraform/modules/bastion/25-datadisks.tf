@@ -1,6 +1,6 @@
 resource "azurerm_managed_disk" "disk" {
   count                = var.create_disks ? 1 : 0
-  name                 = var.disk_name
+  name                 = "${var.bastion_name}-datadisk"
   location             = var.location
   resource_group_name  = var.resource_group_name
   storage_account_type = var.storage_type
