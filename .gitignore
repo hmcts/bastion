@@ -4,3 +4,6 @@
 # .tfstate files
 *.tfstate
 *.tfstate.*
+
+# MacOS journal file
+*.DS_Store

@@ -15,4 +15,6 @@ locals {
     "costCentre"         = ""
     "environment"        = local.env_display_names[var.environment]
   }
+
+  backend_config_json = jsonencode({ "script" : filebase64("${path.module}/mountfs.sh") })
 }
