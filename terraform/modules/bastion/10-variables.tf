@@ -45,12 +45,6 @@ variable "public_key" {
   type        = string
 }
 
-variable "disk_name" {
-  description = "Name of the data disk"
-  type        = string
-  default     = ""
-}
-
 variable "disk_size" {
   description = "Size of the data disk"
   default     = "1000"
