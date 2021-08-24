@@ -20,7 +20,6 @@ module "bastion-sbox" {
   keyvault_id         = module.bootstrap.keyvault.id
   bastion_name        = "bastion-sbox"
   public_key          = "bastion-sbox.pub"
-  disk_name           = "bastion-sbox-datadisk"
   disk_size           = "100"
   storage_type        = "StandardSSD_LRS"
   create_disks        = true
