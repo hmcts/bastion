@@ -18,7 +18,7 @@ parameters:
       - bastionHost: bastion_sbox
         environment: sbox
         serviceConnection: dts-management-sbox-intsvc
-        serviceConnection_privileged: ops-approval-gate-mgmt-envs
+        serviceConnection_privileged: ops-approval-gate-sbox-envs
         rg: dts-management-sbox-intsvc-tfstate
         location: uksouth
         storage_account: tfstateb33943408bd1f9ac
@@ -26,7 +26,7 @@ parameters:
       - bastionHost: bastion_nonprod
         environment: nonprod
         serviceConnection: dts-management-nonprod-intsvc
-        serviceConnection_privileged: ops-approval-gate-mgmt-envs
+        serviceConnection_privileged: ops-approval-gate-stg-envs
         rg: dts-management-nonprod-intsvc-tfstate
         location: uksouth
         storage_account: tfstateb44eb47999719b6f
@@ -34,7 +34,7 @@ parameters:
       - bastionHost: bastion_prod
         environment: prod
         serviceConnection: dts-management-prod-intsvc
-        serviceConnection_privileged: ops-approval-gate-mgmt-envs
+        serviceConnection_privileged: ops-approval-gate-prod-envs
         rg: dts-management-prod-intsvc-tfstate
         location: uksouth
         storage_account: tfstate2b1afc1958670244
