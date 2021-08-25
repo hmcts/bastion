@@ -27,11 +27,10 @@ resource "azurerm_key_vault_secret" "bastion_ssh_private_key_passphrase" {
   name         = "${var.bastion_name}-private-key-passphrase"
   value        = "update me with the private key passphrase"
   key_vault_id = var.keyvault_id
-  /*
+
   lifecycle {
     ignore_changes = [
       value
     ]
   }
- */
 }
