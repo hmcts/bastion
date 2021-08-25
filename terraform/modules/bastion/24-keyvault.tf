@@ -12,8 +12,8 @@ resource "azurerm_key_vault_secret" "bastion_ssh_public_key" {
 }
 
 resource "azurerm_key_vault_secret" "bastion_ssh_private_key" {
-  name = "${var.bastion_name}-private-key"
-  value = "update me with the private key"
+  name         = "${var.bastion_name}-private-key"
+  value        = "update me with the private key"
   key_vault_id = var.keyvault_id
 
   lifecycle {
