@@ -12,7 +12,7 @@ resource "tls_private_key" "bastion_ssh_key" {
 
 resource "azurerm_key_vault_secret" "bastion_ssh_public_key" {
   name         = "${var.bastion_name}-public-key"
-  value        = tls_private_key.bastion_ssh_key.public_key_pem
+  value        = tls_private_key.bastion_ssh_key.public_key_openssh
   key_vault_id = var.keyvault_id
 }
 
