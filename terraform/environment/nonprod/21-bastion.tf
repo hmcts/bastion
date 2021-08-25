@@ -7,7 +7,6 @@ module "bastion-dev" {
   subnet_id           = module.bootstrap.subnet.id
   keyvault_id         = module.bootstrap.keyvault.id
   bastion_name        = "bastion-dev-nonprod"
-  public_key          = "bastion-dev-nonprod.pub"
 }
 
 module "bastion-nonprod" {
@@ -19,7 +18,6 @@ module "bastion-nonprod" {
   subnet_id           = module.bootstrap.subnet.id
   keyvault_id         = module.bootstrap.keyvault.id
   bastion_name        = "bastion-nonprod"
-  public_key          = "bastion-nonprod.pub"
   disk_size           = "1000"
   storage_type        = "StandardSSD_LRS"
   create_disks        = true
