@@ -54,7 +54,7 @@ terraform/environment/prod/
 terraform/environment/nonprod/
 terraform/environment/sbox/
 
-2) Update 21-bastion.tf and add a new bastion by calling the bastion module, making sure to give it a difference name.
+2) Update 21-bastion.tf and add a new bastion by calling the bastion module, making sure to give it a different name.
 
 ```
 module "mybastion" {
