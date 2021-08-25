@@ -16,7 +16,8 @@ resource "azurerm_key_vault" "bastion" {
     secret_permissions = [
       "get",
       "list",
-      "set"
+      "set",
+      "delete"
     ]
   }
 }

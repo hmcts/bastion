@@ -11,7 +11,7 @@ resource "azurerm_linux_virtual_machine" "bastion" {
 
   admin_ssh_key {
     username   = var.bastion_username
-    public_key = file("../../environment/${var.environment}/${var.public_key}")
+    public_key = tls_private_key.bastion_ssh_key.public_key_openssh
   }
 
   identity {
