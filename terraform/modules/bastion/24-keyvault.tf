@@ -11,14 +11,13 @@ resource "azurerm_key_vault_secret" "bastion_ssh_public_key" {
   key_vault_id = var.keyvault_id
 }
 
-resource "azurerm_key_vault_secret" "bastion_ssh_private_key" {
-  name         = "${var.bastion_name}-private-key"
-  value        = "update me with the private key"
-  key_vault_id = var.keyvault_id
+resource "tls_private_key" "bastion_ssh_private_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
 }
 
-resource "azurerm_key_vault_secret" "bastion_ssh_private_key_passphrase" {
-  name         = "${var.bastion_name}-private-key-passphrase"
-  value        = "update me with the private key passphrase"
+resource "azurerm_key_vault_secret" "bastion_ssh_private_key" {
+  name         = "${var.bastion_name}-private-key"
+  value        = tls_private_key.bastion_ssh_private_key.private_key_pem
   key_vault_id = var.keyvault_id
 }
