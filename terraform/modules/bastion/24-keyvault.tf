@@ -12,13 +12,25 @@ resource "azurerm_key_vault_secret" "bastion_ssh_public_key" {
 }
 
 resource "azurerm_key_vault_secret" "bastion_ssh_private_key" {
-  name         = "${var.bastion_name}-private-key"
-  value        = "update me with the private key"
+  name = "${var.bastion_name}-private-key"
+  value = "update me with the private key"
   key_vault_id = var.keyvault_id
+
+  lifecycle {
+    ignore_changes = [
+      value(azurerm_key_vault_secret)
+    ]
+  }
 }
 
 resource "azurerm_key_vault_secret" "bastion_ssh_private_key_passphrase" {
   name         = "${var.bastion_name}-private-key-passphrase"
   value        = "update me with the private key passphrase"
   key_vault_id = var.keyvault_id
+
+  lifecycle {
+    ignore_changes = [
+      value(azurerm_key_vault_secret)
+    ]
+  }
 }
