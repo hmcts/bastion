@@ -18,7 +18,7 @@ resource "azurerm_key_vault_secret" "bastion_ssh_private_key" {
 
   lifecycle {
     ignore_changes = [
-      value(azurerm_key_vault_secret)
+      values(azurerm_key_vault_secret)
     ]
   }
 }
@@ -30,7 +30,7 @@ resource "azurerm_key_vault_secret" "bastion_ssh_private_key_passphrase" {
 
   lifecycle {
     ignore_changes = [
-      value(azurerm_key_vault_secret)
+      values(azurerm_key_vault_secret)
     ]
   }
 }
