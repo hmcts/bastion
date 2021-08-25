@@ -40,11 +40,6 @@ variable "environment" {
   type        = string
 }
 
-variable "public_key" {
-  description = "Name of the SSH public key.  This file should be placed with the parent module Terraform files"
-  type        = string
-}
-
 variable "disk_size" {
   description = "Size of the data disk"
   default     = "1000"
