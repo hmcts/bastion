@@ -1,5 +1,6 @@
 module "bastion-nonprod" {
   source              = "../../modules/bastion/"
+  providers           = { azurerm = azurerm }
   location            = module.bootstrap.resource_group.location
   environment         = local.environment
   image_id            = local.image_id
