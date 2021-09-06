@@ -28,7 +28,7 @@ else
           fi
           mount /dev/${id}1 /opt/data-migration
           uuid=$(blkid -s UUID -o value /dev/${id}1)
-          echo "$uuid /opt/data-migration  xfs   defaults,nofail   1   2" >> /etc/fstab
+          echo "UUID=$uuid /opt/data-migration  xfs   defaults,nofail   1   2" >> /etc/fstab
     logger -s "${id} disk is partitioned"
   fi
   fi
