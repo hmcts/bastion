@@ -8,5 +8,4 @@ locals {
   hub_vnet_resource_group = "hmcts-hub-sbox-int"
   hub_lb_name             = "hmcts-hub-sbox-int-palo-lb"
   hub_lb_resource_group   = local.hub_vnet_resource_group
-  create_infra            = false
 }
