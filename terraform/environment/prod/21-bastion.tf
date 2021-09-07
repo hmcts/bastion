@@ -1,5 +1,5 @@
 module "bastion-devops" {
-  source              = "../../modules/bastion/"
+  source              = "../../modules/empty-module/"
   location            = module.bootstrap.resource_group.location
   environment         = local.environment
   image_id            = local.image_id
