@@ -9,7 +9,6 @@ terraform {
 }
 
 provider "azurerm" {
-  alias   = "bastion-nonprod"
   version = "2.17.0"
   features {}
 }
