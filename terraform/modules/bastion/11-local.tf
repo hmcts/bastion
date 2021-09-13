@@ -17,4 +17,7 @@ locals {
   }
 
   backend_config_json = jsonencode({ "script" : filebase64("${path.module}/mountfs.sh") })
+  splunk_username     = try(data.azurerm_key_vault_secret.splunk_username[0].value, false)
+  splunk_password     = try(data.azurerm_key_vault_secret.splunk_password[0].value, false)
+  splunk_pass4symmkey = try(data.azurerm_key_vault_secret.splunk_pass4symmkey[0].value, false)
 }
