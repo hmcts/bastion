@@ -49,7 +49,7 @@ pr:
   - master
 
 variables:
-  terraformVersion: 0.12.25
+  terraformVersion: 0.13.7
   agentPool: ubuntu-18.04
 
 stages:

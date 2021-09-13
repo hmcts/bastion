@@ -23,25 +23,33 @@ resource "azurerm_key_vault_secret" "bastion_ssh_private_key" {
 }
 
 data "azurerm_key_vault" "soc_vault" {
-  provider            = azurerm.soc
+  count    = var.install_splunk_uf ? 1 : 0
+  provider = azurerm.soc
+
   name                = var.soc_vault_name
   resource_group_name = var.soc_vault_rg
 }
 
 data "azurerm_key_vault_secret" "splunk_username" {
-  provider     = azurerm.soc
+  count    = var.install_splunk_uf ? 1 : 0
+  provider = azurerm.soc
+
   name         = var.splunk_username_secret
-  key_vault_id = data.azurerm_key_vault.soc_vault.id
+  key_vault_id = data.azurerm_key_vault.soc_vault[0].id
 }
 
 data "azurerm_key_vault_secret" "splunk_password" {
-  provider     = azurerm.soc
+  count    = var.install_splunk_uf ? 1 : 0
+  provider = azurerm.soc
+
   name         = var.splunk_password_secret
-  key_vault_id = data.azurerm_key_vault.soc_vault.id
+  key_vault_id = data.azurerm_key_vault.soc_vault[0].id
 }
 
 data "azurerm_key_vault_secret" "splunk_pass4symmkey" {
-  provider     = azurerm.soc
+  count    = var.install_splunk_uf ? 1 : 0
+  provider = azurerm.soc
+
   name         = var.splunk_pass4symmkey_secret
-  key_vault_id = data.azurerm_key_vault.soc_vault.id
+  key_vault_id = data.azurerm_key_vault.soc_vault[0].id
 }
