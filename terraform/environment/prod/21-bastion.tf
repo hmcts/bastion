@@ -10,6 +10,7 @@ module "bastion-prod" {
   disk_size           = "1000"
   storage_type        = "StandardSSD_LRS"
   create_disks        = true
+  install_splunk_uf   = false
 }
 
 module "bastion-secops" {
@@ -21,4 +22,5 @@ module "bastion-secops" {
   subnet_id           = module.bootstrap.subnet.id
   keyvault_id         = module.bootstrap.keyvault.id
   bastion_name        = "bastion-secops-prod"
+  install_splunk_uf   = false
 }
