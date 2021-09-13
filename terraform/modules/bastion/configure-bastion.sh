@@ -144,8 +144,10 @@ mount_fs() {
   fi
 }
 
-if [ "$1" = "false" ] || [ "$2" = "false" ] || [ "$3" = "false" ]; then
+if [ "$1" = "false" ] || [ "$2" = "false" ] || [ "$3" = "false" ]
+then
   mount_fs
-fi
+else
   install_splunk_uf
   mount_fs
+fi
