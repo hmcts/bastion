@@ -28,4 +28,5 @@ module "splunk-uf" {
   splunk_username            = data.azurerm_key_vault_secret.splunk_username[0].value
   splunk_password            = data.azurerm_key_vault_secret.splunk_password[0].value
   splunk_pass4symmkey        = data.azurerm_key_vault_secret.splunk_pass4symmkey[0].value
+  type_handler_version       = "2.0"
 }
