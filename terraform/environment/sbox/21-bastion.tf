@@ -10,4 +10,5 @@ module "bastion-sbox" {
   disk_size           = "100"
   storage_type        = "StandardSSD_LRS"
   create_disks        = true
+  install_splunk_uf   = false
 }

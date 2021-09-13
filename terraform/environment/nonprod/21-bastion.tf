@@ -10,4 +10,5 @@ module "bastion-nonprod" {
   disk_size           = "1000"
   storage_type        = "StandardSSD_LRS"
   create_disks        = true
+  install_splunk_uf   = true
 }
