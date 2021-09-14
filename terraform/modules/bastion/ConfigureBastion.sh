@@ -144,6 +144,14 @@ else
 fi
 }
 
+sudo su
 logger -s "custom_script:: $1"
 logger -s "custom_script:: $2"
 logger -s "custom_script:: $3"
+if [ "$1" = "false" ] || [ "$2" = "false" ] || [ "$3" = "false" ]
+then
+  mount_fs
+else
+  install_splunk_uf
+  mount_fs
+fi
