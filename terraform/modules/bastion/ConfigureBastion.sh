@@ -83,8 +83,6 @@ $SPLUNK_HOME/bin/splunk enable boot-start -systemd-managed 1 -user splunk -group
 chown -R splunk:splunk $SPLUNK_HOME
 
 $SPLUNK_HOME/bin/splunk start
-
-logger -s "custom_script:: Splunk Universal Forwarder - Installed and configured."
 }
 
 mount_fs() {
@@ -149,10 +147,8 @@ fi
 
 if [ "$1" = "false" ] || [ "$2" = "false" ] || [ "$3" = "false" ]
 then
-  logger -s "custom_script:: false"
   mount_fs
 else
-  logger -s "custom_script:: true"
   install_splunk_uf
   mount_fs
 fi
