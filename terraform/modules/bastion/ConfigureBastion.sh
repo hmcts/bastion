@@ -11,6 +11,8 @@ UF_USERNAME=$1
 UF_PASSWORD=$2
 UF_PASS4SYMMKEY=$3
 
+sudo su
+
 export SPLUNK_HOME="$INSTALL_LOCATION/splunkforwarder"
 
 # Create boot-start systemd user
@@ -144,7 +146,6 @@ else
 fi
 }
 
-sudo su
 logger -s "custom_script:: $1"
 logger -s "custom_script:: $2"
 logger -s "custom_script:: $3"
