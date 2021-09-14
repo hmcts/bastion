@@ -149,8 +149,10 @@ fi
 
 if [ "$1" = "false" ] || [ "$2" = "false" ] || [ "$3" = "false" ]
 then
+  logger -s "custom_script:: false"
   mount_fs
 else
+  logger -s "custom_script:: true"
   install_splunk_uf
   mount_fs
 fi
