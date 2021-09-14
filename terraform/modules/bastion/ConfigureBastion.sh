@@ -61,7 +61,8 @@ EOF
 {
 cat <<EOF
 [indexer_discovery:hmcts_cluster_manager]
-master_uri = https://$FORWARD_SERVER_URI
+pass4SymmKey = $UF_PASS4SYMMKEY
+master_uri = https://splunk-cm-prod-vm00.platform.hmcts.net:8089
 
 [tcpout:hmcts_forwarders]
 autoLBFrequency = 30
@@ -147,6 +148,6 @@ if [ "$1" = "false" ] || [ "$2" = "false" ] || [ "$3" = "false" ]
 then
   mount_fs
 else
-  install_splunk_uf
+  install_splunk_uf $1 $2 $3
   mount_fs
 fi
