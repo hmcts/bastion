@@ -8,7 +8,7 @@ resource "azurerm_virtual_machine_extension" "bastion_aad" {
 }
 
 resource "azurerm_virtual_machine_extension" "customscript" {
-  name                 = "configure-bastion"
+  name                 = "ConfigureBastion"
   virtual_machine_id   = azurerm_linux_virtual_machine.bastion.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
