@@ -61,17 +61,16 @@ EOF
 {
 cat <<EOF
 [indexer_discovery:hmcts_cluster_manager]
-pass4SymmKey = $UF_PASS4SYMMKEY
 master_uri = https://$FORWARD_SERVER_URI
 
-[tcpout:dynatrace_forwarders]
+[tcpout:hmcts_forwarders]
 autoLBFrequency = 30
 forceTimebasedAutoLB = true
 indexerDiscovery = hmcts_cluster_manager
 useACK=true
 
 [tcpout]
-defaultGroup = dynatrace_forwarders
+defaultGroup = hmcts_forwarders
 EOF
 } > $SPLUNK_HOME/etc/system/local/outputs.conf
 
