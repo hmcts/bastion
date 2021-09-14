@@ -11,8 +11,6 @@ UF_USERNAME=$1
 UF_PASSWORD=$2
 UF_PASS4SYMMKEY=$3
 
-sudo su
-
 export SPLUNK_HOME="$INSTALL_LOCATION/splunkforwarder"
 
 # Create boot-start systemd user
@@ -146,9 +144,6 @@ else
 fi
 }
 
-logger -s "custom_script:: $1"
-logger -s "custom_script:: $2"
-logger -s "custom_script:: $3"
 if [ "$1" = "false" ] || [ "$2" = "false" ] || [ "$3" = "false" ]
 then
   mount_fs
