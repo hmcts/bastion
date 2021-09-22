@@ -1,5 +1,6 @@
-data "azurerm_shared_image" "shared_image" {
+data "azurerm_shared_image_version" "shared_image_version" {
   name                = var.image_id
+  image_name          = "bastion-ubuntu"
   gallery_name        = "hmcts"
   resource_group_name = "hmcts-image-gallery-rg"
 }
@@ -29,5 +30,5 @@ resource "azurerm_linux_virtual_machine" "bastion" {
     storage_account_type = "Standard_LRS"
   }
 
-  source_image_id = data.azurerm_shared_image.shared_image.id
+  source_image_id = data.azurerm_shared_image_version.shared_image_version.id
 }
