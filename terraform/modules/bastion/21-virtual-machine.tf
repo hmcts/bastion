@@ -1,5 +1,5 @@
 data "azurerm_shared_image_version" "shared_image_version" {
-  name                = var.image_id
+  name                = "latest"
   image_name          = "bastion-ubuntu"
   gallery_name        = "hmcts"
   resource_group_name = "hmcts-image-gallery-rg"
