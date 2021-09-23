@@ -1,5 +1,5 @@
-module "bastion-dev-rbac" {
-  source                          = "../../../modules/empty/"
+module "bastion-nonprod-rbac" {
+  source                          = "../../../modules/rbac/"
   bastion_vm_name                 = "bastion-nonprod"
   bastion_resource_group          = "bastion-nonprod-rg"
   bastion_access_admin_group_name = "DTS Non-Production Bastion Access for Administrators"
@@ -9,9 +9,9 @@ module "bastion-dev-rbac" {
   aad_role_def_id_user            = "/subscriptions/00b9a00a-20eb-4173-b7b6-468e00836a33/providers/Microsoft.Authorization/roleDefinitions/fb879df8-f326-4884-b1cf-06f3ad86be52"
 }
 
-module "bastion-nonprod-rbac" {
-  source                          = "../../../modules/rbac/"
-  bastion_vm_name                 = "bastion-nonprod"
+module "bastion-dev-rbac" {
+  source                          = "../../../modules/empty/"
+  bastion_vm_name                 = "bastion-dev-nonprod"
   bastion_resource_group          = "bastion-nonprod-rg"
   bastion_access_admin_group_name = "DTS Non-Production Bastion Access for Administrators"
   bastion_access_user_group_name  = "DTS Non-Production Bastion Access for Users"
