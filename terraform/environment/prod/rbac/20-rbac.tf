@@ -1,5 +1,5 @@
 module "bastion-prod-rbac" {
-  source                          = "../../../modules/rbac/"
+  source                          = "../../../modules/empty/"
   bastion_vm_name                 = "bastion-prod"
   bastion_resource_group          = "bastion-prod-rg"
   bastion_access_admin_group_name = "DTS Production Bastion Access for Administrators (DevOps)"
