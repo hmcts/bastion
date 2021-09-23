@@ -1,6 +1,6 @@
 module "bastion-deveops-rbac" {
-  source                          = "../../../modules/empty/"
-  bastion_vm_name                 = "bastion-dev-sbox"
+  source                          = "../../../modules/rbac/"
+  bastion_vm_name                 = "bastion-sbox"
   bastion_resource_group          = "bastion-sbox-rg"
   bastion_access_admin_group_name = "DTS Non-Production Bastion Access for Administrators"
   bastion_access_user_group_name  = "DTS Non-Production Bastion Access for Users"
