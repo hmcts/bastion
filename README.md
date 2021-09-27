@@ -81,13 +81,13 @@ Whenever a new version of the image is needed, e.g. a new software package needs
 
 Upon the pipeline running successfully, you should see a new image version in the shared image gallery.
 
-Once you've done the above, update the `10-locals.tf` file for each environment to point to the new image version denoted by image_id:
+Once you've done the above, update the `10-locals.tf` file for each environment to point to the new image version denoted by image_version:
 
 ```hcl
 locals {
   environment             = "sbox"
   location                = "uksouth"
-  image_id                = "1.0.2"
+  image_version           = "1.0.2"
   subnet                  = "10.48.0.96/27"
   hub_subscription_id     = "ea3a8c1e-af9d-4108-bc86-a7e2d267f49c"
   hub_vnet_name           = "hmcts-hub-sbox-int"
