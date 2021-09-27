@@ -14,7 +14,7 @@ This repository contains Terraform IAC for deploying an IaaS bastion host into A
 
 ## Deployment Instructions
 
-There are 2 possible ways to deply a bastion host; you can deploy a bastion into a new resource group and vnet, or you can deploy a bastion into an existing resource group and vnet.
+There are 2 possible ways to deploy a bastion host; you can deploy a bastion into a new resource group and vnet, or you can deploy a bastion into an existing resource group and vnet.
 
 ### Deploy into a new resource group and vnet
 
@@ -44,7 +44,7 @@ keyvault_name: bastion-mybastion-kv
   storage_account: tfstate%unique_string% (%unique_string% should be replaced with the first and last 8 digits from the subscription_id, resulting in a 16 digit string)
 ```
 
-7) The pipeline will run when a PR is created, and the changes applied when merged to master.  Once the resources have been deplyed, the pipeline should be manually run from Azure Devops, and the RBAC option should be selected; This will perform roles assignment on the virtual machine;  this step will require an ADO admin to approve the use of the service connection.
+7) The pipeline will run when a PR is created, and the changes applied when merged to master.
 
 ### Deploy into an existing environment (existing resource group and vnet)
 
@@ -97,4 +97,4 @@ locals {
 }
 ```
 
-Submit a pull request to update this and run the RBAC pipeline after the bastions are successfully redeployed.
+Submit a pull request to update this.
