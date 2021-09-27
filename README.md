@@ -81,7 +81,7 @@ Whenever a new version of the image is needed, e.g. a new software package needs
 
 Upon the pipeline running successfully, you should see a new image version in the shared image gallery.
 
-Once you've done the above, update the 10-locals.tf file for each environment to point to the new image version denoted by image_id:
+Once you've done the above, update the `10-locals.tf` file for each environment to point to the new image version denoted by image_id:
 
 ```hcl
 locals {
