@@ -1,7 +1,7 @@
 locals {
   environment             = "nonprod"
   location                = "uksouth"
-  image_id                = "1.0.2"
+  image_version           = "1.0.2"
   subnet                  = "10.48.0.32/27"
   hub_subscription_id     = "fb084706-583f-4c9a-bdab-949aac66ba5c"
   hub_vnet_name           = "hmcts-hub-nonprodi"
