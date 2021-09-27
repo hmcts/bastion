@@ -1,8 +1,4 @@
 parameters:
-  - name: deploy_rbac
-    displayName: Deploy RBAC
-    type: boolean
-    default: false
 
   - name: bastionHosts
     type: object
@@ -91,9 +87,8 @@ stages:
                   terraformVersion: ${{ variables.terraformVersion }}
                   deploy: true
 
-              - ${{ if parameters.deploy_rbac }}:
-                  - template: pipeline-templates/terraform-execute-rbac.yaml
-                    parameters:
-                      ${{ insert }}: ${{ bastion }}
-                      terraformVersion: ${{ variables.terraformVersion }}
-                      deploy: true
+              - template: pipeline-templates/terraform-execute-rbac.yaml
+                parameters:
+                  ${{ insert }}: ${{ bastion }}
+                  terraformVersion: ${{ variables.terraformVersion }}
+                  deploy: true
