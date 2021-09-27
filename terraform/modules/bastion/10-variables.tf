@@ -9,7 +9,7 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "image_id" {
+variable "image_version" {
   description = "Version number of the shared image to use when building this VM"
   type        = string
 }
