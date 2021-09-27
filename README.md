@@ -83,7 +83,7 @@ Upon the pipeline running successfully, you should see a new image version in th
 
 Once you've done the above, update the 10-locals.tf file for each environment to point to the new image version denoted by image_id:
 
-```dtd
+```hcl
 locals {
   environment             = "sbox"
   location                = "uksouth"
