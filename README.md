@@ -77,7 +77,7 @@ The image used by the bastion vm is stored in a shared image gallery called hmct
 Whenever a new version of the image is needed, e.g. a new software package needs installed, do the following:
 
 1. Update the provision-bastion bash script with the changes needed
-2. Update the ubuntu.pkr.hcl file with a new image version
+2. Update the https://github.com/hmcts/bastion-packer/blob/master/ubuntu.pkr.hcl file with a new image version
 
 Upon the pipeline running successfully, you should see a new image version in the shared image gallery.
 
