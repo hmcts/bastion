@@ -22,12 +22,12 @@ resource "azurerm_route_table" "bastion" {
   tags                          = local.common_tags
   dynamic "route" {
     for_each = var.routes
-     content {
-       name                   = routes.value["name"]
-       address_prefix         = routes.value["address_prefix"]
-       next_hop_type          = routes.value["next_hop_type"]
-       next_hop_in_ip_address = routes.value["next_hop_in_ip_address"]
-     }
+    content {
+      name                   = routes.value["name"]
+      address_prefix         = routes.value["address_prefix"]
+      next_hop_type          = routes.value["next_hop_type"]
+      next_hop_in_ip_address = routes.value["next_hop_in_ip_address"]
+    }
   }
 
 }
