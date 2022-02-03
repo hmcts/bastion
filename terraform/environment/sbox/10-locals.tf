@@ -26,12 +26,6 @@ locals {
       address_prefix         = "192.168.0.0/16"
       next_hop_type          = "VirtualAppliance"
       next_hop_in_ip_address = data.azurerm_lb.hub_palo.frontend_ip_configuration.1.private_ip_address
-    },
-    {
-      name                   = "pet_dev_network"
-      address_prefix         = "192.168.0.0/16"
-      next_hop_type          = "VirtualAppliance"
-      next_hop_in_ip_address = data.azurerm_lb.hub_palo.frontend_ip_configuration.1.private_ip_address
     }
 
   ]
