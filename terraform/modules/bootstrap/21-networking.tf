@@ -23,10 +23,10 @@ resource "azurerm_route_table" "bastion" {
   dynamic "route" {
     for_each = var.routes
     content {
-      name                   = routes.value["name"]
-      address_prefix         = routes.value["address_prefix"]
-      next_hop_type          = routes.value["next_hop_type"]
-      next_hop_in_ip_address = routes.value["next_hop_in_ip_address"]
+      name                   = route.value["name"]
+      address_prefix         = route.value["address_prefix"]
+      next_hop_type          = route.value["next_hop_type"]
+      next_hop_in_ip_address = route.value["next_hop_in_ip_address"]
     }
   }
 
