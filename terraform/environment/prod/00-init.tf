@@ -12,3 +12,10 @@ provider "azurerm" {
   version = "2.17.0"
   features {}
 }
+
+provider "azurerm" {
+  version = ">= 2.17.0"
+  features {}
+  subscription_id = local.hub_subscription_id
+  alias           = "hub"
+}

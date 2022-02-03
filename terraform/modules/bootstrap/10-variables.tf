@@ -53,3 +53,13 @@ variable "hub_lb_resource_group" {
   description = "Name of the hub palo alto load balancer resource group"
   type        = string
 }
+
+variable "routes" {
+  type = list(object({
+    name                   = string
+    address_prefix         = string
+    next_hop_type          = string
+    next_hop_in_ip_address = string
+
+  }))
+}
