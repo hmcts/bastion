@@ -11,4 +11,5 @@ module "bootstrap" {
   hub_subscription_id   = local.hub_subscription_id
   hub_lb_name           = local.hub_lb_name
   hub_lb_resource_group = local.hub_lb_resource_group
+  routes    = local.routes
 }

@@ -20,27 +20,16 @@ resource "azurerm_route_table" "bastion" {
   location                      = azurerm_resource_group.bastion.location
   disable_bgp_route_propagation = true
   tags                          = local.common_tags
-
-  route {
-    name                   = "PrivateA"
-    address_prefix         = "10.0.0.0/8"
-    next_hop_type          = "VirtualAppliance"
-    next_hop_in_ip_address = data.azurerm_lb.hub_palo.frontend_ip_configuration.1.private_ip_address
+  dynamic "route" {
+    for_each = var.routes
+     content {
+       name                   = routes.value["name"]
+       address_prefix         = routes.value["address_prefix"]
+       next_hop_type          = routes.value["next_hop_type"]
+       next_hop_in_ip_address = routes.value["next_hop_in_ip_address"]
+     }
   }
 
-  route {
-    name                   = "PrivateB"
-    address_prefix         = "172.16.0.0/12"
-    next_hop_type          = "VirtualAppliance"
-    next_hop_in_ip_address = data.azurerm_lb.hub_palo.frontend_ip_configuration.1.private_ip_address
-  }
-
-  route {
-    name                   = "PrivateC"
-    address_prefix         = "192.168.0.0/16"
-    next_hop_type          = "VirtualAppliance"
-    next_hop_in_ip_address = data.azurerm_lb.hub_palo.frontend_ip_configuration.1.private_ip_address
-  }
 }
 
 resource "azurerm_subnet_route_table_association" "bastion" {
