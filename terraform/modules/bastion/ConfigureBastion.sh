@@ -21,6 +21,7 @@ curl --retry 3 -# -L -o $INSTALL_FILE $DOWNLOAD_URL
 tar xvzf $INSTALL_FILE -C $INSTALL_LOCATION
 rm -rf $INSTALL_FILE
 chown -R splunk:splunk $SPLUNK_HOME
+setfacl -R -m u:splunk:r /var/log
 
 if [  "$(systemctl is-active SplunkForwarder.service)" = "active"  ]; then
   $SPLUNK_HOME/bin/splunk stop
