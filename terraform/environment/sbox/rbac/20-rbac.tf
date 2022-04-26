@@ -1,4 +1,4 @@
-module "bastion-secops-rbac" {
+module "bastion-secops-sbox-rbac" {
   source                          = "../../../modules/rbac/"
   bastion_vm_name                 = "bastion-secops-sbox"
   bastion_resource_group          = "bastion-sbox-rg"
