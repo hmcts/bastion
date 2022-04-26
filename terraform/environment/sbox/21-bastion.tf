@@ -12,7 +12,7 @@ module "bastion-sbox" {
   create_disks        = true
   install_splunk_uf   = true
 }
-module "bastion-secops" {
+module "bastion-secops-sbox" {
   source              = "../../modules/bastion/"
   location            = module.bootstrap.resource_group.location
   environment         = local.environment
