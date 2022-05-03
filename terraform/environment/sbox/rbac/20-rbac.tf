@@ -1,7 +1,4 @@
 module "bastion-secops-sbox-rbac" {
-  depends_on = [
-    module.bastion-secops-sbox
-  ]
   source                          = "../../../modules/rbac/"
   bastion_vm_name                 = "bastion-secops-sbox"
   bastion_resource_group          = "bastion-sbox-rg"
