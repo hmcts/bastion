@@ -1,7 +1,7 @@
 resource "azurerm_role_assignment" "bastion-admin" {
   provider = azurerm.bastion
   depends_on = [
-    module.bastion-secops-sbox
+    azurerm_linux_virtual_machine.bastion
   ]
   scope              = data.azurerm_virtual_machine.bastion.id
   role_definition_id = var.aad_role_def_id_admin
@@ -11,7 +11,7 @@ resource "azurerm_role_assignment" "bastion-admin" {
 resource "azurerm_role_assignment" "bastion-user" {
   provider = azurerm.bastion
   depends_on = [
-    module.bastion-secops-sbox
+    azurerm_linux_virtual_machine.bastion
   ]
   scope              = data.azurerm_virtual_machine.bastion.id
   role_definition_id = var.aad_role_def_id_user
