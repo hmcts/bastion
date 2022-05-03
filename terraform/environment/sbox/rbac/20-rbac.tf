@@ -1,5 +1,11 @@
 module "bastion-secops-sbox-rbac" {
   source = "../../../modules/rbac/"
+  providers = {
+    azurerm.bastion              = azurerm.bastion
+    azurerm.soc                  = azurerm.soc
+    azurerm.shared_image_gallery = azurerm.shared_image_gallery
+
+  }
   depends_on = [
     module.bastion-secops-sbox
   ]
