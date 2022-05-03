@@ -4,6 +4,7 @@ module "bastion-secops-sbox-rbac" {
     azurerm.bastion              = azurerm.bastion
     azurerm.soc                  = azurerm.soc
     azurerm.shared_image_gallery = azurerm.shared_image_gallery
+    azuread                      = azuread
 
   }
   depends_on = [
