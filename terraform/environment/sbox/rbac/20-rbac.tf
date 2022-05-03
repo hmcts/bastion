@@ -1,5 +1,5 @@
 module "bastion-secops-sbox-rbac" {
-  source                          = "../../../modules/rbac/"
+  source = "../../../modules/rbac/"
   depends_on = [
     module.bastion-secops-sbox
   ]
