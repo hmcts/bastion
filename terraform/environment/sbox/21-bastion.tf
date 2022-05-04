@@ -12,6 +12,8 @@ module "bastion-sbox" {
   create_disks        = true
   install_splunk_uf   = true
 }
+
+# Configuration for SecOps bastion
 module "bastion-secops-sbox" {
   source              = "../../modules/bastion/"
   location            = module.bootstrap.resource_group.location
