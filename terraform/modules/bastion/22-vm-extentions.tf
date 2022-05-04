@@ -16,7 +16,7 @@ module "virtual_machine_bootstrap" {
   virtual_machine_type = "vm"
 
   # Custom Script
-  additional_script_path = "./ConfigureBastion.sh"
+  additional_script_path = "${path.module}/ConfigureBastion.sh"
 
   # Dynatrace OneAgent
   dynatrace_hostgroup = "Platform_Operation_Bastions"
