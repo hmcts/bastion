@@ -10,5 +10,12 @@ module "bastion-nonprod" {
   disk_size           = "1000"
   storage_type        = "StandardSSD_LRS"
   create_disks        = true
-  install_splunk_uf   = true
+  # Dynatrace OneAgent
+  cnp_vault_rg        = "cnp-core-infra"
+  cnp_vault_sub       = "1c4f0704-a29e-403d-b719-b90c34ef14c9"
+  dynatrace_tenant_id = "yrk32651"
+  dynatrace_server    = "https://10.10.70.6:9999/e/yrk32651/api"
+  # Tenable Nessus
+  nessus_server     = "nessus-scanners-nonprod000005.platform.hmcts.net"
+  nessus_key_secret = "nessus-agent-key-nonprod"
 }

@@ -15,3 +15,9 @@ provider "azurerm" {
   features {}
   subscription_id = "2b1afc19-5ca9-4796-a56f-574a58670244"
 }
+
+provider "azurerm" {
+  alias = "cnp"
+  features {}
+  subscription_id = var.cnp_vault_sub
+}

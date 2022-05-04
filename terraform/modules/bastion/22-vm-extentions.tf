@@ -7,18 +7,30 @@ resource "azurerm_virtual_machine_extension" "bastion_aad" {
   auto_upgrade_minor_version = true
 }
 
-resource "azurerm_virtual_machine_extension" "customscript" {
-  name                 = "ConfigureBastion"
-  virtual_machine_id   = azurerm_linux_virtual_machine.bastion.id
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.0"
-  protected_settings   = <<PROTECTED_SETTINGS
-    {
-      "fileUris": ["${local.script_uri}"],
-      "commandToExecute": "${local.cse_script}"
-    }
-    PROTECTED_SETTINGS
-  depends_on           = [azurerm_virtual_machine_data_disk_attachment.diskattach]
+module "virtual_machine_bootstrap" {
+  source = "github.com/hmcts/terraform-module-vm-bootstrap"
 
+  # General
+  os_type              = "Linux"
+  virtual_machine_id   = azurerm_linux_virtual_machine.bastion.id
+  virtual_machine_type = "vm"
+
+  # Custom Script
+  additional_script_path = "./ConfigureBastion.sh"
+
+  # Dynatrace OneAgent
+  dynatrace_hostgroup = "Platform_Operation_Bastions"
+  dynatrace_tenant_id = var.dynatrace_tenant_id
+  dynatrace_token     = data.azurerm_key_vault_secret.token.value
+  dynatrace_server    = var.dynatrace_server
+
+  # Splunk UF
+  splunk_username     = data.azurerm_key_vault_secret.splunk_username.value
+  splunk_password     = data.azurerm_key_vault_secret.splunk_password.value
+  splunk_pass4symmkey = data.azurerm_key_vault_secret.splunk_pass4symmkey.value
+
+  # Tenable Nessus
+  nessus_server = var.nessus_server
+  nessus_key    = data.azurerm_key_vault_secret.nessus_agent_key.value
+  nessus_groups = "Platform-Operation-Bastions"
 }
