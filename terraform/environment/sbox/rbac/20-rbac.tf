@@ -1,15 +1,5 @@
 module "bastion-secops-sbox-rbac" {
   source = "../../../modules/rbac/"
-  providers = {
-    azurerm.bastion              = azurerm.bastion
-    azurerm.soc                  = azurerm.soc
-    azurerm.shared_image_gallery = azurerm.shared_image_gallery
-    azuread                      = azuread
-
-  }
-  depends_on = [
-    module.bastion-secops-sbox
-  ]
   bastion_vm_name                 = "bastion-secops-sbox"
   bastion_resource_group          = "bastion-sbox-rg"
   bastion_access_admin_group_name = "DTS Non-Production Bastion Access for Administrators (SecOps)"
