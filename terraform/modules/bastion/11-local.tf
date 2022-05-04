@@ -16,5 +16,5 @@ locals {
     "environment"        = local.env_display_names[var.environment]
   }
 
-  dynatrace_env = var.tenant_id == "yrk32651" ? "nonprod" : var.tenant_id == "ebe20728" ? "prod" : null
+  dynatrace_env = var.dynatrace_tenant_id == "yrk32651" ? "nonprod" : var.tenant_id == "ebe20728" ? "prod" : null
 }
