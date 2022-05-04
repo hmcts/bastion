@@ -55,14 +55,28 @@ variable "create_disks" {
   default = false
 }
 
-variable "install_splunk_uf" {
-  default = false
-}
-
 variable "soc_vault_name" {
   default = "soc-prod"
 }
 
+# Dynatrace OneAgent
+variable "cnp_vault_rg" {
+  type = string
+}
+
+variable "cnp_vault_sub" {
+  type = string
+}
+variable "dynatrace_tenant_id" {
+  type = string
+}
+
+variable "dynatrace_server" {
+  type    = string
+  default = null
+}
+
+# Splunk UF
 variable "soc_vault_rg" {
   default = "soc-core-infra-prod-rg"
 }
@@ -77,4 +91,13 @@ variable "splunk_password_secret" {
 
 variable "splunk_pass4symmkey_secret" {
   default = "pass4SymmKey-forwarders-plaintext"
+}
+
+# Tenable Nessus
+variable "nessus_server" {
+  type = string
+}
+
+variable "nessus_key_secret" {
+  type = string
 }

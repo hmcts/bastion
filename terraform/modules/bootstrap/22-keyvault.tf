@@ -7,17 +7,16 @@ resource "azurerm_key_vault" "bastion" {
   tags                = local.common_tags
 
   purge_protection_enabled = false
-  soft_delete_enabled      = false
 
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = data.azurerm_client_config.current.object_id
 
     secret_permissions = [
-      "get",
-      "list",
-      "set",
-      "delete"
+      "Get",
+      "List",
+      "Set",
+      "Delete"
     ]
   }
 }

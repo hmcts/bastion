@@ -4,17 +4,17 @@ terraform {
     subscription_id = "2b1afc19-5ca9-4796-a56f-574a58670244"
   }
   required_providers {
-    azurerm = "~> 2.17.0"
+    azurerm = "~> 3.4.0"
   }
 }
 
 provider "azurerm" {
-  version = "2.17.0"
+  version = "3.4.0"
   features {}
 }
 
 provider "azurerm" {
-  version = ">= 2.17.0"
+  version = ">= 3.4.0"
   features {}
   subscription_id = local.hub_subscription_id
   alias           = "hub"

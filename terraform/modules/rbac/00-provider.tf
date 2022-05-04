@@ -1,11 +1,11 @@
 provider "azurerm" {
-  version = ">= 2.17.0"
+  version = ">= 3.4.0"
   features {}
   skip_provider_registration = "true"
 }
 
 provider "azurerm" {
-  version = ">= 2.17.0"
+  version = ">= 3.4.0"
   features {}
   subscription_id = var.bastion_subscription_id
   alias           = "bastion"

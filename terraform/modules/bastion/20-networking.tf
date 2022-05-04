@@ -7,7 +7,7 @@ resource "azurerm_network_interface" "bastion" {
   ip_configuration {
     name                          = "${var.bastion_name}-ip"
     subnet_id                     = var.subnet_id
-    private_ip_address_allocation = "dynamic"
+    private_ip_address_allocation = "Dynamic"
   }
 }
 

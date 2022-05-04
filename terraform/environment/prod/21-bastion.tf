@@ -10,7 +10,14 @@ module "bastion-prod" {
   disk_size           = "1000"
   storage_type        = "StandardSSD_LRS"
   create_disks        = true
-  install_splunk_uf   = true
+  # Dynatrace OneAgent
+  cnp_vault_rg        = "core-infra-prod"
+  cnp_vault_sub       = "8999dec3-0104-4a27-94ee-6588559729d1"
+  dynatrace_tenant_id = "ebe20728"
+  dynatrace_server    = "https://10.10.70.21:9999/e/ebe20728/api"
+  # Tenable Nessus
+  nessus_server     = "nessus-scanners-prod000005.platform.hmcts.net"
+  nessus_key_secret = "nessus-agent-key-prod"
 }
 
 module "bastion-secops" {
@@ -22,5 +29,12 @@ module "bastion-secops" {
   subnet_id           = module.bootstrap.subnet.id
   keyvault_id         = module.bootstrap.keyvault.id
   bastion_name        = "bastion-secops-prod"
-  install_splunk_uf   = true
+  # Dynatrace OneAgent
+  cnp_vault_rg        = "core-infra-prod"
+  cnp_vault_sub       = "8999dec3-0104-4a27-94ee-6588559729d1"
+  dynatrace_tenant_id = "ebe20728"
+  dynatrace_server    = "https://10.10.70.21:9999/e/ebe20728/api"
+  # Tenable Nessus
+  nessus_server     = "nessus-scanners-prod000005.platform.hmcts.net"
+  nessus_key_secret = "nessus-agent-key-prod"
 }
