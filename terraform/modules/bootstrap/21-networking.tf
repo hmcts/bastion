@@ -10,7 +10,7 @@ resource "azurerm_subnet" "bastion" {
   name                 = var.subnet_name
   resource_group_name  = azurerm_resource_group.bastion.name
   virtual_network_name = azurerm_virtual_network.bastion.name
-  address_prefixes     = var.subnet_address
+  address_prefixes     = [var.subnet_address]
   service_endpoints    = ["Microsoft.Sql"]
 }
 
