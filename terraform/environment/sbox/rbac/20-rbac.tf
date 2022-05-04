@@ -1,6 +1,6 @@
 # RBAC settings for SecOps bastion
 module "bastion-secops-sbox-rbac" {
-  source = "../../../modules/rbac/"
+  source                          = "../../../modules/rbac/"
   bastion_vm_name                 = "bastion-secops-sbox"
   bastion_resource_group          = "bastion-sbox-rg"
   bastion_access_admin_group_name = "DTS Non-Production Bastion Access for Administrators (SecOps)"
