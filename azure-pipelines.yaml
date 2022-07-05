@@ -18,6 +18,7 @@ parameters:
         rg: dts-management-sbox-intsvc-tfstate
         location: uksouth
         storage_account: tfstateb33943408bd1f9ac
+        dependent_stage:
 
       - bastionHost: bastion_nonprod
         environment: nonprod
@@ -53,7 +54,7 @@ variables:
 stages:
   - ${{ each bastion in parameters.bastionHosts }}:
       - stage: ${{ bastion.bastionHost }}
-        dependsOn: ${{ bastion.bastionHost.dependent_stage }}
+        dependsOn: ${{ bastion.dependent_stage }}
 
         jobs:
           - job: TestAndPlan
