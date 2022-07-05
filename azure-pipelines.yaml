@@ -18,7 +18,7 @@ parameters:
         rg: dts-management-sbox-intsvc-tfstate
         location: uksouth
         storage_account: tfstateb33943408bd1f9ac
-        dependent_stage:
+        dependsOn:
 
       - bastionHost: bastion_nonprod
         environment: nonprod
@@ -27,7 +27,7 @@ parameters:
         rg: dts-management-nonprod-intsvc-tfstate
         location: uksouth
         storage_account: tfstateb44eb47999719b6f
-        dependent_stage: bastion_sbox
+        dependsOn: "bastion_sbox"
 
       - bastionHost: bastion_prod
         environment: prod
@@ -36,7 +36,7 @@ parameters:
         rg: dts-management-prod-intsvc-tfstate
         location: uksouth
         storage_account: tfstate2b1afc1958670244
-        dependent_stage: bastion_nonprod
+        dependsOn: "bastion_nonprod"
 
 trigger:
   batch: true
@@ -54,7 +54,7 @@ variables:
 stages:
   - ${{ each bastion in parameters.bastionHosts }}:
       - stage: ${{ bastion.bastionHost }}
-        dependsOn: ${{ bastion.dependent_stage }}
+        dependsOn: ${{ bastion.dependsOn }}
 
         jobs:
           - job: TestAndPlan
