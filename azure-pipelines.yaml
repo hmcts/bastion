@@ -57,41 +57,41 @@ stages:
       ${{ if bastion.dependsOn }}:
         dependsOn: ${{ bastion.dependsOn }}
 
-        jobs:
-          - job: TestAndPlan
-            condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
-            pool:
-              vmImage: ${{ variables.agentPool }}
+      jobs:
+        - job: TestAndPlan
+          condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+          pool:
+            vmImage: ${{ variables.agentPool }}
 
-            steps:
-              - template: pipeline-templates/terraform-test.yaml
+          steps:
+            - template: pipeline-templates/terraform-test.yaml
 
-              - template: pipeline-templates/terraform-execute.yaml
-                parameters:
-                  ${{ insert }}: ${{ bastion }}
-                  terraformVersion: ${{ variables.terraformVersion }}
-                  deploy: false
+            - template: pipeline-templates/terraform-execute.yaml
+              parameters:
+                ${{ insert }}: ${{ bastion }}
+                terraformVersion: ${{ variables.terraformVersion }}
+                deploy: false
 
-              - template: pipeline-templates/terraform-execute-rbac.yaml
-                parameters:
-                  ${{ insert }}: ${{ bastion }}
-                  terraformVersion: ${{ variables.terraformVersion }}
-                  deploy: false
+            - template: pipeline-templates/terraform-execute-rbac.yaml
+              parameters:
+                ${{ insert }}: ${{ bastion }}
+                terraformVersion: ${{ variables.terraformVersion }}
+                deploy: false
 
-          - job: Deploy
-            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-            pool:
-              vmImage: ${{ variables.agentPool }}
+        - job: Deploy
+          condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+          pool:
+            vmImage: ${{ variables.agentPool }}
 
-            steps:
-              - template: pipeline-templates/terraform-execute.yaml
-                parameters:
-                  ${{ insert }}: ${{ bastion }}
-                  terraformVersion: ${{ variables.terraformVersion }}
-                  deploy: true
+          steps:
+            - template: pipeline-templates/terraform-execute.yaml
+              parameters:
+                ${{ insert }}: ${{ bastion }}
+                terraformVersion: ${{ variables.terraformVersion }}
+                deploy: true
 
-              - template: pipeline-templates/terraform-execute-rbac.yaml
-                parameters:
-                  ${{ insert }}: ${{ bastion }}
-                  terraformVersion: ${{ variables.terraformVersion }}
-                  deploy: true
+            - template: pipeline-templates/terraform-execute-rbac.yaml
+              parameters:
+                ${{ insert }}: ${{ bastion }}
+                terraformVersion: ${{ variables.terraformVersion }}
+                deploy: true
