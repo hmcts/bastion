@@ -62,6 +62,7 @@ steps:
       command: plan
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
       environmentServiceName: ${{ parameters.serviceConnection }}
+      publishPlanResults: $(System.StageDisplayName)
 
 - ${{ if parameters.deploy }}:
 
