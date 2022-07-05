@@ -54,8 +54,7 @@ variables:
 stages:
   - ${{ each bastion in parameters.bastionHosts }}:
     - stage: ${{ bastion.bastionHost }}
-      ${{ if bastion.dependsOn }}:
-        dependsOn: ${{ bastion.dependsOn }}
+      dependsOn: ${{ bastion.dependsOn }}
 
       jobs:
         - job: TestAndPlan
