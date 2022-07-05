@@ -26,6 +26,7 @@ parameters:
         rg: dts-management-nonprod-intsvc-tfstate
         location: uksouth
         storage_account: tfstateb44eb47999719b6f
+        dependent_stage: bastion_sbox
 
       - bastionHost: bastion_prod
         environment: prod
@@ -34,6 +35,7 @@ parameters:
         rg: dts-management-prod-intsvc-tfstate
         location: uksouth
         storage_account: tfstate2b1afc1958670244
+        dependent_stage: bastion_nonprod
 
 trigger:
   batch: true
