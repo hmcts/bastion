@@ -26,6 +26,9 @@ parameters:
   - name: deploy
     type: boolean
 
+  - name: dependsOn
+    type: string
+
 steps:
 
 - task: TerraformInstaller@0
