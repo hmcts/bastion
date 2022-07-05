@@ -18,7 +18,7 @@ parameters:
         rg: dts-management-sbox-intsvc-tfstate
         location: uksouth
         storage_account: tfstateb33943408bd1f9ac
-        dependsOn: "Precheck"
+        dependsOn: ""
 
       - bastionHost: bastion_nonprod
         environment: nonprod
@@ -52,20 +52,10 @@ variables:
   agentPool: ubuntu-18.04
 
 stages:
-  - stage: Precheck
-    jobs:
-      - job: Validate
-        pool:
-          vmImage: ${{ variables.agentPool }}
-        steps:
-          - task: TerraformInstaller@0
-            displayName: Terraform install
-            inputs:
-              terraformVersion: ${{ variables.terraformVersion }}
-
   - ${{ each bastion in parameters.bastionHosts }}:
       - stage: ${{ bastion.bastionHost }}
-        dependsOn: ${{ bastion.dependsOn }}
+        ${{ if bastion.dependsOn }}:
+          dependsOn: ${{ bastion.dependsOn }}
 
         jobs:
           - job: TestAndPlan
