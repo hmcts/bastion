@@ -53,7 +53,7 @@ variables:
 
 stages:
   - ${{ each bastion in parameters.bastionHosts }}:
-      - stage: ${{ bastion.bastionHost }}
+    - stage: ${{ bastion.bastionHost }}
       ${{ if bastion.dependsOn }}:
         dependsOn: ${{ bastion.dependsOn }}
 
