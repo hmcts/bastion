@@ -26,6 +26,9 @@ parameters:
   - name: deploy
     type: boolean
 
+  - name: dependsOn
+    type: string
+
 steps:
 
 - task: TerraformInstaller@0
@@ -62,6 +65,7 @@ steps:
       command: plan
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
       environmentServiceName: ${{ parameters.serviceConnection_privileged }}
+      publishPlanResults: '$(System.StageDisplayName)-rbac'
 
 - ${{ if eq(parameters.deploy, true) }}:
 

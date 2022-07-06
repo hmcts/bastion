@@ -18,6 +18,7 @@ parameters:
         rg: dts-management-sbox-intsvc-tfstate
         location: uksouth
         storage_account: tfstateb33943408bd1f9ac
+        dependsOn:
 
       - bastionHost: bastion_nonprod
         environment: nonprod
@@ -26,6 +27,7 @@ parameters:
         rg: dts-management-nonprod-intsvc-tfstate
         location: uksouth
         storage_account: tfstateb44eb47999719b6f
+        dependsOn: bastion_sbox
 
       - bastionHost: bastion_prod
         environment: prod
@@ -34,6 +36,7 @@ parameters:
         rg: dts-management-prod-intsvc-tfstate
         location: uksouth
         storage_account: tfstate2b1afc1958670244
+        dependsOn: bastion_nonprod
 
 trigger:
   batch: true
@@ -50,44 +53,44 @@ variables:
 
 stages:
   - ${{ each bastion in parameters.bastionHosts }}:
-      - stage: ${{ bastion.bastionHost }}
-        dependsOn: ${{ bastion.dependent_stage }}
+    - stage: ${{ bastion.bastionHost }}
+      dependsOn: ${{ bastion.dependsOn }}
 
-        jobs:
-          - job: TestAndPlan
-            condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
-            pool:
-              vmImage: ${{ variables.agentPool }}
+      jobs:
+        - job: TestAndPlan
+          condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+          pool:
+            vmImage: ${{ variables.agentPool }}
 
-            steps:
-              - template: pipeline-templates/terraform-test.yaml
+          steps:
+            - template: pipeline-templates/terraform-test.yaml
 
-              - template: pipeline-templates/terraform-execute.yaml
-                parameters:
-                  ${{ insert }}: ${{ bastion }}
-                  terraformVersion: ${{ variables.terraformVersion }}
-                  deploy: false
+            - template: pipeline-templates/terraform-execute.yaml
+              parameters:
+                ${{ insert }}: ${{ bastion }}
+                terraformVersion: ${{ variables.terraformVersion }}
+                deploy: false
 
-              - template: pipeline-templates/terraform-execute-rbac.yaml
-                parameters:
-                  ${{ insert }}: ${{ bastion }}
-                  terraformVersion: ${{ variables.terraformVersion }}
-                  deploy: false
+            - template: pipeline-templates/terraform-execute-rbac.yaml
+              parameters:
+                ${{ insert }}: ${{ bastion }}
+                terraformVersion: ${{ variables.terraformVersion }}
+                deploy: false
 
-          - job: Deploy
-            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-            pool:
-              vmImage: ${{ variables.agentPool }}
+        - job: Deploy
+          condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+          pool:
+            vmImage: ${{ variables.agentPool }}
 
-            steps:
-              - template: pipeline-templates/terraform-execute.yaml
-                parameters:
-                  ${{ insert }}: ${{ bastion }}
-                  terraformVersion: ${{ variables.terraformVersion }}
-                  deploy: true
+          steps:
+            - template: pipeline-templates/terraform-execute.yaml
+              parameters:
+                ${{ insert }}: ${{ bastion }}
+                terraformVersion: ${{ variables.terraformVersion }}
+                deploy: true
 
-              - template: pipeline-templates/terraform-execute-rbac.yaml
-                parameters:
-                  ${{ insert }}: ${{ bastion }}
-                  terraformVersion: ${{ variables.terraformVersion }}
-                  deploy: true
+            - template: pipeline-templates/terraform-execute-rbac.yaml
+              parameters:
+                ${{ insert }}: ${{ bastion }}
+                terraformVersion: ${{ variables.terraformVersion }}
+                deploy: true

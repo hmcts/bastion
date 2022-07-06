@@ -26,6 +26,9 @@ parameters:
   - name: deploy
     type: boolean
 
+  - name: dependsOn
+    type: string
+
 steps:
 
 - task: TerraformInstaller@0
@@ -62,6 +65,7 @@ steps:
       command: plan
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
       environmentServiceName: ${{ parameters.serviceConnection }}
+      publishPlanResults: $(System.StageDisplayName)
 
 - ${{ if parameters.deploy }}:
 
