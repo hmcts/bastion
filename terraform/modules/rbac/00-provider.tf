@@ -12,5 +12,5 @@ provider "azurerm" {
 }
 
 provider "azuread" {
-  version = "2.25"
+  version = "2.26"
 }
