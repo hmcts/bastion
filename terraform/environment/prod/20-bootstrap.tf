@@ -7,7 +7,7 @@ module "bootstrap" {
   keyvault_name         = "bastion-${local.environment}-hmcts-kv"
   subnet_name           = "bastion"
   subnet_address        = local.subnet
-  vnet_address_space    = [local.subnet, local.jumpbox_subnet, local.az_bastion_subnet, local.fslogix_subnet]
+  vnet_address_space    = [local.subnet, local.jumpbox_subnet, local.az_bastion_subnet]
   hub_subscription_id   = local.hub_subscription_id
   hub_lb_name           = local.hub_lb_name
   hub_lb_resource_group = local.hub_lb_resource_group
