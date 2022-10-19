@@ -1,10 +1,10 @@
 locals {
-  environment             = "nonprod"
-  location                = "uksouth"
-  image_version           = "1.0.3"
-  subnet                  = "10.48.0.32/28"
-  jumpbox_subnet          = "10.48.0.48/28"
- 
+  environment    = "nonprod"
+  location       = "uksouth"
+  image_version  = "1.0.3"
+  subnet         = "10.48.0.32/28"
+  jumpbox_subnet = "10.48.0.48/28"
+
   hub_subscription_id     = "fb084706-583f-4c9a-bdab-949aac66ba5c"
   hub_vnet_name           = "hmcts-hub-nonprodi"
   hub_vnet_resource_group = "hmcts-hub-nonprodi"
