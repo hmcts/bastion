@@ -3,7 +3,7 @@ locals {
   location                = "uksouth"
   image_version           = "1.0.3"
   subnet                  = "10.48.0.0/27"
-  jumpbox_subnet          = "10.48.0.120/28"
+  jumpbox_subnet          = "10.48.0.128/28"
   hub_subscription_id     = "0978315c-75fe-4ada-9d11-1eb5e0e0b214"
   hub_vnet_name           = "hmcts-hub-prod-int"
   hub_vnet_resource_group = "hmcts-hub-prod-int"
