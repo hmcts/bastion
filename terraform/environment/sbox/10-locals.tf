@@ -3,7 +3,7 @@ locals {
   location                = "uksouth"
   image_version           = "1.0.3"
   subnet                  = "10.48.0.96/28"
-  jumpbox_subnet          = "10.48.0.112/29"
+  jumpbox_subnet          = "10.48.0.112/28"
   az_bastion_subnet       = "10.48.1.0/26"
   hub_subscription_id     = "ea3a8c1e-af9d-4108-bc86-a7e2d267f49c"
   hub_vnet_name           = "hmcts-hub-sbox-int"
