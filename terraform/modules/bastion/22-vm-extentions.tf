@@ -8,7 +8,7 @@ resource "azurerm_virtual_machine_extension" "bastion_aad" {
 }
 
 module "virtual_machine_bootstrap" {
-  source = "github.com/hmcts/terraform-module-vm-bootstrap"
+  source = "github.com/hmcts/terraform-module-vm-bootstrap?ref=added-run_command"
 
   # General
   os_type              = "Linux"
@@ -33,4 +33,7 @@ module "virtual_machine_bootstrap" {
   nessus_server = var.nessus_server
   nessus_key    = data.azurerm_key_vault_secret.nessus_agent_key.value
   nessus_groups = "Platform-Operation-Bastions"
+
+  run_command    = var.run_command
+  rc_script_file = var.rc_script_file
 }
