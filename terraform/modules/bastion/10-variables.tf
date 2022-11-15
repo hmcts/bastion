@@ -101,3 +101,11 @@ variable "nessus_server" {
 variable "nessus_key_secret" {
   type = string
 }
+
+########### Run Command #########
+variable "run_command" {
+  default = false
+}
+variable "rc_script_file" { default = null }
+
+#########################
