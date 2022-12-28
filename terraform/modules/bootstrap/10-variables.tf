@@ -60,6 +60,5 @@ variable "routes" {
     address_prefix         = string
     next_hop_type          = string
     next_hop_in_ip_address = string
-
   }))
 }

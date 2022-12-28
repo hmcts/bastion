@@ -2,7 +2,7 @@ resource "azurerm_network_interface" "bastion" {
   name                = "${var.bastion_name}-nic"
   resource_group_name = var.resource_group_name
   location            = var.location
-  tags                = local.common_tags
+  tags                = module.ctags.common_tags
 
   ip_configuration {
     name                          = "${var.bastion_name}-ip"
@@ -20,7 +20,7 @@ resource "azurerm_network_security_group" "bastion" {
   name                = "${var.bastion_name}-nsg"
   resource_group_name = var.resource_group_name
   location            = var.location
-  tags                = local.common_tags
+  tags                = module.ctags.common_tags
 }
 
 resource "azurerm_network_security_rule" "bastion" {

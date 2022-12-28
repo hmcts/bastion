@@ -6,7 +6,7 @@ resource "azurerm_managed_disk" "disk" {
   storage_account_type = var.storage_type
   create_option        = "Empty"
   disk_size_gb         = var.disk_size
-  tags                 = local.common_tags
+  tags                 = module.ctags.common_tags
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "diskattach" {
