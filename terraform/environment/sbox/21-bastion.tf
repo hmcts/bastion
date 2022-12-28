@@ -18,10 +18,6 @@ module "bastion-sbox" {
   # Tenable Nessus
   nessus_server     = "nessus-scanners-sbox000006.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-sbox"
-
-  #Run Command
-  run_command    = true
-  rc_script_file = "scripts/test_sh_file.sh"
 }
 
 # Configuration for SecOps bastion
