@@ -1,6 +1,6 @@
 module "azure-bastion" {
   source                   = "../../modules/azure_bastion/"
-  environment           = local.environment
+  environment              = local.environment
   resource_group_name      = module.bootstrap.resource_group.name
   virtual_network_name     = module.bootstrap.vnet
   azbastion_subnet_address = local.AzureBastionSubnet
