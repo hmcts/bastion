@@ -2,8 +2,8 @@ module "azure-bastion" {
   source = "../../modules/bastion/"
 
   # Resource Group, location, VNet and Subnet details
-  resource_group_name  = "rg-shared-westeurope-01"
-  virtual_network_name = "vnet-shared-hub-westeurope-001"
+  resource_group_name  = "bastion-sbox-rg"
+  virtual_network_name = "bastion-sbox-vnet"
 
   # Azure bastion server requireemnts
   azure_bastion_service_name          = "mybastion-service"
@@ -42,7 +42,7 @@ module "bastion-sbox" {
 
 resource "azurerm_public_ip" "bastion_ip" {
   count               = var.az_bastion_subnet == null ? 0 : 1
-  name                = "jumpbox-bastion-ip"
+  name                = "azure-bastion-ip"
   location            = var.location
   resource_group_name = data.azurerm_resource_group.bastionrg.name
   allocation_method   = "Static"
