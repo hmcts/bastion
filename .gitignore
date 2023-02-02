@@ -7,3 +7,4 @@
 
 # MacOS journal file
 *.DS_Store
+*.terraform.lock.hcl

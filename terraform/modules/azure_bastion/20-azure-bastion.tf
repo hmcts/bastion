@@ -1,5 +1,5 @@
 # Create AzureBastionSubnet
-resource "azurerm_subnet" "AzureBastionSubnet" {
+resource "azurerm_subnet" "azure_bastion_subnet" {
   name                 = "AzureBastionSubnet"
   resource_group_name  = var.resource_group_name
   virtual_network_name = var.virtual_network_name
@@ -8,28 +8,26 @@ resource "azurerm_subnet" "AzureBastionSubnet" {
 
 
 
-resource "azurerm_public_ip" "bastion_ip" {
-  count               = var.az_bastion_subnet == null ? 0 : 1
-  name                = "azure-bastion-ip"
+resource "azurerm_public_ip" "p_ip_bastion" {
+  name                = var.public_ip_name
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.bastionrg.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
+  resource_group_name = var.resource_group_name
+  allocation_method   = var.allocation_method
+  sku                 = var.public_ip_sku
   tags                = module.ctags.common_tags
 }
 
-resource "azurerm_bastion_host" "bastion" {
-  count               = var.az_bastion_subnet == null ? 0 : 1
-  name                = "azure-bastion-${var.env}"
+resource "azurerm_bastion_host" "bastion_host" {
+  name                = var.bastion_name
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.bastionrg.name
-  sku                 = "Standard"
-  tunneling_enabled   = true
+  resource_group_name = var.resource_group_name
+  sku                 = var.bastion_sku
+  tunneling_enabled   = var.tunneling_enabled
   tags                = module.ctags.common_tags
 
   ip_configuration {
-    name                 = "ip-config"
-    subnet_id            = azurerm_subnet.bastion_subnet[0].id
-    public_ip_address_id = azurerm_public_ip.bastion_ip[0].id
+    name                 = var.ip_config_name
+    subnet_id            = azurerm_subnet.azure_bastion_subnet.id
+    public_ip_address_id = azurerm_public_ip.p_ip_bastion.id
   }
 }
