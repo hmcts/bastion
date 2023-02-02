@@ -2,7 +2,7 @@ module "azure-bastion" {
   source                   = "../../modules/azure_bastion/"
   environment              = local.environment
   resource_group_name      = module.bootstrap.resource_group.name
-  virtual_network_name     = module.bootstrap.vnet
+  virtual_network_name     = module.bootstrap.vnet.name
   azbastion_subnet_address = local.AzureBastionSubnet
 
   public_ip_name    = "pub-ip-bastion-${local.environment}"
