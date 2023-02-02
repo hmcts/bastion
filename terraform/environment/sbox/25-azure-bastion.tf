@@ -1,9 +1,9 @@
 module "azure-bastion" {
-  source                   = "../../modules/azure_bastion/"
-  environment              = local.environment
+  source                   = "git@github.com:hmcts/terraform-module-azure-bastion.git"
+  env                      = local.environment
   resource_group_name      = module.bootstrap.resource_group.name
   virtual_network_name     = module.bootstrap.vnet.name
-  azbastion_subnet_address = local.AzureBastionSubnet
+  azbastion_subnet_address = [local.AzureBastionSubnet]
 
   public_ip_name    = "pub-ip-bastion-${local.environment}"
   location          = module.bootstrap.resource_group.location
@@ -16,4 +16,6 @@ module "azure-bastion" {
   tunneling_enabled = local.tunneling_enabled
   ip_config_name    = local.ip_config_name
 
+  builtFrom = "https://github.com/hmcts/bastion"
+  product   = "mgmt"
 }
