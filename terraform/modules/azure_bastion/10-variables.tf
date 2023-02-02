@@ -18,3 +18,13 @@ variable "environment" {
   description = "Name of the environment for which the azure bastion is being deployed"
   type        = string
 }
+
+variable "azbastion_subnet_address" {
+  description = "Virtual network subnet address that contains the azure bastion host"
+  type        = string
+}
+
+variable "virtual_network_name" {
+  description = "Virtual network name that contains the bastion host"
+  type        = string
+}

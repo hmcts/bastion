@@ -1,3 +1,13 @@
+# Create AzureBastionSubnet
+resource "azurerm_subnet" "AzureBastionSubnet" {
+  name                 = "AzureBastionSubnet"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = var.virtual_network_name
+  address_prefixes     = var.azbastion_subnet_address
+}
+
+
+
 resource "azurerm_public_ip" "bastion_ip" {
   count               = var.az_bastion_subnet == null ? 0 : 1
   name                = "azure-bastion-ip"
