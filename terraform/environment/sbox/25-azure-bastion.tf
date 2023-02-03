@@ -1,5 +1,5 @@
 module "azure-bastion" {
-  source                   = "git@github.com:hmcts/terraform-module-azure-bastion"
+  source                   = "github.com/hmcts/terraform-module-azure-bastion"
   env                      = local.environment
   resource_group_name      = module.bootstrap.resource_group.name
   virtual_network_name     = module.bootstrap.vnet.name
