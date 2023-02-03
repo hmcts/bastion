@@ -32,4 +32,11 @@ locals {
     }
 
   ]
+
+  #Azure Bastion variables
+  allocation_method = "Static"
+  public_ip_sku     = "Standard"
+  bastion_sku       = "Standard"
+  tunneling_enabled = true
+  ip_config_name    = "ip-config"
 }
