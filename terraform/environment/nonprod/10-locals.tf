@@ -1,9 +1,10 @@
 locals {
-  environment    = "nonprod"
-  location       = "uksouth"
-  image_version  = "1.0.3"
-  subnet         = "10.48.0.32/28"
-  jumpbox_subnet = "10.48.0.48/28"
+  environment        = "nonprod"
+  location           = "uksouth"
+  image_version      = "1.0.3"
+  subnet             = "10.48.0.32/28"
+  jumpbox_subnet     = "10.48.0.48/28"
+  AzureBastionSubnet = "10.22.124.0/24"
 
   hub_subscription_id     = "fb084706-583f-4c9a-bdab-949aac66ba5c"
   hub_vnet_name           = "hmcts-hub-nonprodi"
@@ -31,4 +32,11 @@ locals {
     }
 
   ]
+
+  #Azure Bastion variables
+  allocation_method = "Static"
+  public_ip_sku     = "Standard"
+  bastion_sku       = "Standard"
+  tunneling_enabled = true
+  ip_config_name    = "ip-config"
 }
