@@ -9,7 +9,9 @@ resource "azurerm_virtual_machine_extension" "bastion_aad" {
 
 module "virtual_machine_bootstrap" {
   source = "github.com/hmcts/terraform-module-vm-bootstrap"
-
+  
+  tags                 = module.ctags.common_tags 
+  
   # General
   os_type              = "Linux"
   virtual_machine_id   = azurerm_linux_virtual_machine.bastion.id
