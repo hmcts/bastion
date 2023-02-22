@@ -1,7 +1,7 @@
 locals {
   environment             = "sbox"
   location                = "uksouth"
-  image_version           = "1.0.4"
+  image_version           = "1.0.3"
   subnet                  = "10.48.0.96/28"
   jumpbox_subnet          = "10.48.0.112/28"
   hub_subscription_id     = "ea3a8c1e-af9d-4108-bc86-a7e2d267f49c"
