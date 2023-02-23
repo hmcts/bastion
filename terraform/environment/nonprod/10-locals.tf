@@ -1,7 +1,7 @@
 locals {
   environment    = "nonprod"
   location       = "uksouth"
-  image_version  = "1.0.3"
+  image_version  = "1.0.5"
   subnet         = "10.48.0.32/28"
   jumpbox_subnet = "10.48.0.48/28"
 
