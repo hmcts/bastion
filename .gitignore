@@ -7,3 +7,6 @@
 
 # MacOS journal file
 *.DS_Store
+
+# Intelij
+.idea
