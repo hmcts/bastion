@@ -40,6 +40,11 @@ variable "environment" {
   type        = string
 }
 
+variable "env" {
+  description = "Name of the environment for which the bastion is being deployed"
+  type        = string
+}
+
 variable "disk_size" {
   description = "Size of the data disk"
   default     = "1000"
