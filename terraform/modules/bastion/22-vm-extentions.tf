@@ -15,7 +15,6 @@ module "virtual_machine_bootstrap" {
     azurerm.soc = azurerm.soc
   }
   source      = "github.com/hmcts/terraform-module-vm-bootstrap"
-  env         = var.environment
   common_tags = module.ctags.common_tags
 
   # General
