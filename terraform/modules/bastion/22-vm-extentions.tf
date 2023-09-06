@@ -9,10 +9,14 @@ resource "azurerm_virtual_machine_extension" "bastion_aad" {
 }
 
 module "virtual_machine_bootstrap" {
-  source = "github.com/hmcts/terraform-module-vm-bootstrap"
-
+  providers = {
+    azurerm     = azurerm
+    azurerm.cnp = azurerm.cnp
+    azurerm.soc = azurerm.soc
+  }
+  source      = "github.com/hmcts/terraform-module-vm-bootstrap?ref=master"
   common_tags = module.ctags.common_tags
-
+  env         = var.environment == "prod" ? var.environment : "nonprod"
   # General
   os_type              = "Linux"
   virtual_machine_id   = azurerm_linux_virtual_machine.bastion.id
