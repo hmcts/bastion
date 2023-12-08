@@ -32,3 +32,9 @@ variable "aad_role_def_id_user" {
   description = "The role definition ID for Virtual Machine User Login"
   type        = string
 }
+
+variable "aad_workaround_users" {
+  description = "List of user IDs to grant user access to the bastion VM whilst JIT is not working. This will unblock ITHC testers."
+  type        = list(string)
+  default     = []
+}
