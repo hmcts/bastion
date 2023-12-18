@@ -4,11 +4,11 @@ terraform {
     subscription_id = ""
   }
   required_providers {
-    azurerm = "~> 3.84.0"
+    azurerm = "~> 3.85.0"
   }
 }
 
 provider "azurerm" {
-  version = "3.84.0"
+  version = "3.85.0"
   features {}
 }
