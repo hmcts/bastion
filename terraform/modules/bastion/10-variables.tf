@@ -103,5 +103,5 @@ variable "nessus_key_secret" {
 }
 
 variable "vm_bootstrap_source" {
-  type        = string
+  type = string
 }
