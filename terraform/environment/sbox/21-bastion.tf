@@ -18,6 +18,8 @@ module "bastion-sbox" {
   # Tenable Nessus
   nessus_server     = "nessus-scanners-sbox000006.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-sbox"
+  vm_bootstrap_source     = "github.com/hmcts/terraform-module-vm-bootstrap?ref=DTSPO-17050-splunk-usf-version-update"
+
 }
 
 # Configuration for SecOps bastion

@@ -14,7 +14,7 @@ module "virtual_machine_bootstrap" {
     azurerm.cnp = azurerm.cnp
     azurerm.soc = azurerm.soc
   }
-  source      = local.vm_bootstrap_source
+  source      = var.vm_bootstrap_source
   common_tags = module.ctags.common_tags
   env         = var.environment == "prod" ? var.environment : "nonprod"
   # General
