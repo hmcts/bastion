@@ -101,3 +101,9 @@ variable "nessus_server" {
 variable "nessus_key_secret" {
   type = string
 }
+
+variable "vm_bootstrap_source" {
+  description = "Source for the vm-bootstrap module"
+  type        = string
+  default     = "github.com/hmcts/terraform-module-vm-bootstrap?ref=master"
+}
