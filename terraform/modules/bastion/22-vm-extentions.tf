@@ -14,7 +14,7 @@ module "virtual_machine_bootstrap" {
     azurerm.cnp = azurerm.cnp
     azurerm.soc = azurerm.soc
   }
-  source      = var.environment == "sbox" ? "github.com/hmcts/terraform-module-vm-bootstrap?ref=DTSPO-17050-splunk-usf-version-update" : "github.com/hmcts/terraform-module-vm-bootstrap?ref=master"
+  source      = local.vm_bootstrap_source
   common_tags = module.ctags.common_tags
   env         = var.environment == "prod" ? var.environment : "nonprod"
   # General
