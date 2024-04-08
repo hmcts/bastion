@@ -18,8 +18,7 @@ module "bastion-sbox" {
   # Tenable Nessus
   nessus_server       = "nessus-scanners-sbox000006.platform.hmcts.net"
   nessus_key_secret   = "nessus-agent-key-sbox"
-  vm_bootstrap_source = "github.com/hmcts/terraform-module-vm-bootstrap?ref=DTSPO-17050-splunk-usf-version-update"
-
+  vm_bootstrap_source = local.vm_bootstrap_source
 }
 
 # Configuration for SecOps bastion
@@ -38,6 +37,7 @@ module "bastion-secops-sbox" {
   dynatrace_tenant_id = "yrk32651"
   dynatrace_server    = "https://dynatrace-activegate-nonprod.platform.hmcts.net:9999/e/yrk32651/api"
   # Tenable Nessus
-  nessus_server     = "nessus-scanners-sbox000006.platform.hmcts.net"
-  nessus_key_secret = "nessus-agent-key-sbox"
+  nessus_server       = "nessus-scanners-sbox000006.platform.hmcts.net"
+  nessus_key_secret   = "nessus-agent-key-sbox"
+  vm_bootstrap_source = local.vm_bootstrap_source
 }

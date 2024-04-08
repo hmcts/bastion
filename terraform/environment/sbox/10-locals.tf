@@ -9,6 +9,7 @@ locals {
   hub_vnet_resource_group = "hmcts-hub-sbox-int"
   hub_lb_name             = "hmcts-hub-sbox-int-palo-lb"
   hub_lb_resource_group   = local.hub_vnet_resource_group
+  vm_bootstrap_source     = "github.com/hmcts/terraform-module-vm-bootstrap?ref=DTSPO-17050-splunk-usf-version-update"
   routes = [
     {
       name                   = "PrivateA"

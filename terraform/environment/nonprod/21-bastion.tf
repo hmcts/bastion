@@ -16,6 +16,7 @@ module "bastion-nonprod" {
   dynatrace_tenant_id = "yrk32651"
   dynatrace_server    = "https://10.10.70.6:9999/e/yrk32651/api"
   # Tenable Nessus
-  nessus_server     = "nessus-scanners-nonprod000005.platform.hmcts.net"
-  nessus_key_secret = "nessus-agent-key-nonprod"
+  nessus_server       = "nessus-scanners-nonprod000005.platform.hmcts.net"
+  nessus_key_secret   = "nessus-agent-key-nonprod"
+  vm_bootstrap_source = local.vm_bootstrap_source
 }

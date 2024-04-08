@@ -10,6 +10,7 @@ locals {
   hub_vnet_resource_group = "hmcts-hub-nonprodi"
   hub_lb_name             = "hmcts-hub-nonprodi-palo-lb"
   hub_lb_resource_group   = local.hub_vnet_resource_group
+  vm_bootstrap_source     = "github.com/hmcts/terraform-module-vm-bootstrap?ref=master"
   routes = [
     {
       name                   = "PrivateA"

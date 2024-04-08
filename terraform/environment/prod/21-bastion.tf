@@ -16,8 +16,9 @@ module "bastion-prod" {
   dynatrace_tenant_id = "ebe20728"
   dynatrace_server    = "https://10.10.70.21:9999/e/ebe20728/api"
   # Tenable Nessus
-  nessus_server     = "nessus-scanners-prod000005.platform.hmcts.net"
-  nessus_key_secret = "nessus-agent-key-prod"
+  nessus_server       = "nessus-scanners-prod000005.platform.hmcts.net"
+  nessus_key_secret   = "nessus-agent-key-prod"
+  vm_bootstrap_source = local.vm_bootstrap_source
 }
 
 module "bastion-secops" {
@@ -35,6 +36,7 @@ module "bastion-secops" {
   dynatrace_tenant_id = "ebe20728"
   dynatrace_server    = "https://10.10.70.21:9999/e/ebe20728/api"
   # Tenable Nessus
-  nessus_server     = "nessus-scanners-prod000005.platform.hmcts.net"
-  nessus_key_secret = "nessus-agent-key-prod"
+  nessus_server       = "nessus-scanners-prod000005.platform.hmcts.net"
+  nessus_key_secret   = "nessus-agent-key-prod"
+  vm_bootstrap_source = local.vm_bootstrap_source
 }
