@@ -17,8 +17,6 @@ resource "azurerm_linux_virtual_machine" "bastion" {
     azurerm_network_interface.bastion.id,
   ]
 
-  patch_mode = "AutomaticByPlatform"
-
   admin_ssh_key {
     username   = var.bastion_username
     public_key = tls_private_key.bastion_ssh_key.public_key_openssh
