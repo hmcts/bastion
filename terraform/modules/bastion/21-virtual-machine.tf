@@ -17,7 +17,7 @@ resource "azurerm_linux_virtual_machine" "bastion" {
     azurerm_network_interface.bastion.id,
   ]
 
-  patch_mode            = "AutomaticByPlatform"
+  patch_mode = "AutomaticByPlatform"
 
   admin_ssh_key {
     username   = var.bastion_username
