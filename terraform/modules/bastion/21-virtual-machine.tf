@@ -16,7 +16,7 @@ resource "azurerm_linux_virtual_machine" "bastion" {
   network_interface_ids = [
     azurerm_network_interface.bastion.id,
   ]
-  patch_assessment_mode = "var.vm_patch_assessment_mode"
+  patch_assessment_mode = "AutomaticByPlatform"
   provision_vm_agent    = true
   patch_mode            = "AutomaticByPlatform"
 
