@@ -9,12 +9,13 @@ resource "azurerm_virtual_machine_extension" "bastion_aad" {
 }
 
 module "virtual_machine_bootstrap" {
+  count = local.is_sbox_env
   providers = {
     azurerm     = azurerm
     azurerm.cnp = azurerm.cnp
     azurerm.soc = azurerm.soc
   }
-  source      = "github.com/hmcts/terraform-module-vm-bootstrap?ref=master"
+  source      = "github.com/hmcts/terraform-module-vm-bootstrap?ref=DTSPO-17050-splunk-usf-version-update"
   common_tags = module.ctags.common_tags
   env         = var.environment == "prod" ? var.environment : "nonprod"
   # General
