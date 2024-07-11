@@ -17,4 +17,5 @@ locals {
   }
 
   dynatrace_env = var.dynatrace_tenant_id == "yrk32651" ? "nonprod" : var.dynatrace_tenant_id == "ebe20728" ? "prod" : null
+
 }
