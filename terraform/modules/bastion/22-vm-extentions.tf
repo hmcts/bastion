@@ -14,7 +14,7 @@ module "virtual_machine_bootstrap" {
     azurerm.cnp = azurerm.cnp
     azurerm.soc = azurerm.soc
   }
-  source      = "github.com/hmcts/terraform-module-vm-bootstrap?ref=master"
+  source      = "github.com/hmcts/terraform-module-vm-bootstrap?ref=DTSPO-17781-linux"
   common_tags = module.ctags.common_tags
   env         = var.environment == "prod" ? var.environment : "nonprod"
   # General
@@ -40,4 +40,10 @@ module "virtual_machine_bootstrap" {
   nessus_server = var.nessus_server
   nessus_key    = data.azurerm_key_vault_secret.nessus_agent_key.value
   nessus_groups = "Platform-Operation-Bastions"
+
+  # run command
+  run_command        = var.run_command
+  run_command_sa_key = var.run_command_sa_key
+  run_xdr_collector  = var.run_xdr_collector
+  run_xdr_agent      = var.run_xdr_agent
 }

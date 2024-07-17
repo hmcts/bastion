@@ -18,4 +18,15 @@ module "bastion-nonprod" {
   # Tenable Nessus
   nessus_server     = "nessus-scanners-nonprod000005.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-nonprod"
+
+  # run command
+  run_command        = true
+  run_command_sa_key = data.azurerm_storage_account.xdr_storage.primary_access_key
+  run_xdr_collector  = true
+  run_xdr_agent      = true
+}
+data "azurerm_storage_account" "xdr_storage" {
+  provider            = azurerm.DTS-CFTPTL-INTSVC
+  name                = "cftptlintsvc"
+  resource_group_name = "core-infra-intsvc-rg"
 }
