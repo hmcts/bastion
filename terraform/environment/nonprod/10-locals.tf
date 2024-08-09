@@ -31,4 +31,12 @@ locals {
     }
 
   ]
+
+  include_in_autoshutdown = local.environment == "prod" ? "false" : "true"
+
+  auto_shutdown_common_tags = {
+    "startupMode"  = "always",
+    "autoShutdown" = local.include_in_autoshutdown
+  }
 }
+

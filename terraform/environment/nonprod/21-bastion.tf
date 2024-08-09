@@ -18,4 +18,5 @@ module "bastion-nonprod" {
   # Tenable Nessus
   nessus_server     = "nessus-scanners-nonprod000005.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-nonprod"
+  common_tags       =  merge(var.common_tags, local.auto_shutdown_common_tags)
 }
