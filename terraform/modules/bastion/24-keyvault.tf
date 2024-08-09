@@ -2,7 +2,7 @@ resource "azurerm_key_vault_secret" "bastion_admin_username" {
   name         = "${var.bastion_name}-admin-username"
   value        = azurerm_linux_virtual_machine.bastion.admin_username
   key_vault_id = var.keyvault_id
-  tags         = module.ctags.common_tags
+  tags         = var.common_tags
 }
 
 resource "tls_private_key" "bastion_ssh_key" {
