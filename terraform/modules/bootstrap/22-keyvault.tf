@@ -4,7 +4,7 @@ resource "azurerm_key_vault" "bastion" {
   location            = azurerm_resource_group.bastion.location
   sku_name            = "standard"
   tenant_id           = data.azurerm_client_config.current.tenant_id
-  tags                = module.ctags.common_tags
+  tags                = var.common_tags
 
   purge_protection_enabled = false
 
