@@ -18,6 +18,7 @@ module "bastion-sbox" {
   # Tenable Nessus
   nessus_server     = "nessus-scanners-sbox000006.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-sbox"
+  common_tags       = merge(module.ctags.common_tags, local.auto_shutdown_common_tags)
 }
 
 # Configuration for SecOps bastion
@@ -38,4 +39,5 @@ module "bastion-secops-sbox" {
   # Tenable Nessus
   nessus_server     = "nessus-scanners-sbox000006.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-sbox"
+  common_tags       = merge(module.ctags.common_tags, local.auto_shutdown_common_tags)
 }

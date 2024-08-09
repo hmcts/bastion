@@ -35,4 +35,14 @@ locals {
       next_hop_in_ip_address = data.azurerm_lb.hub_palo.frontend_ip_configuration.1.private_ip_address
     }
   ]
+
+ include_in_autoshutdown = var.env == "prod" ? "false" : "true"
+
+  auto_shutdown_common_tags = {
+    "startupMode"  = "always",
+    "autoShutdown" = local.include_in_autoshutdown
+  }
+}
+
+variable "env" {
 }
