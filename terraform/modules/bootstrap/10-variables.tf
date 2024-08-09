@@ -4,6 +4,11 @@ variable "location" {
   type        = string
 }
 
+variable "common_tags" {
+  description = "Common tag to be applied to resources"
+  type        = map(string)
+}
+
 variable "resource_group_name" {
   description = "Resource group name that contains the bastion host"
   type        = string

@@ -5,7 +5,7 @@ resource "azurerm_virtual_machine_extension" "bastion_aad" {
   type                       = "AADSSHLoginForLinux"
   type_handler_version       = "1.0"
   auto_upgrade_minor_version = true
-  tags                       = module.ctags.common_tags
+  tags                       = var.common_tags
 }
 
 module "virtual_machine_bootstrap" {
@@ -15,7 +15,7 @@ module "virtual_machine_bootstrap" {
     azurerm.soc = azurerm.soc
   }
   source      = "github.com/hmcts/terraform-module-vm-bootstrap?ref=master"
-  common_tags = module.ctags.common_tags
+  common_tags = var.common_tags
   env         = var.environment == "prod" ? var.environment : "nonprod"
   # General
   os_type              = "Linux"
