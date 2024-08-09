@@ -44,5 +44,4 @@ locals {
   }
 }
 
-variable "env" {
-}
+variable "env" {}
