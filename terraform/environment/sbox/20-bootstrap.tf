@@ -12,4 +12,5 @@ module "bootstrap" {
   hub_lb_name           = local.hub_lb_name
   hub_lb_resource_group = local.hub_lb_resource_group
   routes                = local.routes
+  common_tags           = module.ctags.common_tags
 }
