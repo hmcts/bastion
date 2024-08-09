@@ -18,5 +18,14 @@ module "bastion-nonprod" {
   # Tenable Nessus
   nessus_server     = "nessus-scanners-nonprod000005.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-nonprod"
-  common_tags       = merge(module.bastion.common_tags, local.auto_shutdown_common_tags)
+  common_tags       = merge(module.ctags.common_tags, local.auto_shutdown_common_tags)
+}
+
+module "ctags" {
+  source = "github.com/hmcts/terraform-module-common-tags"
+
+  builtFrom    = "https://github.com/hmcts/bastion"
+  environment  = var.environment
+  product      = "mgmt"
+  expiresAfter = "3000-01-01"
 }
