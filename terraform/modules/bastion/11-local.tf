@@ -18,7 +18,6 @@ locals {
 
   dynatrace_env = var.dynatrace_tenant_id == "yrk32651" ? "nonprod" : var.dynatrace_tenant_id == "ebe20728" ? "prod" : null
 
-
   include_in_autoshutdown = local.env_display_names[var.environment] == "Production" ? "false" : "true"
 
   auto_shutdown_common_tags = {
@@ -27,4 +26,5 @@ locals {
   }
 
   merged_tags = merge(module.ctags.common_tags, local.auto_shutdown_common_tags)
+
 }
