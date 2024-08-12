@@ -40,6 +40,4 @@ module "bastion-secops-sbox" {
   nessus_server     = "nessus-scanners-sbox000006.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-sbox"
   common_tags       = module.bastion-secops-sbox.merged_tags
-
-
 }

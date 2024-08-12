@@ -18,12 +18,13 @@ locals {
 
   dynatrace_env = var.dynatrace_tenant_id == "yrk32651" ? "nonprod" : var.dynatrace_tenant_id == "ebe20728" ? "prod" : null
 
-  include_in_autoshutdown = local.env_display_names[var.environment] == "Production" ? "false" : "true"
 
-  merged_tags = local.env_display_names[var.environment] == "Production" ? {} : merge(module.ctags.common_tags, local.auto_shutdown_common_tags)
+  include_in_autoshutdown = local.env_display_names[var.environment] == "Production" ? "false" : "true"
 
   auto_shutdown_common_tags = {
     "startupMode"  = "always",
     "autoShutdown" = local.include_in_autoshutdown
   }
+
+  merged_tags = merge(module.ctags.common_tags, local.auto_shutdown_common_tags)
 }
