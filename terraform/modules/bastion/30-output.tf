@@ -3,6 +3,6 @@ output "virtual_machine" {
   value       = azurerm_linux_virtual_machine.bastion
 }
 
-output "ctags" {
-  value = module.ctags
+output "merged_tags" {
+  value = local.merged_tags
 }
