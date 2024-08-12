@@ -19,7 +19,8 @@ locals {
   dynatrace_env = var.dynatrace_tenant_id == "yrk32651" ? "nonprod" : var.dynatrace_tenant_id == "ebe20728" ? "prod" : null
 
 
-  include_in_autoshutdown = local.env_display_names == "prod" ? "false" : "true"
+  include_in_autoshutdown = var.environment == "prod" ? "false" : "true"
+
 
   auto_shutdown_common_tags = {
     "startupMode"  = "always",
