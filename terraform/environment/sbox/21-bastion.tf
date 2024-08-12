@@ -1,5 +1,5 @@
 module "tags" {
-  source = "../../modules/bastion/tags"
+  source = "../../modules/bastion/12-tags.tf"
 }
 
 module "bastion-sbox" {
