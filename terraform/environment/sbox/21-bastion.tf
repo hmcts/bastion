@@ -1,3 +1,7 @@
+module "tags" {
+  source = "../../modules/bastion/tags"
+}
+
 module "bastion-sbox" {
   source              = "../../modules/bastion/"
   location            = module.bootstrap.resource_group.location
