@@ -6,3 +6,11 @@ output "virtual_machine" {
 output "merged_tags" {
   value = local.merged_tags
 }
+
+output "ctags_common_tags" {
+  value = module.ctags.common_tags
+}
+
+output "auto_shutdown_common_tags" {
+  value = local.auto_shutdown_common_tags
+}
