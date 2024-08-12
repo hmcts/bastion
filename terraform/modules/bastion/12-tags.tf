@@ -6,3 +6,9 @@ module "ctags" {
   product      = "mgmt"
   expiresAfter = "3000-01-01" # never expire bastions
 }
+
+locals {
+  auto_shutdown_common_tags = {
+    "autoShutdown" = "true"
+  }
+}
