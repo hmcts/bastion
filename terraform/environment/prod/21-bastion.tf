@@ -18,6 +18,8 @@ module "bastion-prod" {
   # Tenable Nessus
   nessus_server     = "nessus-scanners-prod000005.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-prod"
+  common_tags       = module.bastion-prod.merged_tags
+
 }
 
 module "bastion-secops" {
@@ -37,4 +39,6 @@ module "bastion-secops" {
   # Tenable Nessus
   nessus_server     = "nessus-scanners-prod000005.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-prod"
+  common_tags       = module.bastion-secops.merged_tags
+
 }
