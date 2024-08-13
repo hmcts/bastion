@@ -101,3 +101,9 @@ variable "nessus_server" {
 variable "nessus_key_secret" {
   type = string
 }
+
+variable "autoShutdown" {
+  description = "Auto shutdown setting for the Linux virtual machine"
+  type        = bool
+  default     = false
+}
