@@ -29,5 +29,6 @@ locals {
       next_hop_type          = "VirtualAppliance"
       next_hop_in_ip_address = data.azurerm_lb.hub_palo.frontend_ip_configuration.1.private_ip_address
     }
+
   ]
 }
