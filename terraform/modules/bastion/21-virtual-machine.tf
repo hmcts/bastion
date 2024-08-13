@@ -10,6 +10,7 @@ resource "azurerm_linux_virtual_machine" "bastion" {
   name                = var.bastion_name
   resource_group_name = var.resource_group_name
   location            = var.location
+  tags                = module.ctags.common_tags
   size                = "Standard_D4ds_v5"
   admin_username      = var.bastion_username
   network_interface_ids = [
@@ -31,9 +32,4 @@ resource "azurerm_linux_virtual_machine" "bastion" {
   }
 
   source_image_id = data.azurerm_shared_image_version.shared_image_version.id
-
-  tags = merge(
-    module.ctags.common_tags,
-    var.environment == "non-prod" || var.environment == "stg" ? { "autoShutdown" = tostring(var.autoShutdown) } : {}
-  )
 }
