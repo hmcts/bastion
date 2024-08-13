@@ -6,6 +6,8 @@ locals {
     test    = "Test"
   }
 
+  include_in_autoshutdown = var.environment == "prod" ? "false" : "true"
+
   common_tags = {
     "managedBy"          = "DevOps"
     "solutionOwner"      = "RDO"
@@ -14,13 +16,11 @@ locals {
     "automation"         = ""
     "costCentre"         = ""
     "environment"        = local.env_display_names[var.environment]
+    "startupMode"        = "always"
     "autoShutdown"       = local.include_in_autoshutdown
-    "startupMode"        = "always",
   }
 
   dynatrace_env = var.dynatrace_tenant_id == "yrk32651" ? "nonprod" : var.dynatrace_tenant_id == "ebe20728" ? "prod" : null
 
-  include_in_autoshutdown = local.env_display_names[var.environment] == "Production" ? "false" : "true"
-
-  merged_tags = merge(module.ctags.common_tags, local.common_tags)
+  merged_tags = var.environment == "prod" ? {} : merge(module.ctags.common_tags, local.common_tags)
 }
