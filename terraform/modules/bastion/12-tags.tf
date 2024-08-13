@@ -7,6 +7,3 @@ module "ctags" {
   expiresAfter = "3000-01-01" # never expire bastions
   autoShutdown = var.auto_shutdown
 }
-
-
-
