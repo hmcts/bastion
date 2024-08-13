@@ -5,4 +5,8 @@ module "ctags" {
   environment  = var.environment
   product      = "mgmt"
   expiresAfter = "3000-01-01" # never expire bastions
+  autoShutdown = var.auto_shutdown
 }
+
+
+  

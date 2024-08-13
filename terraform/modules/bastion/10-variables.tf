@@ -102,7 +102,7 @@ variable "nessus_key_secret" {
   type = string
 }
 
-variable "common_tags" {
-  description = "Tags to apply to the bastion virtual machine"
-  type        = map(string)
+variable "auto_shutdown" {
+  description = "auto shutdown"
+  type        = bool
 }
