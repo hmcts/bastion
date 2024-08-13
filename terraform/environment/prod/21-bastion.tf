@@ -18,7 +18,7 @@ module "bastion-prod" {
   # Tenable Nessus
   nessus_server     = "nessus-scanners-prod000005.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-prod"
-  auto_shutdown     = "false"
+  autoShutdown     = "false"
 }
 
 module "bastion-secops" {
@@ -38,5 +38,5 @@ module "bastion-secops" {
   # Tenable Nessus
   nessus_server     = "nessus-scanners-prod000005.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-prod"
-  auto_shutdown     = "false"
+  autoShutdown     = "false"
 }
