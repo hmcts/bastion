@@ -34,6 +34,6 @@ resource "azurerm_linux_virtual_machine" "bastion" {
 
   tags = merge(
     module.ctags.common_tags,
-    var.environment == "non-prod" || var.environment == "stg" ? var.autoShutdown : {}
+    var.environment == "non-prod" || var.environment == "stg" ? { "autoShutdown" = tostring(var.autoShutdown) } : {}
   )
 }
