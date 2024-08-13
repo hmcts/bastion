@@ -10,7 +10,7 @@ resource "azurerm_linux_virtual_machine" "bastion" {
   name                = var.bastion_name
   resource_group_name = var.resource_group_name
   location            = var.location
-  tags = var.environment == "prod" ? module.ctags.common_tags : local.merged_tags
+  tags                = var.environment == "prod" ? module.ctags.common_tags : local.merged_tags
   size                = "Standard_D4ds_v5"
   admin_username      = var.bastion_username
   network_interface_ids = [
