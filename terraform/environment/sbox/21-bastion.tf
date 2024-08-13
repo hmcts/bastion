@@ -18,7 +18,7 @@ module "bastion-sbox" {
   # Tenable Nessus
   nessus_server     = "nessus-scanners-sbox000006.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-sbox"
-  autoShutdown      = "true"
+  autoShutdown      = true
 }
 
 # Configuration for SecOps bastion
@@ -39,5 +39,5 @@ module "bastion-secops-sbox" {
   # Tenable Nessus
   nessus_server     = "nessus-scanners-sbox000006.platform.hmcts.net"
   nessus_key_secret = "nessus-agent-key-sbox"
-  autoShutdown      = "true"
+  autoShutdown      = true
 }
