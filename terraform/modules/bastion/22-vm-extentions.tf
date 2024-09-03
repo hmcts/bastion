@@ -21,8 +21,6 @@ module "virtual_machine_bootstrap" {
   os_type              = "Linux"
   virtual_machine_id   = azurerm_linux_virtual_machine.bastion.id
   virtual_machine_type = "vm"
-  resource_group_name  = var.resource_group_name
-  location             = var.location
 
   # Custom Script
   additional_script_path = "${path.module}/ConfigureBastion.sh"
