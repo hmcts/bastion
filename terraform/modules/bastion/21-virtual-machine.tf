@@ -33,31 +33,3 @@ resource "azurerm_linux_virtual_machine" "bastion" {
 
   source_image_id = data.azurerm_shared_image_version.shared_image_version.id
 }
-
-resource "azurerm_linux_virtual_machine" "test_vm" {
-  name                = "test-vm"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  tags                = module.ctags.common_tags
-  size                = "Standard_D4ds_v5"
-  admin_username      = var.bastion_username
-  network_interface_ids = [
-    azurerm_network_interface.bastion.id,
-  ]
-
-  admin_ssh_key {
-    username   = var.bastion_username
-    public_key = tls_private_key.bastion_ssh_key.public_key_openssh
-  }
-
-  identity {
-    type = "SystemAssigned"
-  }
-
-  os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
-
-  source_image_id = data.azurerm_shared_image_version.shared_image_version.id
-}
