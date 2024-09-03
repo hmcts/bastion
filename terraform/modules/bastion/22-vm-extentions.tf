@@ -14,13 +14,15 @@ module "virtual_machine_bootstrap" {
     azurerm.cnp = azurerm.cnp
     azurerm.soc = azurerm.soc
   }
-  source      = "github.com/hmcts/terraform-module-vm-bootstrap?ref=master"
+  source      = "github.com/hmcts/terraform-module-vm-bootstrap?ref=DTSPO-18633-add-data-collection-rule"
   common_tags = module.ctags.common_tags
   env         = var.environment == "prod" ? var.environment : "nonprod"
   # General
   os_type              = "Linux"
   virtual_machine_id   = azurerm_linux_virtual_machine.bastion.id
   virtual_machine_type = "vm"
+  resource_group_name  = var.resource_group_name
+  location             = var.location
 
   # Custom Script
   additional_script_path = "${path.module}/ConfigureBastion.sh"
