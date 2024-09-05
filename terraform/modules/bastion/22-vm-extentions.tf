@@ -14,7 +14,7 @@ module "virtual_machine_bootstrap" {
     azurerm.cnp = azurerm.cnp
     azurerm.soc = azurerm.soc
   }
-  source      = "github.com/hmcts/terraform-module-vm-bootstrap?ref=DTSPO-18633-add-data-collection-rule"
+  source      = "github.com/hmcts/terraform-module-vm-bootstrap?ref=master"
   common_tags = module.ctags.common_tags
   env         = var.environment == "prod" ? var.environment : "nonprod"
   # General
