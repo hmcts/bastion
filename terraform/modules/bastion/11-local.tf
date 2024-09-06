@@ -6,9 +6,6 @@ locals {
     test    = "Test"
   }
 
-  log_analytics_workspace = var.log_analytics_workspace_names[var.environment]
-  dcr_subscription        = var.log_analytics_sub_id[local.log_analytics_workspace]
-
   common_tags = {
     "managedBy"          = "DevOps"
     "solutionOwner"      = "RDO"
