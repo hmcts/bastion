@@ -24,3 +24,11 @@ provider "azurerm" {
   features {}
   subscription_id = var.cnp_vault_sub
 }
+
+provider "azurerm" {
+  alias                      = "dcr"
+  skip_provider_registration = "true"
+  features {}
+  subscription_id = local.dcr_subscription
+
+}
