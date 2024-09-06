@@ -13,8 +13,9 @@ module "virtual_machine_bootstrap" {
     azurerm     = azurerm
     azurerm.cnp = azurerm.cnp
     azurerm.soc = azurerm.soc
+    azurerm.dcr = azurerm.dcr
   }
-  source      = "github.com/hmcts/terraform-module-vm-bootstrap?ref=master"
+  source      = "github.com/hmcts/terraform-module-vm-bootstrap?ref=ieuanb74-patch-1"
   common_tags = module.ctags.common_tags
   env         = var.environment == "prod" ? var.environment : "nonprod"
   # General
