@@ -8,6 +8,7 @@ provider "azurerm" {
 provider "azurerm" {
   version = ">= 3.4.0"
   features {}
-  subscription_id = var.vpn_subscription_id
-  alias           = "vpn"
+  subscription_id            = var.vpn_subscription_id
+  alias                      = "vpn"
+  skip_provider_registration = "true"
 }
