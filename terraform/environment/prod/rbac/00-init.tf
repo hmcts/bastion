@@ -11,6 +11,7 @@ terraform {
 provider "azurerm" {
   version = "3.85.0"
   features {}
+  skip_provider_registration = "true"
 }
 
 provider "azuread" {
