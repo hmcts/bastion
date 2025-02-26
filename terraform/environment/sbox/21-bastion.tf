@@ -3,6 +3,7 @@ module "bastion-sbox" {
   location            = module.bootstrap.resource_group.location
   environment         = local.environment
   image_version       = local.image_version
+  image_name          = local.image_name
   resource_group_name = module.bootstrap.resource_group.name
   subnet_id           = module.bootstrap.subnet.id
   keyvault_id         = module.bootstrap.keyvault.id
