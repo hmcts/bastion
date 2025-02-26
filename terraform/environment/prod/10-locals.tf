@@ -1,7 +1,8 @@
 locals {
   environment             = "prod"
   location                = "uksouth"
-  image_version           = "1.0.5"
+  image_version           = "24.04.0"
+  image_name              = "bastion-ubuntu-v2"
   subnet                  = "10.48.0.0/27"
   jumpbox_subnet          = "10.48.2.0/28"
   hub_subscription_id     = "0978315c-75fe-4ada-9d11-1eb5e0e0b214"

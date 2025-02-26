@@ -3,6 +3,7 @@ module "bastion-prod" {
   location            = module.bootstrap.resource_group.location
   environment         = local.environment
   image_version       = local.image_version
+  image_name          = local.image_name
   resource_group_name = module.bootstrap.resource_group.name
   subnet_id           = module.bootstrap.subnet.id
   keyvault_id         = module.bootstrap.keyvault.id
@@ -24,7 +25,8 @@ module "bastion-secops" {
   source              = "../../modules/bastion/"
   location            = module.bootstrap.resource_group.location
   environment         = local.environment
-  image_version       = local.image_version
+  image_version       = "1.0.5"
+  image_name          = "bastion-ubuntu"
   resource_group_name = module.bootstrap.resource_group.name
   subnet_id           = module.bootstrap.subnet.id
   keyvault_id         = module.bootstrap.keyvault.id
