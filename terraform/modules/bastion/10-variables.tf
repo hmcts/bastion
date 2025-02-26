@@ -107,3 +107,9 @@ variable "autoShutdown" {
   type        = bool
   default     = false
 }
+
+variable "image_name" {
+  description = "Name of the shared image to use when building this VM"
+  type        = string
+  default     = "bastion-ubuntu"
+}
