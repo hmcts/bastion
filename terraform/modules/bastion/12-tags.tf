@@ -1,5 +1,5 @@
 module "ctags" {
-  source = "github.com/hmcts/terraform-module-common-tags"
+  source = "github.com/hmcts/terraform-module-common-tags/DTSPO-18904/make-startupmode-optional"
 
   builtFrom    = "https://github.com/hmcts/bastion"
   environment  = var.environment
