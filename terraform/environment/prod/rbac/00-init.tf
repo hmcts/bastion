@@ -4,12 +4,12 @@ terraform {
     subscription_id = "2b1afc19-5ca9-4796-a56f-574a58670244"
   }
   required_providers {
-    azurerm = "~> 3.85.0"
+    azurerm = "~> 3.117.0"
   }
 }
 
 provider "azurerm" {
-  version = "3.85.0"
+  version = "3.117.1"
   features {}
   skip_provider_registration = "true"
 }
