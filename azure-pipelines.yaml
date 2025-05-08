@@ -49,7 +49,7 @@ pr:
 
 variables:
   terraformVersion: 1.5.6
-  agentPool: ubuntu-20.04
+  agentPool: ubuntu-24.04
 
 stages:
   - ${{ each bastion in parameters.bastionHosts }}:
