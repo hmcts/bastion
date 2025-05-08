@@ -1,3 +1,7 @@
+parameters:
+  - name: terraformVersion
+    type: string
+    
 steps:
 
 - task: TerraformInstaller@0
