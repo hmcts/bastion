@@ -1,5 +1,10 @@
 steps:
 
+- task: TerraformInstaller@0
+  displayName: Terraform install test
+  inputs:
+    terraformVersion: ${{ parameters.terraformVersion }}
+
 - task: PowerShell@2
   displayName: Run tests
   inputs:
