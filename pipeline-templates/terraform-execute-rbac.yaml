@@ -36,7 +36,7 @@ steps:
   inputs:
     terraformVersion: ${{ parameters.terraformVersion }}
 
-- task: TerraformCLI@0
+- task: TerraformCLI@2
   displayName: Terraform initialize RBAC
   inputs:
     command: init
@@ -53,13 +53,13 @@ steps:
 
 - ${{ if eq(parameters.deploy, false) }}:
 
-  - task: TerraformCLI@0
+  - task: TerraformCLI@2
     displayName: Terraform validate RBAC
     inputs:
       command: validate
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
 
-  - task: TerraformCLI@0
+  - task: TerraformCLI@2
     displayName: Terraform plan RBAC
     inputs:
       command: plan
@@ -69,7 +69,7 @@ steps:
 
 - ${{ if eq(parameters.deploy, true) }}:
 
-  - task: TerraformCLI@0
+  - task: TerraformCLI@2
     displayName: Terraform apply RBAC
     inputs:
       command: apply
