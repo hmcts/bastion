@@ -8,7 +8,7 @@ module "bastion-nonprod" {
   subnet_id           = module.bootstrap.subnet.id
   keyvault_id         = module.bootstrap.keyvault.id
   bastion_name        = "bastion-nonprod"
-  disk_size           = "1000"
+  disk_size           = "4096"
   storage_type        = "StandardSSD_LRS"
   create_disks        = true
   # Dynatrace OneAgent
