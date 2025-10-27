@@ -21,3 +21,30 @@ module "bastion-nonprod" {
   nessus_key_secret = "nessus-agent-key-nonprod"
   autoShutdown      = true
 }
+
+module "ctags" {
+  source = "github.com/hmcts/terraform-module-common-tags"
+
+  builtFrom    = "https://github.com/hmcts/bastion"
+  environment  = local.environment
+  product      = "mgmt"
+  expiresAfter = "3000-01-01" # never expire bastions
+  autoShutdown = false
+}
+
+resource "azurerm_managed_disk" "disk" {
+  name                 = "bastion-nonprod-datadisk"
+  location             = module.bootstrap.resource_group.location
+  resource_group_name  = module.bootstrap.resource_group.name
+  storage_account_type = "StandardSSD_LRS"
+  create_option        = "Empty"
+  disk_size_gb         = "2000"
+  tags                 = module.ctags.common_tags
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "diskattach" {
+  managed_disk_id    = azurerm_managed_disk.disk.id
+  virtual_machine_id = module.bastion-nonprod.virtual_machine.id
+  lun                = 0
+  caching            = "ReadWrite"
+}
