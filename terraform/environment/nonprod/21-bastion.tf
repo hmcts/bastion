@@ -45,6 +45,6 @@ resource "azurerm_managed_disk" "disk" {
 resource "azurerm_virtual_machine_data_disk_attachment" "diskattach" {
   managed_disk_id    = azurerm_managed_disk.disk.id
   virtual_machine_id = module.bastion-nonprod.virtual_machine.id
-  lun                = 0
+  lun                = 10
   caching            = "ReadWrite"
 }
