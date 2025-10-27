@@ -33,7 +33,7 @@ module "ctags" {
 }
 
 resource "azurerm_managed_disk" "disk" {
-  name                 = "bastion-nonprod-datadisk"
+  name                 = "bastion-nonprod-datadisk-temp"
   location             = module.bootstrap.resource_group.location
   resource_group_name  = module.bootstrap.resource_group.name
   storage_account_type = "StandardSSD_LRS"
