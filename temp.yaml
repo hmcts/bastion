@@ -1,0 +1,6 @@
+pool:
+  name: hmcts-sds-ptlsbox-windows
+
+steps:
+- script: echo "Keeping pool warm"
+  displayName: 'Heartbeat'
