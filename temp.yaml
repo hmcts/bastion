@@ -1,22 +1,23 @@
 stages:
-- stage: WindowsStage
-  displayName: 'Windows Pool Stage'
-  pool:
-    name: hmcts-sds-ptlsbox-windows
-  jobs:
-  - job: WindowsJob
-    displayName: 'Windows Heartbeat'
-    steps:
-    - script: echo "Keeping pool warm"
-      displayName: 'Heartbeat'
+  - stage: WindowsStage
+    displayName: "Windows Pool Stage"
+    pool:
+      name: hmcts-sds-ptlsbox-windows
+    jobs:
+      - job: WindowsJob
+        displayName: "Windows Heartbeat"
+        steps:
+          - script: echo "Keeping pool warm"
+            displayName: "Heartbeat"
 
-- stage: LinuxStage
-  displayName: 'Linux Pool Stage'
-  pool:
-    name: hmcts-sds-ptlsbox
-  jobs:
-  - job: LinuxJob
-    displayName: 'Linux Heartbeat'
-    steps:
-    - script: echo "Keeping pool warm"
-      displayName: 'Heartbeat'
+  - stage: LinuxStage
+    displayName: "Linux Pool Stage"
+    dependsOn: []
+    pool:
+      name: hmcts-sds-ptlsbox
+    jobs:
+      - job: LinuxJob
+        displayName: "Linux Heartbeat"
+        steps:
+          - script: echo "Keeping pool warm"
+            displayName: "Heartbeat"
