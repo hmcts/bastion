@@ -7,7 +7,7 @@ stages:
       - job: WindowsJob
         displayName: "Windows Heartbeat"
         steps:
-          - script: echo "Keeping pool warm"
+          - script: Write-Host "Keeping pool warm"
             displayName: "Heartbeat"
 
   - stage: LinuxStage
