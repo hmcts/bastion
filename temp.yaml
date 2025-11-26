@@ -1,13 +1,5 @@
-parameters:
-  - name: pool
-    type: string
-    default: 'hmcts-sds-ptlsbox-windows'
-    values:
-      - 'hmcts-sds-ptlsbox-windows'
-      - 'hmcts-sds-ptlsbox'
-
 pool:
-  name: ${{ parameters.pool }}
+  name: hmcts-sds-ptlsbox-windows
 
 steps:
 - script: echo "Keeping pool warm"
