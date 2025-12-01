@@ -7,8 +7,16 @@ stages:
       - job: WindowsJob
         displayName: "Windows Heartbeat"
         steps:
-          - script: Write-Host "Keeping pool warm"
-            displayName: "Heartbeat"
+          - script: echo "Hello from Windows CMD"
+            displayName: "CMD Test"
+          
+          - task: PowerShell@2
+            displayName: "PowerShell Test"
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "Hello from Windows PowerShell"
+                Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
 
   - stage: LinuxStage
     displayName: "Linux Pool Stage"
