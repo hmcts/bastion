@@ -17,6 +17,60 @@ stages:
               script: |
                 Write-Host "Hello from Windows PowerShell"
                 Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
+  - stage: WindowsStage
+    displayName: "Windows Pool Stage"
+    pool:
+      name: hmcts-sds-ptl-windows
+    jobs:
+      - job: WindowsJob
+        displayName: "Windows Heartbeat"
+        steps:
+          - script: echo "Hello from Windows CMD"
+            displayName: "CMD Test"
+          
+          - task: PowerShell@2
+            displayName: "PowerShell Test"
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "Hello from Windows PowerShell"
+                Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
+  - stage: WindowsStage
+    displayName: "Windows Pool Stage"
+    pool:
+      name: hmcts-cft-ptlsbox-windows
+    jobs:
+      - job: WindowsJob
+        displayName: "Windows Heartbeat"
+        steps:
+          - script: echo "Hello from Windows CMD"
+            displayName: "CMD Test"
+          
+          - task: PowerShell@2
+            displayName: "PowerShell Test"
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "Hello from Windows PowerShell"
+                Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
+  - stage: WindowsStage
+    displayName: "Windows Pool Stage"
+    pool:
+      name: hmcts-cft-ptl-windows
+    jobs:
+      - job: WindowsJob
+        displayName: "Windows Heartbeat"
+        steps:
+          - script: echo "Hello from Windows CMD"
+            displayName: "CMD Test"
+          
+          - task: PowerShell@2
+            displayName: "PowerShell Test"
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "Hello from Windows PowerShell"
+                Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
 
   - stage: LinuxStage
     displayName: "Linux Pool Stage"
