@@ -1,5 +1,5 @@
 stages:
-  - stage: WindowsStage
+  - stage: WindowsStageSDSPTLSBox
     displayName: "Windows Pool Stage"
     pool:
       name: hmcts-sds-ptlsbox-windows
@@ -17,7 +17,7 @@ stages:
               script: |
                 Write-Host "Hello from Windows PowerShell"
                 Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
-  - stage: WindowsStage
+  - stage: WindowsStageSDSPTL
     displayName: "Windows Pool Stage"
     pool:
       name: hmcts-sds-ptl-windows
@@ -35,7 +35,7 @@ stages:
               script: |
                 Write-Host "Hello from Windows PowerShell"
                 Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
-  - stage: WindowsStage
+  - stage: WindowsStageCFTPTLSBox
     displayName: "Windows Pool Stage"
     pool:
       name: hmcts-cft-ptlsbox-windows
@@ -53,7 +53,7 @@ stages:
               script: |
                 Write-Host "Hello from Windows PowerShell"
                 Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
-  - stage: WindowsStage
+  - stage: WindowsStageCFTPTL
     displayName: "Windows Pool Stage"
     pool:
       name: hmcts-cft-ptl-windows
