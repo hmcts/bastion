@@ -13,6 +13,12 @@ locals {
   hub_lb_resource_group   = local.hub_vnet_resource_group
   routes = [
     {
+      name                   = "InternetDefault"
+      address_prefix         = "0.0.0.0/0"
+      next_hop_type          = "VirtualAppliance"
+      next_hop_in_ip_address = data.azurerm_lb.hub_palo.frontend_ip_configuration.1.private_ip_address
+    },
+    {
       name                   = "PrivateA"
       address_prefix         = "10.0.0.0/8"
       next_hop_type          = "VirtualAppliance"
