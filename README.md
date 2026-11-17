@@ -102,3 +102,15 @@ Submit a pull request to update this.
 Note - when deploying a new image version, the home directories will be removed so it is advised to backup your home directory contents.  Also after the deployment when you attempt to SSH to the Bastion server you will need to run `rm ~/.ssh/known_hosts` to prevent the 'WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED' error message.
 
 Schedule the Production Bastion server after 18:00 and communicate the outage and home directory backup requirements on the following Slack channels: dtspo-secops-chat, cloud-native-announce and db-self-service.
+
+## Workload identity federation
+
+The sandbox, non-production and production pipelines use their corresponding
+`DTS-MANAGEMENT-<environment>-INTSVC-WIF` connections for infrastructure and RBAC.
+Each identity inherits Owner on its management subscription through its existing
+Entra group membership; the migration does not add role assignments.
+
+PR and feature-branch runs execute Terraform validation and plans only. Backend
+auto-creation is disabled so initialization requires the existing state storage.
+Master runs retain their existing automatic apply behavior. Review the plans
+before merging: a merge can deploy infrastructure and RBAC changes.
