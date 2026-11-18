@@ -1,5 +1,14 @@
 parameters:
 
+  - name: vaultBootstrapAction
+    displayName: Only bootstrap existing vault policies
+    type: string
+    default: disabled
+    values:
+      - disabled
+      - plan
+      - apply
+
   - name: bastionHosts
     type: object
     default:
@@ -58,7 +67,7 @@ stages:
 
       jobs:
         - job: TestAndPlan
-          condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+          condition: and(succeeded(), or(ne(variables['Build.SourceBranch'], 'refs/heads/master'), eq('${{ parameters.vaultBootstrapAction }}', 'plan')), not(and(eq(variables['Build.Reason'], 'Manual'), eq('${{ parameters.vaultBootstrapAction }}', 'apply'))))
           pool:
             vmImage: ${{ variables.agentPool }}
 
@@ -72,15 +81,18 @@ stages:
                 ${{ insert }}: ${{ bastion }}
                 terraformVersion: ${{ variables.terraformVersion }}
                 deploy: false
+                ${{ if ne(parameters.vaultBootstrapAction, 'disabled') }}:
+                  commandOptions: '-target=module.bootstrap.azurerm_key_vault.bastion'
 
-            - template: pipeline-templates/terraform-execute-rbac.yaml
-              parameters:
-                ${{ insert }}: ${{ bastion }}
-                terraformVersion: ${{ variables.terraformVersion }}
-                deploy: false
+            - ${{ if eq(parameters.vaultBootstrapAction, 'disabled') }}:
+              - template: pipeline-templates/terraform-execute-rbac.yaml
+                parameters:
+                  ${{ insert }}: ${{ bastion }}
+                  terraformVersion: ${{ variables.terraformVersion }}
+                  deploy: false
 
         - job: Deploy
-          condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+          condition: and(succeeded(), or(and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq('${{ parameters.vaultBootstrapAction }}', 'disabled')), and(eq(variables['Build.Reason'], 'Manual'), eq('${{ parameters.vaultBootstrapAction }}', 'apply'))))
           pool:
             vmImage: ${{ variables.agentPool }}
 
@@ -90,9 +102,12 @@ stages:
                 ${{ insert }}: ${{ bastion }}
                 terraformVersion: ${{ variables.terraformVersion }}
                 deploy: true
+                ${{ if ne(parameters.vaultBootstrapAction, 'disabled') }}:
+                  commandOptions: '-target=module.bootstrap.azurerm_key_vault.bastion'
 
-            - template: pipeline-templates/terraform-execute-rbac.yaml
-              parameters:
-                ${{ insert }}: ${{ bastion }}
-                terraformVersion: ${{ variables.terraformVersion }}
-                deploy: true
+            - ${{ if eq(parameters.vaultBootstrapAction, 'disabled') }}:
+              - template: pipeline-templates/terraform-execute-rbac.yaml
+                parameters:
+                  ${{ insert }}: ${{ bastion }}
+                  terraformVersion: ${{ variables.terraformVersion }}
+                  deploy: true

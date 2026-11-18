@@ -29,6 +29,10 @@ parameters:
   - name: dependsOn
     type: string
 
+  - name: commandOptions
+    type: string
+    default: ''
+
 steps:
 
 - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@2
@@ -66,6 +70,7 @@ steps:
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
       environmentServiceName: ${{ parameters.serviceConnection }}
       publishPlanResults: $(System.StageDisplayName)
+      commandOptions: ${{ parameters.commandOptions }}
 
 - ${{ if parameters.deploy }}:
 
@@ -75,4 +80,4 @@ steps:
       command: apply
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
       environmentServiceName: ${{ parameters.serviceConnection }}
-      commandOptions: --auto-approve
+      commandOptions: --auto-approve ${{ parameters.commandOptions }}

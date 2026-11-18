@@ -122,3 +122,20 @@ Mocked regression tests require Terraform 1.7 or later and can be run from
 after initialization with the repository's AzureRM 3.85.0 provider. The tests use
 mock providers and plan commands; they do not connect to Azure or apply resources.
 The deployment pipeline's Terraform version is unchanged.
+
+
+The bootstrap branch exposes `vaultBootstrapAction`:
+
+- `disabled` (default): existing pipeline behavior. The full PR plans include
+  unrelated VM/extension drift, so this PR remains draft and must not auto-apply.
+- `plan`: only plan `module.bootstrap.azurerm_key_vault.bastion` in each environment;
+  skip the RBAC template and all deploy jobs, including on a manual master run.
+- `apply`: allowed only on a manually queued run; apply only that same existing
+  vault target and skip RBAC. Owners must first review the policy-only plan and
+  explicitly authorize this action. This mode can run from the reviewed bootstrap
+  feature branch before the WIF switch, using the existing legacy connections.
+
+Targeting is an intentional bootstrap exception, not a substitute for the full
+WIF validation plans after permission provisioning. No apply was queued while
+preparing this PR. Do not merge the draft while default master deployment would
+also apply unreviewed drift.
