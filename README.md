@@ -102,3 +102,23 @@ Submit a pull request to update this.
 Note - when deploying a new image version, the home directories will be removed so it is advised to backup your home directory contents.  Also after the deployment when you attempt to SSH to the Bastion server you will need to run `rm ~/.ssh/known_hosts` to prevent the 'WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED' error message.
 
 Schedule the Production Bastion server after 18:00 and communicate the outage and home directory backup requirements on the following Slack channels: dtspo-secops-chat, cloud-native-announce and db-self-service.
+
+## Bootstrapping WIF vault access
+
+The bootstrap vault module accepts `additional_key_vault_access_policies`, a map
+of principal object IDs to secret permissions. The environment configurations
+preserve each verified legacy pipeline identity and add its existing WIF identity.
+The current caller is merged by object ID, so switching credentials neither
+removes legacy access nor creates duplicate WIF policies. Production also keeps
+its pre-existing read-only policy.
+
+Deploy this vault-policy preparation with the existing legacy connections before
+switching the pipeline to WIF in PR #132. Review the plans first: only vault-policy
+updates are intended, and master still performs automatic apply. Do not merge if
+plans include unreviewed VM, networking, extension or disk changes.
+
+Mocked regression tests require Terraform 1.7 or later and can be run from
+`terraform/modules/bootstrap` with `terraform test -filter=tests/keyvault.tftest.hcl`
+after initialization with the repository's AzureRM 3.85.0 provider. The tests use
+mock providers and plan commands; they do not connect to Azure or apply resources.
+The deployment pipeline's Terraform version is unchanged.

@@ -62,3 +62,9 @@ variable "routes" {
     next_hop_in_ip_address = string
   }))
 }
+
+variable "additional_key_vault_access_policies" {
+  description = "Additional principal IDs and their secret permissions, merged with the pipeline caller policy"
+  type        = map(set(string))
+  default     = {}
+}
