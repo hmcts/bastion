@@ -139,3 +139,8 @@ Targeting is an intentional bootstrap exception, not a substitute for the full
 WIF validation plans after permission provisioning. No apply was queued while
 preparing this PR. Do not merge the draft while default master deployment would
 also apply unreviewed drift.
+
+
+With `vaultBootstrapAction: disabled`, existing PR plan jobs, master deployment
+jobs, RBAC steps and backend auto-creation retain their original defaults.
+Backend auto-creation is disabled only for the opt-in vault bootstrap mode.

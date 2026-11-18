@@ -29,6 +29,10 @@ parameters:
   - name: dependsOn
     type: string
 
+  - name: ensureBackend
+    type: boolean
+    default: true
+
   - name: commandOptions
     type: string
     default: ''
@@ -46,7 +50,7 @@ steps:
     command: init
     workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
     backendType: azurerm
-    ensurebackend: false
+    ensurebackend: ${{ parameters.ensureBackend }}
     backendServiceArm: ${{ parameters.serviceConnection }}
     backendAzureRmResourceGroupName: ${{ parameters.rg }}
     backendAzureRmResourceGroupLocation: ${{ parameters.location }}

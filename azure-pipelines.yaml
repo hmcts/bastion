@@ -83,6 +83,7 @@ stages:
                 deploy: false
                 ${{ if ne(parameters.vaultBootstrapAction, 'disabled') }}:
                   commandOptions: '-target=module.bootstrap.azurerm_key_vault.bastion'
+                  ensureBackend: false
 
             - ${{ if eq(parameters.vaultBootstrapAction, 'disabled') }}:
               - template: pipeline-templates/terraform-execute-rbac.yaml
@@ -104,6 +105,7 @@ stages:
                 deploy: true
                 ${{ if ne(parameters.vaultBootstrapAction, 'disabled') }}:
                   commandOptions: '-target=module.bootstrap.azurerm_key_vault.bastion'
+                  ensureBackend: false
 
             - ${{ if eq(parameters.vaultBootstrapAction, 'disabled') }}:
               - template: pipeline-templates/terraform-execute-rbac.yaml

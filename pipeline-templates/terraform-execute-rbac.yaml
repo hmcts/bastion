@@ -42,7 +42,7 @@ steps:
     command: init
     workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}/rbac
     backendType: azurerm
-    ensurebackend: false
+    ensurebackend: true
     backendServiceArm: ${{ parameters.serviceConnection }}
     backendAzureRmResourceGroupName: ${{ parameters.rg }}
     backendAzureRmResourceGroupLocation: ${{ parameters.location }}
