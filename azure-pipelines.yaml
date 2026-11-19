@@ -65,6 +65,16 @@ jobs:
           backendAzureRmKey: rdo-bastion/bastion-${{ variables.maintenanceEnvironment }}.tfstate
           commandOptions: -input=false -no-color
 
+      - task: AzureCLI@2
+        displayName: Check selected VM and OneAgent health without changes
+        inputs:
+          azureSubscription: ${{ variables.maintenanceConnection }}
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            set -euo pipefail
+            python3 "$(System.DefaultWorkingDirectory)/scripts/read_dynatrace_guest_health.py" --maintenance-host '${{ parameters.maintenanceHost }}' --report-file "$(planDirectory)/guest-before.json"
+
       - task: TerraformCLI@2
         displayName: Plan selected Dynatrace extension only
         inputs:
