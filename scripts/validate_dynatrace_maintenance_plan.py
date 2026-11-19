@@ -138,14 +138,25 @@ def validate_plan(plan, host):
     token = new_settings.get("token")
     if not isinstance(token, str) or not token.strip() or "\r" in token or "\n" in token:
         raise RejectedPlan("Planned installer token is missing or malformed.")
-    sources = list(resources(plan.get("planned_values", {}).get("root_module", {})))
-    sources.extend(
-        dict(item, values=item.get("change", {}).get("after") or {})
-        for item in plan.get("resource_changes", []) if item.get("mode") == "data"
-    )
+    source_groups = {
+        "planned_values": list(resources(plan.get("planned_values", {}).get("root_module", {}))),
+        "resource_changes": [
+            dict(item, values=item.get("change", {}).get("after") or {})
+            for item in plan.get("resource_changes", []) if item.get("mode") == "data"
+        ],
+        # Terraform 1.5.6 saves the refreshed state here, including data reads
+        # that have no recorded change and are omitted from planned_values.
+        "prior_state": list(resources(plan.get("prior_state", {}).get("values", {}).get("root_module", {}))),
+    }
     source_address = f"module.{host}.data.azurerm_key_vault_secret.token"
-    selected_sources = [item for item in sources if item.get("address") == source_address]
+    selected_sources = [
+        item for group in source_groups.values() for item in group
+        if item.get("address") == source_address
+    ]
     if not selected_sources:
+        for label, group in source_groups.items():
+            count = sum(item.get("mode") == "data" and item.get("type") == "azurerm_key_vault_secret" for item in group)
+            print(f"Key Vault source presence: {label}: expected source absent; secret data entries={count}.")
         raise RejectedPlan("The selected host's Key Vault token data source is missing.")
     for item in selected_sources:
         values = item.get("values", {})

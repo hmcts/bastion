@@ -166,6 +166,37 @@ class PlanGuardTests(unittest.TestCase):
         with self.assertRaises(guard.RejectedPlan):
             guard.validate_plan(plan, "bastion-sbox")
 
+    def test_accepts_refreshed_data_present_only_in_prior_state(self):
+        for host in guard.HOSTS:
+            with self.subTest(host=host):
+                plan = valid_plan(host)
+                plan["prior_state"] = {"values": plan.pop("planned_values")}
+                self.assertEqual(guard.validate_plan(plan, host), (TOKEN, False))
+
+    def test_prior_state_still_requires_exact_version_id_and_token(self):
+        for field in ("version", "id", "value"):
+            with self.subTest(field=field):
+                plan = valid_plan()
+                plan["prior_state"] = {"values": plan.pop("planned_values")}
+                source = plan["prior_state"]["values"]["root_module"]["child_modules"][0]["resources"][0]["values"]
+                source[field] = "unapproved"
+                with self.assertRaises(guard.RejectedPlan):
+                    guard.validate_plan(plan, "bastion-sbox")
+
+    def test_missing_source_diagnostics_print_only_static_presence_counts(self):
+        plan = valid_plan()
+        plan["prior_state"] = {"values": plan.pop("planned_values")}
+        source = plan["prior_state"]["values"]["root_module"]["child_modules"][0]["resources"][0]
+        source["address"] = TOKEN
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output), self.assertRaises(guard.RejectedPlan):
+            guard.validate_plan(plan, "bastion-sbox")
+        self.assertNotIn(TOKEN, output.getvalue())
+        self.assertEqual(output.getvalue(),
+                         "Key Vault source presence: planned_values: expected source absent; secret data entries=0.\n"
+                         "Key Vault source presence: resource_changes: expected source absent; secret data entries=0.\n"
+                         "Key Vault source presence: prior_state: expected source absent; secret data entries=1.\n")
+
     def test_rejects_duplicate_target(self):
         plan = valid_plan()
         plan["resource_changes"].append(copy.deepcopy(plan["resource_changes"][0]))
