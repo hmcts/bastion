@@ -24,10 +24,16 @@ variables {
   hub_lb_name           = "test-lb"
   hub_lb_resource_group = "test-rg"
   routes                = []
-  additional_key_vault_access_policies = {
-    "43e023d9-c617-471f-aeda-2ad0efb97aac" = ["Get", "List", "Set", "Delete"]
-    "083265d1-2e54-40ef-83bc-34fd5a1f1bcf" = ["Get", "List", "Set", "Delete"]
-  }
+  additional_key_vault_access_policies = [
+    {
+      object_id          = "43e023d9-c617-471f-aeda-2ad0efb97aac"
+      secret_permissions = ["Get", "List", "Set", "Delete"]
+    },
+    {
+      object_id          = "083265d1-2e54-40ef-83bc-34fd5a1f1bcf"
+      secret_permissions = ["Get", "List", "Set", "Delete"]
+    },
+  ]
 }
 
 run "legacy_caller_keeps_both_identities" {
@@ -36,6 +42,7 @@ run "legacy_caller_keeps_both_identities" {
   assert {
     condition = (
       length(azurerm_key_vault.bastion.access_policy) == 2 &&
+      azurerm_key_vault.bastion.access_policy[0].object_id == "43e023d9-c617-471f-aeda-2ad0efb97aac" &&
       jsonencode(one([for policy in azurerm_key_vault.bastion.access_policy : policy.secret_permissions if policy.object_id == "43e023d9-c617-471f-aeda-2ad0efb97aac"])) == jsonencode(["Get", "List", "Set", "Delete"]) &&
       toset([for policy in azurerm_key_vault.bastion.access_policy : policy.object_id]) ==
       toset(["43e023d9-c617-471f-aeda-2ad0efb97aac", "083265d1-2e54-40ef-83bc-34fd5a1f1bcf"])
@@ -59,6 +66,7 @@ run "wif_caller_keeps_legacy_identity" {
   assert {
     condition = (
       length(azurerm_key_vault.bastion.access_policy) == 2 &&
+      azurerm_key_vault.bastion.access_policy[0].object_id == "43e023d9-c617-471f-aeda-2ad0efb97aac" &&
       contains([for policy in azurerm_key_vault.bastion.access_policy : policy.object_id], "43e023d9-c617-471f-aeda-2ad0efb97aac")
     )
     error_message = "Switching the pipeline to WIF must not remove legacy access or duplicate the WIF policy."
@@ -70,11 +78,20 @@ run "existing_production_reader_stays_read_only" {
 
   variables {
     environment = "prod"
-    additional_key_vault_access_policies = {
-      "b7a68ebf-8ace-4855-9ea6-1f08ef0af8f9" = ["Get", "List", "Set", "Delete"]
-      "5d16e46d-017b-4ae0-859c-22a10cce59e9" = ["Get", "List", "Set", "Delete"]
-      "0f11e5e9-83e3-442f-a015-a6bda75912cd" = ["Get", "List"]
-    }
+    additional_key_vault_access_policies = [
+      {
+        object_id          = "b7a68ebf-8ace-4855-9ea6-1f08ef0af8f9"
+        secret_permissions = ["Get", "List", "Set", "Delete"]
+      },
+      {
+        object_id          = "0f11e5e9-83e3-442f-a015-a6bda75912cd"
+        secret_permissions = ["Get", "List"]
+      },
+      {
+        object_id          = "5d16e46d-017b-4ae0-859c-22a10cce59e9"
+        secret_permissions = ["Get", "List", "Set", "Delete"]
+      },
+    ]
   }
 
   override_data {
@@ -99,7 +116,7 @@ run "default_preserves_existing_module_behavior" {
   command = plan
 
   variables {
-    additional_key_vault_access_policies = {}
+    additional_key_vault_access_policies = []
   }
 
   assert {
