@@ -1,115 +1,38 @@
-parameters:
-
-  - name: vaultBootstrapAction
-    displayName: Only bootstrap existing vault policies
-    type: string
-    default: disabled
-    values:
-      - disabled
-      - plan
-      - apply
-
-  - name: bastionHosts
-    type: object
-    default:
-      # - bastionHost: bastion_test
-      #   environment: test
-      #   serviceConnection: dts-management-test
-      #   serviceConnection_privileged: ops-approval-gate-test-envs
-      #   rg: dts-management-test-tfstate
-      #   location: uksouth
-      #   storage_account: tfstated7b54c7febbb5bde
-
-      - bastionHost: bastion_sbox
-        environment: sbox
-        serviceConnection: dts-management-sbox-intsvc
-        serviceConnection_privileged: ops-approval-gate-sbox-envs
-        rg: dts-management-sbox-intsvc-tfstate
-        location: uksouth
-        storage_account: tfstateb33943408bd1f9ac
-        dependsOn:
-
-      - bastionHost: bastion_nonprod
-        environment: nonprod
-        serviceConnection: dts-management-nonprod-intsvc
-        serviceConnection_privileged: ops-approval-gate-stg-envs
-        rg: dts-management-nonprod-intsvc-tfstate
-        location: uksouth
-        storage_account: tfstateb44eb47999719b6f
-        dependsOn: bastion_sbox
-
-      - bastionHost: bastion_prod
-        environment: prod
-        serviceConnection: dts-management-prod-intsvc
-        serviceConnection_privileged: ops-approval-gate-prod-envs
-        rg: dts-management-prod-intsvc-tfstate
-        location: uksouth
-        storage_account: tfstate2b1afc1958670244
-        dependsOn: bastion_nonprod
-
-trigger:
-  batch: true
-  branches:
-    include:
-      - master
-
-pr:
-  - master
-
-variables:
-  terraformVersion: 1.5.6
-  agentPool: ubuntu-latest
+trigger: none
+pr: none
 
 stages:
-  - ${{ each bastion in parameters.bastionHosts }}:
-    - stage: ${{ bastion.bastionHost }}
-      dependsOn: ${{ bastion.dependsOn }}
-
-      jobs:
-        - job: TestAndPlan
-          condition: and(succeeded(), or(ne(variables['Build.SourceBranch'], 'refs/heads/master'), eq('${{ parameters.vaultBootstrapAction }}', 'plan')), not(and(eq(variables['Build.Reason'], 'Manual'), eq('${{ parameters.vaultBootstrapAction }}', 'apply'))))
-          pool:
-            vmImage: ${{ variables.agentPool }}
-
-          steps:
-            - template: pipeline-templates/terraform-test.yaml
-              parameters:
-                terraformVersion: ${{ variables.terraformVersion }}
-
-            - template: pipeline-templates/terraform-execute.yaml
-              parameters:
-                ${{ insert }}: ${{ bastion }}
-                terraformVersion: ${{ variables.terraformVersion }}
-                deploy: false
-                ${{ if ne(parameters.vaultBootstrapAction, 'disabled') }}:
-                  commandOptions: '-target=module.bootstrap.azurerm_key_vault.bastion'
-                  ensureBackend: false
-
-            - ${{ if eq(parameters.vaultBootstrapAction, 'disabled') }}:
-              - template: pipeline-templates/terraform-execute-rbac.yaml
-                parameters:
-                  ${{ insert }}: ${{ bastion }}
-                  terraformVersion: ${{ variables.terraformVersion }}
-                  deploy: false
-
-        - job: Deploy
-          condition: and(succeeded(), or(and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq('${{ parameters.vaultBootstrapAction }}', 'disabled')), and(eq(variables['Build.Reason'], 'Manual'), eq('${{ parameters.vaultBootstrapAction }}', 'apply'))))
-          pool:
-            vmImage: ${{ variables.agentPool }}
-
-          steps:
-            - template: pipeline-templates/terraform-execute.yaml
-              parameters:
-                ${{ insert }}: ${{ bastion }}
-                terraformVersion: ${{ variables.terraformVersion }}
-                deploy: true
-                ${{ if ne(parameters.vaultBootstrapAction, 'disabled') }}:
-                  commandOptions: '-target=module.bootstrap.azurerm_key_vault.bastion'
-                  ensureBackend: false
-
-            - ${{ if eq(parameters.vaultBootstrapAction, 'disabled') }}:
-              - template: pipeline-templates/terraform-execute-rbac.yaml
-                parameters:
-                  ${{ insert }}: ${{ bastion }}
-                  terraformVersion: ${{ variables.terraformVersion }}
-                  deploy: true
+  - stage: VaultPermissions
+    jobs:
+      - job: Sandbox
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: dts-management-sbox-intsvc
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: python3 scripts/bootstrap_wif_vault_policy.py sbox
+      - job: Nonprod
+        dependsOn: Sandbox
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: dts-management-nonprod-intsvc
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: python3 scripts/bootstrap_wif_vault_policy.py nonprod
+      - job: Production
+        dependsOn: Nonprod
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: dts-management-prod-intsvc
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: python3 scripts/bootstrap_wif_vault_policy.py prod
