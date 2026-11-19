@@ -114,3 +114,16 @@ PR and feature-branch runs execute Terraform validation and plans only. Backend
 auto-creation is disabled so initialization requires the existing state storage.
 Master runs retain their existing automatic apply behavior. Review the plans
 before merging: a merge can deploy infrastructure and RBAC changes.
+
+## WIF vault access
+
+The bootstrap module accepts `additional_key_vault_access_policies`, an ordered
+list of principal object IDs and secret permissions. Each environment preserves
+its existing pipeline identity and WIF identity; production also preserves its
+existing read-only policy. The current caller is appended only if it is absent.
+This keeps existing access when the pipeline changes authentication method.
+
+Mocked regression tests require Terraform 1.7 or later. From
+`terraform/modules/bootstrap`, run `terraform test -filter=tests/keyvault.tftest.hcl`
+after initialization with AzureRM 3.85.0. These tests do not connect to Azure or
+apply resources. The deployment pipeline's Terraform version is unchanged.

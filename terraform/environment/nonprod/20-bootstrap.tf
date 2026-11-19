@@ -12,4 +12,15 @@ module "bootstrap" {
   hub_lb_name           = local.hub_lb_name
   hub_lb_resource_group = local.hub_lb_resource_group
   routes                = local.routes
+
+  additional_key_vault_access_policies = [
+    {
+      object_id          = "29e4829a-6912-4285-8573-0afd9c5b70d8"
+      secret_permissions = ["Get", "List", "Set", "Delete"]
+    },
+    {
+      object_id          = "65326fe1-e4fe-444a-becb-d7f6a53091df"
+      secret_permissions = ["Delete", "Get", "List", "Set"]
+    },
+  ]
 }
