@@ -2,6 +2,8 @@ import contextlib
 import copy
 import io
 import json
+from pathlib import Path
+import tempfile
 import unittest
 import urllib.error
 from unittest import mock
@@ -10,6 +12,7 @@ import validate_dynatrace_maintenance_plan as guard
 
 
 TOKEN = "TEST_TOKEN_SENTINEL_DO_NOT_PRINT"
+AGENT_VERSION = "1.349.109.20261102-164952"
 
 
 def valid_plan(host="bastion-sbox"):
@@ -218,6 +221,29 @@ class PlanGuardTests(unittest.TestCase):
         self.assertEqual(result, 1)
         self.assertNotIn(TOKEN, output.getvalue())
 
+    def test_require_noop_rejects_remaining_update_before_token_request(self):
+        output = io.StringIO()
+        with mock.patch.object(guard.sys, "stdin", io.StringIO(json.dumps(valid_plan()))), mock.patch.object(guard, "validate_token") as token_check, contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
+            result = guard.main(["--maintenance-host", "bastion-sbox", "--require-noop"])
+        self.assertEqual(result, 1)
+        token_check.assert_not_called()
+        self.assertIn("still contains an extension update", output.getvalue())
+        self.assertNotIn("Plan scope accepted", output.getvalue())
+        self.assertNotIn(TOKEN, output.getvalue())
+
+    def test_require_noop_accepts_reconciled_extension_and_still_checks_token(self):
+        plan = valid_plan()
+        change = plan["resource_changes"][0]["change"]
+        change["actions"] = ["no-op"]
+        change["before"] = copy.deepcopy(change["after"])
+        output = io.StringIO()
+        with mock.patch.object(guard.sys, "stdin", io.StringIO(json.dumps(plan))), mock.patch.object(guard, "validate_token", return_value=AGENT_VERSION) as token_check, contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
+            result = guard.main(["--maintenance-host", "bastion-sbox", "--require-noop"])
+        self.assertEqual(result, 0)
+        token_check.assert_called_once_with(TOKEN)
+        self.assertIn("selected extension already reconciled", output.getvalue())
+        self.assertNotIn(TOKEN, output.getvalue())
+
 
 class InstallerTokenTests(unittest.TestCase):
     def fake_response(self, payload):
@@ -232,7 +258,7 @@ class InstallerTokenTests(unittest.TestCase):
         opener.open.return_value = self.fake_response({"latestAgentVersion": "1.349.109.20261102-164952"})
         output = io.StringIO()
         with mock.patch.object(guard.urllib.request, "build_opener", return_value=opener) as builder, contextlib.redirect_stdout(output):
-            guard.validate_token(TOKEN)
+            self.assertEqual(guard.validate_token(TOKEN), AGENT_VERSION)
         handlers = builder.call_args.args
         self.assertEqual(handlers[0]._context.verify_mode, guard.ssl.CERT_REQUIRED)
         self.assertTrue(handlers[0]._context.check_hostname)
@@ -272,6 +298,149 @@ class InstallerTokenTests(unittest.TestCase):
         with mock.patch.object(guard.urllib.request, "build_opener", return_value=opener), contextlib.redirect_stdout(output), self.assertRaises(guard.RejectedPlan):
             guard.validate_token(TOKEN)
         self.assertNotIn(TOKEN, output.getvalue())
+
+
+class GuestVersionGateTests(unittest.TestCase):
+    def baseline(self, host="bastion-sbox"):
+        return {"maintenance_host": host, "report": {
+            "schema": 1, "healthy": True, "oneagent_version": AGENT_VERSION,
+        }}
+
+    def run_guard(self, baseline_path=None, metadata_version=AGENT_VERSION, host="bastion-sbox"):
+        arguments = ["--maintenance-host", host]
+        if baseline_path is not None:
+            arguments.extend(["--guest-health-file", str(baseline_path)])
+        output = io.StringIO()
+        with mock.patch.object(guard.sys, "stdin", io.StringIO(json.dumps(valid_plan(host)))), mock.patch.object(guard, "validate_token", return_value=metadata_version) as token_check, contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
+            result = guard.main(arguments)
+        self.assertNotIn(TOKEN, output.getvalue())
+        return result, output.getvalue(), token_check
+
+    def test_existing_plan_only_cli_remains_compatible(self):
+        result, output, token_check = self.run_guard()
+        self.assertEqual(result, 0)
+        token_check.assert_called_once_with(TOKEN)
+        self.assertNotIn("Guest baseline accepted", output)
+
+    def test_exact_latest_version_passes_for_same_host(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "guest-before.json"
+            for host in guard.HOSTS:
+                with self.subTest(host=host):
+                    path.write_text(json.dumps(self.baseline(host)))
+                    result, output, token_check = self.run_guard(path, host=host)
+                    self.assertEqual(result, 0)
+                    self.assertIn("Guest baseline accepted", output)
+                    token_check.assert_called_once_with(TOKEN)
+
+    def test_newer_older_or_shortened_version_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "guest-before.json"
+            path.write_text(json.dumps(self.baseline()))
+            for version in ("1.350.1.20261120-010000", "1.348.1.20261001-010000", "1.349.109", None):
+                with self.subTest(version=version):
+                    result, output, _ = self.run_guard(path, metadata_version=version)
+                    self.assertEqual(result, 1)
+                    self.assertIn("differs from the checked guest", output)
+                    self.assertNotIn("Plan scope accepted", output)
+
+    def test_missing_malformed_oversized_or_unhealthy_baseline_rejected_before_token_request(self):
+        bad = [TOKEN, "x" * 4097, "[]", json.dumps(self.baseline("bastion-nonprod"))]
+        for field, value in (("schema", True), ("schema", 2), ("healthy", False), ("healthy", "true"), ("oneagent_version", TOKEN), ("oneagent_version", None)):
+            baseline = self.baseline()
+            baseline["report"][field] = value
+            bad.append(json.dumps(baseline))
+        for field in ("maintenance_host", "report"):
+            baseline = self.baseline()
+            del baseline[field]
+            bad.append(json.dumps(baseline))
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "guest-before.json"
+            result, _, token_check = self.run_guard(path)
+            self.assertEqual(result, 1)
+            token_check.assert_not_called()
+            for index, contents in enumerate(bad):
+                with self.subTest(case=index):
+                    path.write_text(contents)
+                    result, output, token_check = self.run_guard(path)
+                    self.assertEqual(result, 1)
+                    self.assertNotIn("Plan scope accepted", output)
+                    token_check.assert_not_called()
+
+
+class PipelineSecretRegistrationTests(unittest.TestCase):
+    def run_guard(self, plan, flag=True, environment="true"):
+        arguments = ["--maintenance-host", "bastion-sbox"]
+        if flag:
+            arguments.append("--register-pipeline-secrets")
+        output = io.StringIO()
+        with mock.patch.object(guard.sys, "stdin", io.StringIO(json.dumps(plan))), mock.patch.dict(guard.os.environ, {"TF_BUILD": environment}), mock.patch.object(guard, "validate_token", return_value=AGENT_VERSION) as token_check, contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
+            result = guard.main(arguments)
+        return result, output.getvalue(), token_check
+
+    def test_explicit_pipeline_flag_registers_exact_old_and_new_tokens(self):
+        result, output, token_check = self.run_guard(valid_plan(), environment="TrUe")
+        self.assertEqual(result, 0)
+        self.assertEqual([line for line in output.splitlines() if line.startswith("##vso[")], [
+            "##vso[task.setsecret]OLD_TEST_TOKEN", "##vso[task.setsecret]" + TOKEN,
+        ])
+        self.assertEqual(output.count(TOKEN), 1)
+        self.assertEqual(output.count("OLD_TEST_TOKEN"), 1)
+        token_check.assert_called_once_with(TOKEN)
+
+    def test_default_does_not_register_or_expose_tokens(self):
+        result, output, _ = self.run_guard(valid_plan(), flag=False)
+        self.assertEqual(result, 0)
+        self.assertNotIn("##vso[", output)
+        self.assertNotIn(TOKEN, output)
+        self.assertNotIn("OLD_TEST_TOKEN", output)
+
+    def test_non_pipeline_context_fails_before_token_output_or_http(self):
+        for environment in ("", "false", "1"):
+            with self.subTest(environment=environment):
+                result, output, token_check = self.run_guard(valid_plan(), environment=environment)
+                self.assertEqual(result, 1)
+                self.assertNotIn("##vso[", output)
+                self.assertNotIn(TOKEN, output)
+                self.assertNotIn("OLD_TEST_TOKEN", output)
+                token_check.assert_not_called()
+
+    def test_structurally_invalid_or_wrong_host_plan_never_registers(self):
+        wrong_scope = valid_plan()
+        wrong_scope["resource_changes"][0]["change"]["after"]["name"] = "unexpected"
+        for plan in (wrong_scope, valid_plan("bastion-nonprod")):
+            result, output, token_check = self.run_guard(plan)
+            self.assertEqual(result, 1)
+            self.assertNotIn("##vso[", output)
+            self.assertNotIn(TOKEN, output)
+            token_check.assert_not_called()
+
+    def test_logging_command_escapes_percent_cr_and_lf(self):
+        plan = valid_plan()
+        change = plan["resource_changes"][0]["change"]
+        old_settings = json.loads(change["before"]["settings"])
+        old_settings["token"] = "OLD%TOKEN\r\n##vso[task.complete]Injected"
+        change["before"]["settings"] = json.dumps(old_settings)
+        result, output, _ = self.run_guard(plan)
+        self.assertEqual(result, 0)
+        commands = [line for line in output.splitlines() if line.startswith("##vso[")]
+        self.assertEqual(commands, [
+            "##vso[task.setsecret]OLD%AZP25TOKEN%0D%0A##vso[task.complete]Injected",
+            "##vso[task.setsecret]" + TOKEN,
+        ])
+        self.assertNotIn("\n##vso[task.complete]", output)
+
+    def test_unusable_old_token_fails_without_partial_registration(self):
+        plan = valid_plan()
+        change = plan["resource_changes"][0]["change"]
+        old_settings = json.loads(change["before"]["settings"])
+        old_settings["token"] = None
+        change["before"]["settings"] = json.dumps(old_settings)
+        result, output, token_check = self.run_guard(plan)
+        self.assertEqual(result, 1)
+        self.assertNotIn("##vso[", output)
+        self.assertNotIn(TOKEN, output)
+        token_check.assert_not_called()
 
 
 if __name__ == "__main__":

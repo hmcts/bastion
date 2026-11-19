@@ -2,6 +2,8 @@
 
 import argparse
 import json
+import os
+from pathlib import Path
 import re
 import ssl
 import sys
@@ -179,6 +181,41 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
+def register_pipeline_secrets(plan, host):
+    """Register both installer tokens for masking in later tasks of this job."""
+    if os.environ.get("TF_BUILD", "").lower() != "true":
+        raise RejectedPlan("Pipeline secret registration requires an Azure Pipelines job.")
+    selected = [item for item in plan["resource_changes"] if item.get("address") == target_address(host)]
+    change = selected[0]["change"]
+    tokens = [settings(change[side]["settings"]).get("token") for side in ("before", "after")]
+    if any(not isinstance(token, str) or not token.strip() for token in tokens):
+        raise RejectedPlan("An installer token cannot be safely registered for pipeline masking.")
+    for token in tokens:
+        escaped = token.replace("%", "%AZP25").replace("\r", "%0D").replace("\n", "%0A")
+        print("##vso[task.setsecret]" + escaped, flush=True)
+
+
+def guest_oneagent_version(path, host):
+    """Read only the safe, host-bound baseline written by the health reader."""
+    try:
+        with Path(path).open() as stream:
+            raw = stream.read(4097)
+        if len(raw.encode("utf-8")) > 4096:
+            raise ValueError
+        saved = json.loads(raw)
+        if not isinstance(saved, dict) or set(saved) != {"maintenance_host", "report"} or saved["maintenance_host"] != host:
+            raise ValueError
+        report = saved["report"]
+        if not isinstance(report, dict) or type(report.get("schema")) is not int or report["schema"] != 1 or report.get("healthy") is not True:
+            raise ValueError
+        version = report.get("oneagent_version")
+        if not isinstance(version, str) or not re.fullmatch(r"1\.\d+\.\d+(?:\.\d{8}-\d{6})?", version):
+            raise ValueError
+        return version
+    except Exception:
+        raise RejectedPlan("Guest health baseline is unavailable, malformed, unhealthy, or belongs to another host.") from None
+
+
 def validate_token(token):
     opener = urllib.request.build_opener(
         urllib.request.HTTPSHandler(context=ssl.create_default_context()), NoRedirect()
@@ -205,16 +242,29 @@ def validate_token(token):
     if not isinstance(version, str) or not re.fullmatch(r"[0-9][0-9A-Za-z_.-]{0,99}", version):
         raise RejectedPlan("Installer metadata version is invalid.")
     print(f"Latest OneAgent version: {version}")
+    return version
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--maintenance-host", required=True, choices=HOSTS)
+    parser.add_argument("--guest-health-file", help="Require installer metadata to match the selected host's checked OneAgent version.")
+    parser.add_argument("--require-noop", action="store_true", help="Reject any remaining extension update during post-apply verification.")
+    parser.add_argument("--register-pipeline-secrets", action="store_true", help="Register old and new installer tokens for later Azure Pipelines log masking.")
     args = parser.parse_args(argv)
     try:
         plan = json.load(sys.stdin)
         token, unchanged = validate_plan(plan, args.maintenance_host)
-        validate_token(token)
+        if args.require_noop and not unchanged:
+            raise RejectedPlan("Post-apply verification still contains an extension update.")
+        if args.register_pipeline_secrets:
+            register_pipeline_secrets(plan, args.maintenance_host)
+        guest_version = guest_oneagent_version(args.guest_health_file, args.maintenance_host) if args.guest_health_file else None
+        installer_version = validate_token(token)
+        if guest_version is not None:
+            if guest_version != installer_version:
+                raise RejectedPlan("Latest installer version differs from the checked guest OneAgent version.")
+            print("Guest baseline accepted: OneAgent already matches the latest installer version.")
     except RejectedPlan as error:
         print(f"Maintenance validation failed: {error}", file=sys.stderr)
         return 1

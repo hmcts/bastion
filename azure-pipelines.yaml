@@ -3,13 +3,20 @@ pr: none
 
 parameters:
   - name: maintenanceHost
-    displayName: Dynatrace extension to inspect (plan only)
+    displayName: Dynatrace extension to inspect
     type: string
     default: bastion-sbox
     values:
       - bastion-sbox
       - bastion-secops-sbox
       - bastion-nonprod
+  - name: maintenanceAction
+    displayName: Plan, or apply the approved bastion-sbox canary only
+    type: string
+    default: plan
+    values:
+      - plan
+      - apply-sandbox-canary
 
 variables:
   terraformVersion: '1.5.6'
@@ -32,12 +39,23 @@ variables:
 
 jobs:
   - job: InspectDynatraceToken
-    displayName: Inspect one Dynatrace token update without applying
+    displayName: Validate Dynatrace maintenance and optionally apply sandbox canary
     condition: and(succeeded(), eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/DTSPO-34419-dynatrace-token-maintenance'))
     pool:
       vmImage: ubuntu-latest
     steps:
       - checkout: self
+
+      - bash: |
+          set -euo pipefail
+          if [[ "$MAINTENANCE_ACTION" == 'apply-sandbox-canary' && "$MAINTENANCE_HOST" != 'bastion-sbox' ]]; then
+            echo 'Only bastion-sbox is approved for apply.' >&2
+            exit 1
+          fi
+        displayName: Enforce approved canary host
+        env:
+          MAINTENANCE_ACTION: ${{ parameters.maintenanceAction }}
+          MAINTENANCE_HOST: ${{ parameters.maintenanceHost }}
 
       - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@2
         displayName: Install Terraform
@@ -86,16 +104,56 @@ jobs:
       - bash: |
           set -euo pipefail
           terraform show -json "$(planDirectory)/maintenance.tfplan" |
-            python3 "$(System.DefaultWorkingDirectory)/scripts/validate_dynatrace_maintenance_plan.py" --maintenance-host '${{ parameters.maintenanceHost }}'
+            python3 "$(System.DefaultWorkingDirectory)/scripts/validate_dynatrace_maintenance_plan.py" --maintenance-host '${{ parameters.maintenanceHost }}' --guest-health-file "$(planDirectory)/guest-before.json" --register-pipeline-secrets
         displayName: Check token-only scope and installer token validity
         workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ variables.maintenanceEnvironment }}
+
+      - ${{ if and(eq(parameters.maintenanceAction, 'apply-sandbox-canary'), eq(parameters.maintenanceHost, 'bastion-sbox')) }}:
+        - bash: |
+            echo '##vso[task.setvariable variable=canaryApplyAttempted]true'
+          displayName: Record approved sandbox canary attempt
+
+        - task: TerraformCLI@2
+          displayName: Apply validated saved plan to bastion-sbox only
+          inputs:
+            command: apply
+            workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/sbox
+            environmentServiceName: DTS-MANAGEMENT-SBOX-INTSVC-WIF
+            commandOptions: '-input=false -no-color "$(planDirectory)/maintenance.tfplan"'
+
+        - task: AzureCLI@2
+          displayName: Verify sandbox canary health against the baseline
+          condition: and(succeededOrFailed(), eq(variables['canaryApplyAttempted'], 'true'))
+          inputs:
+            azureSubscription: DTS-MANAGEMENT-SBOX-INTSVC-WIF
+            scriptType: bash
+            scriptLocation: inlineScript
+            inlineScript: |
+              set -euo pipefail
+              python3 "$(System.DefaultWorkingDirectory)/scripts/read_dynatrace_guest_health.py" --maintenance-host bastion-sbox --baseline-file "$(planDirectory)/guest-before.json" --report-file "$(planDirectory)/guest-after.json"
+
+        - task: TerraformCLI@2
+          displayName: Replan sandbox canary to verify reconciliation
+          inputs:
+            command: plan
+            workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/sbox
+            environmentServiceName: DTS-MANAGEMENT-SBOX-INTSVC-WIF
+            commandOptions: '-input=false -no-color -out="$(planDirectory)/verification.tfplan" -target="module.bastion-sbox.module.virtual_machine_bootstrap.azurerm_virtual_machine_extension.dynatrace_oneagent[0]"'
+
+        - bash: |
+            set -euo pipefail
+            terraform show -json "$(planDirectory)/verification.tfplan" |
+              python3 "$(System.DefaultWorkingDirectory)/scripts/validate_dynatrace_maintenance_plan.py" --maintenance-host bastion-sbox --guest-health-file "$(planDirectory)/guest-after.json" --require-noop
+          displayName: Require zero remaining canary changes
+          workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/sbox
 
       - bash: |
           python3 - <<'PY'
           import os
           from pathlib import Path
-          plan = Path(os.environ['MAINTENANCE_PLAN_DIRECTORY']) / 'maintenance.tfplan'
-          plan.unlink(missing_ok=True)
+          directory = Path(os.environ['MAINTENANCE_PLAN_DIRECTORY'])
+          for name in ('maintenance.tfplan', 'verification.tfplan'):
+              (directory / name).unlink(missing_ok=True)
           PY
         displayName: Remove private saved plan
         condition: always()
