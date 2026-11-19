@@ -65,14 +65,11 @@ steps:
       command: plan
       workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
       environmentServiceName: ${{ parameters.serviceConnection }}
-      publishPlanResults: $(System.StageDisplayName)
+      commandOptions: -out=wif-diagnostic.tfplan
 
-- ${{ if parameters.deploy }}:
 
-  - task: TerraformCLI@2
-    displayName: Terraform apply
-    inputs:
-      command: apply
-      workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
-      environmentServiceName: ${{ parameters.serviceConnection }}
-      commandOptions: --auto-approve
+  - bash: |
+      set -euo pipefail
+      terraform show -json wif-diagnostic.tfplan | python3 "$(System.DefaultWorkingDirectory)/diagnostics/summarize-plan.py"
+    displayName: Summarize changed fields without secret values
+    workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
