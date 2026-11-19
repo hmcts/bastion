@@ -103,44 +103,15 @@ Note - when deploying a new image version, the home directories will be removed 
 
 Schedule the Production Bastion server after 18:00 and communicate the outage and home directory backup requirements on the following Slack channels: dtspo-secops-chat, cloud-native-announce and db-self-service.
 
-## Bootstrapping WIF vault access
+## WIF vault access
 
-The bootstrap vault module accepts `additional_key_vault_access_policies`, a map
-of principal object IDs to secret permissions. The environment configurations
-preserve each verified legacy pipeline identity and add its existing WIF identity.
-The current caller is merged by object ID, so switching credentials neither
-removes legacy access nor creates duplicate WIF policies. Production also keeps
-its pre-existing read-only policy.
+The bootstrap module accepts `additional_key_vault_access_policies`, an ordered
+list of principal object IDs and secret permissions. Each environment preserves
+its existing pipeline identity and WIF identity; production also preserves its
+existing read-only policy. The current caller is appended only if it is absent.
+This keeps existing access when the pipeline changes authentication method.
 
-Deploy this vault-policy preparation with the existing legacy connections before
-switching the pipeline to WIF in PR #132. Review the plans first: only vault-policy
-updates are intended, and master still performs automatic apply. Do not merge if
-plans include unreviewed VM, networking, extension or disk changes.
-
-Mocked regression tests require Terraform 1.7 or later and can be run from
-`terraform/modules/bootstrap` with `terraform test -filter=tests/keyvault.tftest.hcl`
-after initialization with the repository's AzureRM 3.85.0 provider. The tests use
-mock providers and plan commands; they do not connect to Azure or apply resources.
-The deployment pipeline's Terraform version is unchanged.
-
-
-The bootstrap branch exposes `vaultBootstrapAction`:
-
-- `disabled` (default): existing pipeline behavior. The full PR plans include
-  unrelated VM/extension drift, so this PR remains draft and must not auto-apply.
-- `plan`: only plan `module.bootstrap.azurerm_key_vault.bastion` in each environment;
-  skip the RBAC template and all deploy jobs, including on a manual master run.
-- `apply`: allowed only on a manually queued run; apply only that same existing
-  vault target and skip RBAC. Owners must first review the policy-only plan and
-  explicitly authorize this action. This mode can run from the reviewed bootstrap
-  feature branch before the WIF switch, using the existing legacy connections.
-
-Targeting is an intentional bootstrap exception, not a substitute for the full
-WIF validation plans after permission provisioning. No apply was queued while
-preparing this PR. Do not merge the draft while default master deployment would
-also apply unreviewed drift.
-
-
-With `vaultBootstrapAction: disabled`, existing PR plan jobs, master deployment
-jobs, RBAC steps and backend auto-creation retain their original defaults.
-Backend auto-creation is disabled only for the opt-in vault bootstrap mode.
+Mocked regression tests require Terraform 1.7 or later. From
+`terraform/modules/bootstrap`, run `terraform test -filter=tests/keyvault.tftest.hcl`
+after initialization with AzureRM 3.85.0. These tests do not connect to Azure or
+apply resources. The deployment pipeline's Terraform version is unchanged.
