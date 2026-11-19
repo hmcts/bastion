@@ -36,6 +36,7 @@ run "legacy_caller_keeps_both_identities" {
   assert {
     condition = (
       length(azurerm_key_vault.bastion.access_policy) == 2 &&
+      jsonencode(one([for policy in azurerm_key_vault.bastion.access_policy : policy.secret_permissions if policy.object_id == "43e023d9-c617-471f-aeda-2ad0efb97aac"])) == jsonencode(["Get", "List", "Set", "Delete"]) &&
       toset([for policy in azurerm_key_vault.bastion.access_policy : policy.object_id]) ==
       toset(["43e023d9-c617-471f-aeda-2ad0efb97aac", "083265d1-2e54-40ef-83bc-34fd5a1f1bcf"])
     )

@@ -65,6 +65,6 @@ variable "routes" {
 
 variable "additional_key_vault_access_policies" {
   description = "Additional principal IDs and their secret permissions, merged with the pipeline caller policy"
-  type        = map(set(string))
+  type        = map(list(string))
   default     = {}
 }

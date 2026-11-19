@@ -15,6 +15,6 @@ module "bootstrap" {
 
   additional_key_vault_access_policies = {
     "29e4829a-6912-4285-8573-0afd9c5b70d8" = ["Get", "List", "Set", "Delete"]
-    "65326fe1-e4fe-444a-becb-d7f6a53091df" = ["Get", "List", "Set", "Delete"]
+    "65326fe1-e4fe-444a-becb-d7f6a53091df" = ["Delete", "Get", "List", "Set"]
   }
 }
