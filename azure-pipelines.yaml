@@ -72,4 +72,3 @@ stages:
                 ${{ insert }}: ${{ bastion }}
                 terraformVersion: ${{ variables.terraformVersion }}
                 deploy: false
-
