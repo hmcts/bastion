@@ -1,98 +1,93 @@
+trigger: none
+pr: none
+
 parameters:
-
-  - name: bastionHosts
-    type: object
-    default:
-      # - bastionHost: bastion_test
-      #   environment: test
-      #   serviceConnection: dts-management-test
-      #   serviceConnection_privileged: ops-approval-gate-test-envs
-      #   rg: dts-management-test-tfstate
-      #   location: uksouth
-      #   storage_account: tfstated7b54c7febbb5bde
-
-      - bastionHost: bastion_sbox
-        environment: sbox
-        serviceConnection: DTS-MANAGEMENT-SBOX-INTSVC-WIF
-        serviceConnection_privileged: DTS-MANAGEMENT-SBOX-INTSVC-WIF
-        rg: dts-management-sbox-intsvc-tfstate
-        location: uksouth
-        storage_account: tfstateb33943408bd1f9ac
-        dependsOn:
-
-      - bastionHost: bastion_nonprod
-        environment: nonprod
-        serviceConnection: DTS-MANAGEMENT-NONPROD-INTSVC-WIF
-        serviceConnection_privileged: DTS-MANAGEMENT-NONPROD-INTSVC-WIF
-        rg: dts-management-nonprod-intsvc-tfstate
-        location: uksouth
-        storage_account: tfstateb44eb47999719b6f
-        dependsOn: bastion_sbox
-
-      - bastionHost: bastion_prod
-        environment: prod
-        serviceConnection: DTS-MANAGEMENT-PROD-INTSVC-WIF
-        serviceConnection_privileged: DTS-MANAGEMENT-PROD-INTSVC-WIF
-        rg: dts-management-prod-intsvc-tfstate
-        location: uksouth
-        storage_account: tfstate2b1afc1958670244
-        dependsOn: bastion_nonprod
-
-trigger:
-  batch: true
-  branches:
-    include:
-      - master
-
-pr:
-  - master
+  - name: maintenanceHost
+    displayName: Dynatrace extension to inspect (plan only)
+    type: string
+    default: bastion-sbox
+    values:
+      - bastion-sbox
+      - bastion-secops-sbox
+      - bastion-nonprod
 
 variables:
-  terraformVersion: 1.5.6
-  agentPool: ubuntu-latest
+  terraformVersion: '1.5.6'
+  planDirectory: $(Agent.TempDirectory)/bastion-dynatrace-maintenance
+  ${{ if in(parameters.maintenanceHost, 'bastion-sbox', 'bastion-secops-sbox') }}:
+    maintenanceEnvironment: sbox
+    maintenanceConnection: DTS-MANAGEMENT-SBOX-INTSVC-WIF
+    backendResourceGroup: dts-management-sbox-intsvc-tfstate
+    backendStorageAccount: tfstateb33943408bd1f9ac
+  ${{ if eq(parameters.maintenanceHost, 'bastion-nonprod') }}:
+    maintenanceEnvironment: nonprod
+    maintenanceConnection: DTS-MANAGEMENT-NONPROD-INTSVC-WIF
+    backendResourceGroup: dts-management-nonprod-intsvc-tfstate
+    backendStorageAccount: tfstateb44eb47999719b6f
+    maintenanceTarget: module.bastion-nonprod.module.virtual_machine_bootstrap.azurerm_virtual_machine_extension.dynatrace_oneagent[0]
+  ${{ if eq(parameters.maintenanceHost, 'bastion-sbox') }}:
+    maintenanceTarget: module.bastion-sbox.module.virtual_machine_bootstrap.azurerm_virtual_machine_extension.dynatrace_oneagent[0]
+  ${{ if eq(parameters.maintenanceHost, 'bastion-secops-sbox') }}:
+    maintenanceTarget: module.bastion-secops-sbox.module.virtual_machine_bootstrap.azurerm_virtual_machine_extension.dynatrace_oneagent[0]
 
-stages:
-  - ${{ each bastion in parameters.bastionHosts }}:
-    - stage: ${{ bastion.bastionHost }}
-      dependsOn: ${{ bastion.dependsOn }}
+jobs:
+  - job: InspectDynatraceToken
+    displayName: Inspect one Dynatrace token update without applying
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/DTSPO-34419-dynatrace-token-maintenance'))
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      - checkout: self
 
-      jobs:
-        - job: TestAndPlan
-          condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
-          pool:
-            vmImage: ${{ variables.agentPool }}
+      - task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@2
+        displayName: Install Terraform
+        inputs:
+          terraformVersion: ${{ variables.terraformVersion }}
 
-          steps:
-            - template: pipeline-templates/terraform-test.yaml
-              parameters:
-                terraformVersion: ${{ variables.terraformVersion }}
+      - bash: |
+          set -euo pipefail
+          install -d -m 700 "$(planDirectory)"
+        displayName: Prepare private plan directory
 
-            - template: pipeline-templates/terraform-execute.yaml
-              parameters:
-                ${{ insert }}: ${{ bastion }}
-                terraformVersion: ${{ variables.terraformVersion }}
-                deploy: false
+      - task: TerraformCLI@2
+        displayName: Initialize existing state backend
+        inputs:
+          command: init
+          workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ variables.maintenanceEnvironment }}
+          backendType: azurerm
+          ensurebackend: false
+          backendServiceArm: ${{ variables.maintenanceConnection }}
+          backendAzureRmResourceGroupName: ${{ variables.backendResourceGroup }}
+          backendAzureRmResourceGroupLocation: uksouth
+          backendAzureRmStorageAccountName: ${{ variables.backendStorageAccount }}
+          backendAzureRmStorageAccountSku: Standard_LRS
+          backendAzureRmContainerName: tfstate
+          backendAzureRmKey: rdo-bastion/bastion-${{ variables.maintenanceEnvironment }}.tfstate
+          commandOptions: -input=false -no-color
 
-            - template: pipeline-templates/terraform-execute-rbac.yaml
-              parameters:
-                ${{ insert }}: ${{ bastion }}
-                terraformVersion: ${{ variables.terraformVersion }}
-                deploy: false
+      - task: TerraformCLI@2
+        displayName: Plan selected Dynatrace extension only
+        inputs:
+          command: plan
+          workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ variables.maintenanceEnvironment }}
+          environmentServiceName: ${{ variables.maintenanceConnection }}
+          commandOptions: '-input=false -no-color -out="$(planDirectory)/maintenance.tfplan" -target="${{ variables.maintenanceTarget }}"'
 
-        - job: Deploy
-          condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-          pool:
-            vmImage: ${{ variables.agentPool }}
+      - bash: |
+          set -euo pipefail
+          terraform show -json "$(planDirectory)/maintenance.tfplan" |
+            python3 "$(System.DefaultWorkingDirectory)/scripts/validate_dynatrace_maintenance_plan.py" --maintenance-host '${{ parameters.maintenanceHost }}'
+        displayName: Check token-only scope and installer token validity
+        workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ variables.maintenanceEnvironment }}
 
-          steps:
-            - template: pipeline-templates/terraform-execute.yaml
-              parameters:
-                ${{ insert }}: ${{ bastion }}
-                terraformVersion: ${{ variables.terraformVersion }}
-                deploy: true
-
-            - template: pipeline-templates/terraform-execute-rbac.yaml
-              parameters:
-                ${{ insert }}: ${{ bastion }}
-                terraformVersion: ${{ variables.terraformVersion }}
-                deploy: true
+      - bash: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          plan = Path(os.environ['MAINTENANCE_PLAN_DIRECTORY']) / 'maintenance.tfplan'
+          plan.unlink(missing_ok=True)
+          PY
+        displayName: Remove private saved plan
+        condition: always()
+        env:
+          MAINTENANCE_PLAN_DIRECTORY: $(planDirectory)
