@@ -11,12 +11,12 @@ parameters:
       - bastion-secops-sbox
       - bastion-nonprod
   - name: maintenanceAction
-    displayName: Plan, or apply the approved bastion-sbox canary only
+    displayName: Plan, or apply one approved remaining host
     type: string
     default: plan
     values:
       - plan
-      - apply-sandbox-canary
+      - apply-remaining-host
 
 variables:
   terraformVersion: '1.5.6'
@@ -39,7 +39,7 @@ variables:
 
 jobs:
   - job: InspectDynatraceToken
-    displayName: Validate Dynatrace maintenance and optionally apply sandbox canary
+    displayName: Validate Dynatrace maintenance and optionally apply one remaining host
     condition: and(succeeded(), eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.SourceBranch'], 'refs/heads/DTSPO-34419-dynatrace-token-maintenance'))
     pool:
       vmImage: ubuntu-latest
@@ -48,11 +48,11 @@ jobs:
 
       - bash: |
           set -euo pipefail
-          if [[ "$MAINTENANCE_ACTION" == 'apply-sandbox-canary' && "$MAINTENANCE_HOST" != 'bastion-sbox' ]]; then
-            echo 'Only bastion-sbox is approved for apply.' >&2
+          if [[ "$MAINTENANCE_ACTION" == 'apply-remaining-host' && "$MAINTENANCE_HOST" != 'bastion-secops-sbox' && "$MAINTENANCE_HOST" != 'bastion-nonprod' ]]; then
+            echo 'Only bastion-secops-sbox and bastion-nonprod are approved for this rollout.' >&2
             exit 1
           fi
-        displayName: Enforce approved canary host
+        displayName: Enforce approved remaining hosts
         env:
           MAINTENANCE_ACTION: ${{ parameters.maintenanceAction }}
           MAINTENANCE_HOST: ${{ parameters.maintenanceHost }}
@@ -108,44 +108,44 @@ jobs:
         displayName: Check token-only scope and installer token validity
         workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ variables.maintenanceEnvironment }}
 
-      - ${{ if and(eq(parameters.maintenanceAction, 'apply-sandbox-canary'), eq(parameters.maintenanceHost, 'bastion-sbox')) }}:
+      - ${{ if and(eq(parameters.maintenanceAction, 'apply-remaining-host'), in(parameters.maintenanceHost, 'bastion-secops-sbox', 'bastion-nonprod')) }}:
         - bash: |
-            echo '##vso[task.setvariable variable=canaryApplyAttempted]true'
-          displayName: Record approved sandbox canary attempt
+            echo '##vso[task.setvariable variable=maintenanceApplyAttempted]true'
+          displayName: Record approved single-host apply attempt
 
         - task: TerraformCLI@2
-          displayName: Apply validated saved plan to bastion-sbox only
+          displayName: Apply validated saved plan to selected host only
           inputs:
             command: apply
-            workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/sbox
-            environmentServiceName: DTS-MANAGEMENT-SBOX-INTSVC-WIF
+            workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ variables.maintenanceEnvironment }}
+            environmentServiceName: ${{ variables.maintenanceConnection }}
             commandOptions: '-input=false -no-color "$(planDirectory)/maintenance.tfplan"'
 
         - task: AzureCLI@2
-          displayName: Verify sandbox canary health against the baseline
-          condition: and(succeededOrFailed(), eq(variables['canaryApplyAttempted'], 'true'))
+          displayName: Verify selected host health against the baseline
+          condition: and(succeededOrFailed(), eq(variables['maintenanceApplyAttempted'], 'true'))
           inputs:
-            azureSubscription: DTS-MANAGEMENT-SBOX-INTSVC-WIF
+            azureSubscription: ${{ variables.maintenanceConnection }}
             scriptType: bash
             scriptLocation: inlineScript
             inlineScript: |
               set -euo pipefail
-              python3 "$(System.DefaultWorkingDirectory)/scripts/read_dynatrace_guest_health.py" --maintenance-host bastion-sbox --baseline-file "$(planDirectory)/guest-before.json" --report-file "$(planDirectory)/guest-after.json"
+              python3 "$(System.DefaultWorkingDirectory)/scripts/read_dynatrace_guest_health.py" --maintenance-host '${{ parameters.maintenanceHost }}' --baseline-file "$(planDirectory)/guest-before.json" --report-file "$(planDirectory)/guest-after.json"
 
         - task: TerraformCLI@2
-          displayName: Replan sandbox canary to verify reconciliation
+          displayName: Replan selected host to verify reconciliation
           inputs:
             command: plan
-            workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/sbox
-            environmentServiceName: DTS-MANAGEMENT-SBOX-INTSVC-WIF
-            commandOptions: '-input=false -no-color -out="$(planDirectory)/verification.tfplan" -target="module.bastion-sbox.module.virtual_machine_bootstrap.azurerm_virtual_machine_extension.dynatrace_oneagent[0]"'
+            workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ variables.maintenanceEnvironment }}
+            environmentServiceName: ${{ variables.maintenanceConnection }}
+            commandOptions: '-input=false -no-color -out="$(planDirectory)/verification.tfplan" -target="${{ variables.maintenanceTarget }}"'
 
         - bash: |
             set -euo pipefail
             terraform show -json "$(planDirectory)/verification.tfplan" |
-              python3 "$(System.DefaultWorkingDirectory)/scripts/validate_dynatrace_maintenance_plan.py" --maintenance-host bastion-sbox --guest-health-file "$(planDirectory)/guest-after.json" --require-noop
-          displayName: Require zero remaining canary changes
-          workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/sbox
+              python3 "$(System.DefaultWorkingDirectory)/scripts/validate_dynatrace_maintenance_plan.py" --maintenance-host '${{ parameters.maintenanceHost }}' --guest-health-file "$(planDirectory)/guest-after.json" --require-noop
+          displayName: Require zero remaining changes for selected host
+          workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ variables.maintenanceEnvironment }}
 
       - bash: |
           python3 - <<'PY'
