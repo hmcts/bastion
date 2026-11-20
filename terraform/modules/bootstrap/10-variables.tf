@@ -62,3 +62,12 @@ variable "routes" {
     next_hop_in_ip_address = string
   }))
 }
+
+variable "additional_key_vault_access_policies" {
+  description = "Access policies in existing vault order; the pipeline caller is appended if absent"
+  type = list(object({
+    object_id          = string
+    secret_permissions = list(string)
+  }))
+  default = []
+}

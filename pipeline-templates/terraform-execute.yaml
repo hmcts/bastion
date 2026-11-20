@@ -42,7 +42,7 @@ steps:
     command: init
     workingDirectory: $(System.DefaultWorkingDirectory)/terraform/environment/${{ parameters.environment }}
     backendType: azurerm
-    ensurebackend: true
+    ensurebackend: false
     backendServiceArm: ${{ parameters.serviceConnection }}
     backendAzureRmResourceGroupName: ${{ parameters.rg }}
     backendAzureRmResourceGroupLocation: ${{ parameters.location }}
